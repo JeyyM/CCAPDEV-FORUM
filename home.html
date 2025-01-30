@@ -9,67 +9,69 @@
     <!-- Dependencies -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <div class="header">
         <div class="title">
-            <i class='bx bx-conversation titleIcon'></i>
-            <span>ForumName</span>
+            <i class='bx bx-conversation titleIcon white-large-roboto'></i>
+            <span class="white-large-roboto">ForumName</span>
         </div>
-        <div class="searchBar">
-            <i class='bx bx-search searchIcon'></i>
-            <input id="search" type="text" placeholder="Search">
+        <div class="searchBar gray-inter">
+            <i class='bx bx-search searchIcon gray-inter'></i>
+            <input id="search" class="text-inter" type="text" placeholder="Search">
         </div>
         <div class="account">
-            <button id="login">Log In</button>
-            <button id="signup">Sign Up</button>
+            <button id="login" class="outline-green-button bg-inter">Log-In</button>
+            <button id="signup" class="solid-beige-button gray-inter">Sign-Up</button>
         </div>
     </div>
     <div class="main">
         <div class="sidebar">
             <div class="tabGroup tabs">
-                <button class="buttonGroup">
-                    <i class='bx bx-home'></i>
-                    <span>Home</span>
+                <button class="sideTab">
+                    <i class='icon-setup icon-home-green'></i>
+                    <span class="text-bold-inter-small">Home</span>
                 </button>
-                <button class="buttonGroup">
-                    <i class='bx bx-trending-up'></i>
-                    <span>Popular</span>
+                <button class="sideTab">
+                    <i class='icon-setup icon-popular-green'></i>
+                    <span class="text-bold-inter-small">Popular</span>
                 </button>
             </div>
             <div class="tabGroup communities">
-                <span class="tabTitle"><i class='bx bx-star'></i>My Communities</span>
-                <button class="buttonGroup">
+                <span class="tabTitle text-bold-inter-small"><i class='icon-setup icon-star-green'></i>My Communities</span>
+                <button class="sideTab-green">
                     <i class='bx bx-plus'></i>
-                    <span>Create New Community</span>
+                    <span class="green-bold-inter-small">Create New Community</span>
                 </button>
-                <button class="buttonGroup">
+                <button class="sideTab text-inter-small">
                     <img src="images/minecraft.png" class="communityIcon">
                     Minecraft
                 </button>
-                <button class="buttonGroup">
+                <button class="sideTab text-inter-small">
                     <img src="images/anime.jpg" class="communityIcon">
                     Anime
                 </button>
             </div>
             <div class="tabGroup explore">
-                <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
-                <button class="buttonGroup">
+                <span class="tabTitle text-bold-inter-small"><i class='icon-setup icon-rocket-green'></i>Explore</span>
+                <button class="sideTab text-inter-small">
                     <img src="images/minecraft.png" class="communityIcon">
                     Minecraft
                 </button>
-                <button class="buttonGroup">
+                <button class="sideTab text-inter-small">
                     <img src="images/anime.jpg" class="communityIcon">
                     Anime
                 </button>
             </div>
         </div>
         <div class="posts">
-            <div id="sort">
+            <div id="sort" class="solid-bg-button-small text-bold-inter-small">
                 <div id="mainsort">
-					<span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
+					<span id="current"><i class='icon-setup icon-fire-green'></i>Hot<i class='icon-setup icon-chevron-down-green'></i></span>
 				</div>
 				<div class="choices hidden"><i class='bx bxs-hot'></i>Hot</div>
 				<div class="choices hidden"><i class='bx bx-up-arrow-alt'></i>Top</div>
@@ -81,20 +83,20 @@
                     <div class="postHeader">
                         <img src="images/steve.png" class="profilePic">
                         <div>
-                            <span class="posterName">Steve</span>
-                            <span class="timePosted">1 day ago</span>
+                            <span class="posterName text-bold-inter-small">Steve</span>
+                            <span class="timePosted text-inter-smaller">1 day ago</span>
                         </div>
                     </div>
                     <div class="postContent">
-                        <span class="postTitle">I built a house</span>
-                        <span class="postBody">I think it's very cool and made of wood and all.</span>
+                        <span class="text-bold-inter-medium postTitle">I built a house</span>
+                        <span class="text-inter-small postBody">I think it's very cool and made of wood and all.</span>
                         <img src="images/steveHouse.jpg" class="postImage">
                     </div>
                     <div class="postEngagement">
-                        <button class="likeButton clicked"><i class='bx bxs-like'></i><span>161</span></button>
-                        <button class="dislikeButton"><i class='bx bx-dislike'></i><span>2</span></button>
-                        <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
-                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                        <button class="solid-green-button-small bg-inter-small"><i class='icon-setup-small icon-like-filled-bg'></i><span>161</span></button>
+                        <button class="outline-bg-button-small green-inter-small"><i class='icon-setup-small icon-dislike-line-green'></i><span>2</span></button>
+                        <button class="outline-bg-button-small green-inter-small"><i class='icon-setup-small icon-comment-green'></i><span>2</span></button>
+                        <button class="outline-bg-button-small green-inter-small"><i class='icon-setup-small icon-share-green'></i></button>
                     </div>
                 </div>
 
@@ -102,19 +104,19 @@
                     <div class="postHeader">
                         <img src="images/steve.png" class="profilePic">
                         <div>
-                            <span class="posterName">Steve</span>
-                            <span class="timePosted">1 day ago</span>
+                            <span class="posterName text-bold-inter-small">Steve</span>
+                            <span class="timePosted text-inter-smaller">1 day ago</span>
                         </div>
                     </div>
                     <div class="postContent">
-                        <span class="postTitle">I built a house</span>
-                        <span class="postBody">I think it's very cool and made of wood and all.</span>
+                        <span class="text-bold-inter-medium postTitle">I built a house</span>
+                        <span class="text-inter-small postBody">I think it's very cool and made of wood and all.</span>
                     </div>
                     <div class="postEngagement">
-                        <button class="likeButton"><i class='bx bxs-like'></i><span>161</span></button>
-                        <button class="dislikeButton clicked"><i class='bx bx-dislike'></i><span>2</span></button>
-                        <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
-                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                        <button class="outline-bg-button-small green-inter-small"><i class='icon-setup-small icon-like-line-green'></i><span>161</span></button>
+                        <button class="solid-blue-button-small"><i class='icon-setup-small icon-dislike-filled-bg'></i><span>2</span></button>
+                        <button class="outline-bg-button-small green-inter-small"><i class='icon-setup-small icon-comment-green'></i><span>2</span></button>
+                        <button class="outline-bg-button-small green-inter-small"><i class='icon-setup-small icon-share-green rounden'></i></button>
                     </div>
                 </div>
             </div>

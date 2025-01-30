@@ -1,0 +1,85 @@
+.icon-setup {
+    height: 2.8rem;
+    width: 2.8rem;
+    mask-size: 2.8rem;
+
+    mask-position: center;
+    /* mask-image: url("/assets/svgs/edit.svg"); */
+    mask-repeat: no-repeat;
+    background-repeat: no-repeat;
+
+    fill: transparent;
+  }
+
+  .icon-setup-small {
+    height: 2rem;
+    width: 2rem;
+    mask-size: 2rem;
+
+    mask-position: center;
+    /* mask-image: url("/assets/svgs/edit.svg"); */
+    mask-repeat: no-repeat;
+    background-repeat: no-repeat;
+
+    fill: transparent;
+  }
+
+  .icon-home-green {
+    mask-image: url("../assets/svgs/home.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-popular-green {
+    mask-image: url("../assets/svgs/popular.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-fire-green {
+    mask-image: url("../assets/svgs/fire.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-chevron-down-green {
+    mask-image: url("../assets/svgs/chevron\ down.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-star-green {
+    mask-image: url("../assets/svgs/star.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-rocket-green {
+    mask-image: url("../assets/svgs/rocket.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+  
+  .icon-like-line-green {
+    mask-image: url("../assets/svgs/like\ line.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-like-filled-bg {
+    mask-image: url("../assets/svgs/like\ filled.svg");
+    background-image: linear-gradient(to right, var(--bg), var(--bg));
+  }
+
+  .icon-dislike-filled-bg {
+    mask-image: url("../assets/svgs/dislike\ filled.svg");
+    background-image: linear-gradient(to right, var(--bg), var(--bg));
+  }
+
+  .icon-dislike-line-green {
+    mask-image: url("../assets/svgs/dislike\ line.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-comment-green {
+    mask-image: url("../assets/svgs/comment.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }
+
+  .icon-share-green {
+    mask-image: url("../assets/svgs/share.svg");
+    background-image: linear-gradient(to right, var(--green), var(--green));
+  }

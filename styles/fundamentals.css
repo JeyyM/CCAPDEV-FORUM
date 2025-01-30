@@ -1,0 +1,83 @@
+.logo-green {
+    color: var(--green);
+}
+
+.solid-beige-button {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: "Ubuntu", serif;
+    border: 0.3rem solid var(--bg);
+    border-radius: 2.5rem;
+    min-width: max-content;
+    padding: 0.5rem 2rem;
+}
+
+.outline-green-button {
+    background-color: var(--green);
+    color: var(--bg);
+    font-family: "Ubuntu", serif;
+    border: 0.3rem solid var(--bg);
+    border-radius: 2.5rem;
+    min-width: max-content;
+    padding: 0.5rem 2rem;
+}
+
+.solid-green-button-small {
+    background-color: var(--green);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 2.5rem;
+    border: none;
+    padding: 0.5rem 1rem;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
+
+.outline-bg-button-small {
+    background-color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 2.5rem;
+    border: 0.3rem solid var(--green);
+    padding: 0.5rem 1rem;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
+
+.solid-bg-button-small {
+    background-color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 2.5rem;
+    border: none;
+    padding: 0.5rem 1rem;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
+
+.solid-blue-button-small {
+    background-color: var(--blue);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 2.5rem;
+    border: none;
+    padding: 0.5rem 1rem;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
+
+.solid-bg-button-small {
+    background: var(--bg);
+    margin: 1rem;
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 3rem;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
