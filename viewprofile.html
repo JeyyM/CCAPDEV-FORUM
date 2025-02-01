@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Profile Page</title>
+
+    <link rel="stylesheet" href="styles/viewprofile.css">
+
+    <!-- Dependencies -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="header">
+        <div class="title">
+            <i class='bx bx-conversation titleIcon'></i>
+            <span>ForumName</span>
+        </div>
+        <div class="searchBar">
+            <i class='bx bx-search searchIcon'></i>
+            <input id="search" type="text" placeholder="Search">
+        </div>
+        <div class="account hidden">
+            <button id="login">Log In</button>
+            <button id="signup">Sign Up</button>
+        </div>
+        <div class="account">
+            <button id="createPost"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/anime.jpg" class="profilePic">
+        </div>
+    </div>
+    <div class="main">
+        <div class="sidebar">
+            <div class="tabGroup tabs">
+                <button class="buttonGroup">
+                    <i class='bx bx-home'></i>
+                    <span>Home</span>
+                </button>
+                <button class="buttonGroup">
+                    <i class='bx bx-trending-up'></i>
+                    <span>Popular</span>
+                </button>
+            </div>
+            <div class="tabGroup communities">
+                <span class="tabTitle"><i class='bx bx-star'></i>My Communities</span>
+                <button class="buttonGroup">
+                    <i class='bx bx-plus'></i>
+                    <span>Create New Community</span>
+                </button>
+                <button class="buttonGroup">
+                    <img src="images/minecraft.png" class="communityIcon">
+                    Minecraft
+                </button>
+                <button class="buttonGroup">
+                    <img src="images/anime.jpg" class="communityIcon">
+                    Anime
+                </button>
+            </div>
+            <div class="tabGroup explore">
+                <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
+                <button class="buttonGroup">
+                    <img src="images/minecraft.png" class="communityIcon">
+                    Minecraft
+                </button>
+                <button class="buttonGroup">
+                    <img src="images/anime.jpg" class="communityIcon">
+                    Anime
+                </button>
+            </div>
+        </div>
+        
+        <div class="bodyContainer">
+            <div class="profileInfo">
+                <img src="images/bannerSeoldam.jpg" class="bannerPic">
+                <div class="profileFloatingContainer">
+                    <div class="profile">
+                        <img src="images/seoldamPfp.jpg" class="profilePic">
+                        <span class="profileName">Seoldam</span>
+                    </div>
+                    <div class="profileOptions following"><i class='bx bxs-bookmark'></i>Following</div>
+                </div>
+                <div class="profileDescription">
+                    <div class="descriptionContent">
+                        Keep it up. Screw up, and they're on us! Let's blow them over. Sweet, that went well! Alright, same thing this time. Nice, killed it! And them. We definitely killed them. Last round won while in the lead
+                    </div>
+                    <div class="profileStats">
+                        <span class="followers"><i class='bx bxs-group'></i>25 Followers</span>
+                        <span class="posts"><i class='bx bx-note'></i>10 Posts</span>
+                        <span class="comments"><i class='bx bxs-comment'></i>5 Comments</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sortContainer">
+                <div id="sort">
+                    <div id="mainsort">
+                        <span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <div class="choices hidden"><i class='bx bxs-hot'></i>Hot</div>
+                    <div class="choices hidden"><i class='bx bx-up-arrow-alt'></i>Top</div>
+                    <div class="choices hidden"><i class='bx bxs-time'></i>New</div>
+                </div>
+                <div id="viewOptions">
+                    <div id="mainView">
+                        <span id="currentView"><i class='bx bxs-grid'></i>All<i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <div class="choices hidden"><i class='bx bxs-grid'></i>All</span></div>
+                    <div class="choices hidden"><i class='bx bx-note'></i>Posts</div>
+                    <div class="choices hidden"><i class='bx bxs-comment'></i>Comments</div>
+                </div>
+            </div>
+
+            <div id="postContainer">
+                <div class="post">
+                    <div class="postHeader">
+                        <img src="images/steve.png" class="profilePic">
+                        <div>
+                            <span class="posterName">Steve</span>
+                            <span class="timePosted">1 day ago</span>
+                        </div>
+                    </div>
+                    <div class="postContent">
+                        <span class="postTitle">I built a house</span>
+                        <span class="postBody">I think it's very cool and made of wood and all.</span>
+                        <img src="images/steveHouse.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton clicked"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeader">
+                        <img src="images/steve.png" class="profilePic">
+                        <div>
+                            <span class="posterName">Steve</span>
+                            <span class="timePosted">1 day ago</span>
+                        </div>
+                    </div>
+                    <div class="postContent">
+                        <span class="postTitle">I built a house</span>
+                        <span class="postBody">I think it's very cool and made of wood and all.</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton clicked"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
