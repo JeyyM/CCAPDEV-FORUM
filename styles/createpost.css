@@ -1,0 +1,122 @@
+@import url(home.css);
+
+.main {
+    display: flex;
+}
+
+.textEditorBody {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 70vw;
+    margin: 25px auto;
+    background-color: var(--bg);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.editorTitle {
+    font-size: 200%;
+    font-family: 'Roboto', serif;
+    font-weight: bolder;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+}
+
+.editorTitle .bx {
+    font-size: 150%;
+    color: var(--text);
+}
+
+.communitySelection {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.textEditorBody .searchBar {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 40%;
+    border: 1px solid var(--gray);
+}
+
+#searchCommunity {
+    background: none;
+    outline: none;
+    border: none;
+    font-size: 18px;
+}
+
+.communitySelected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    color: var(--bg);
+    background-color: var(--green);
+    border-radius: 20px;
+    width: 140px;
+    height: 30px;
+    padding: 5px;
+}
+
+.communitySelected .bx {
+    color: var(--bg);
+    font-size: 24px;
+}
+
+.communityPic {
+    width: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+}
+
+#postTitle {
+    background: none;
+    background-color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 10px;
+    outline: none;
+}
+
+#postBody {
+    resize: none;
+    padding: 10px;
+    font-family: 'Inter', serif;
+    font-size: 24px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    outline: none;
+}
+
+.buttonHolder {
+    text-align: right;
+}
+
+.buttonHolder button {
+    font-family: 'Ubuntu', serif;
+    font-size: 18px;
+    width: 120px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.cancelPost {
+    background-color: var(--lightgray);
+    border: 2px solid var(--lightgray);
+}
+
+.confirmPost {
+    background-color: var(--green);
+    border: 2px solid var(--bg);
+    color: var(--bg);
+}

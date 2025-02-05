@@ -1,0 +1,171 @@
+@import url('fundamentals.css');
+@import url('home.css');
+
+.postContainer {
+    width: 95%;
+    margin: 10px;
+    padding: 20px;
+    background-color: var(--bg);
+    border-radius: 20px;
+}
+
+.postHeader {
+    display: flex;
+    gap: 0.5%;
+    color: var(--darktext);
+}
+
+.postHeader > div {
+    display: flex;
+    flex-direction: column;
+    font-family: "Roboto", serif;
+}
+
+.posterName {
+    font-size: 125%;
+    font-weight: bold;
+}
+
+.timePosted {
+    font-size: 75%;
+}
+
+.profilePic {
+    height: 4vh;
+    border: 1px solid var(--gray);
+    border-radius: 50%;
+}
+
+.postContent {
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+    margin: 0.5%;
+}
+
+.postTitle {
+    font-size: 200%;
+    font-weight: bold;
+    margin-bottom: 0.5%;
+}
+
+.postBody {
+    font-size: 120%;
+}
+
+.postImage {
+    border-radius: 10px;
+    max-height: 25vh;
+    margin: 0.5% 0;
+}
+
+.postEngagement {
+    margin: 0.5%;
+    display: flex;
+    gap: 1vw;
+}
+
+.replyContainer .hidden {
+    display: none;
+}
+
+.replyContainer {
+    background-color: #fff;
+    width: 100%;
+    padding-bottom: 10px;
+    text-align: right;
+    border-radius: 15px;
+    border: 2px solid var(--border);
+    margin: 20px 0;
+}
+
+.replyContent {
+    resize: none;
+    width: 98%;
+    outline: none;
+    border: 0px;
+    font-size: 150%;
+    font-family: 'Roboto';
+    padding: 10px 1% 0;
+    border-radius: 15px;
+}
+
+.replyContainer button {
+    width: 7.5%;
+    padding: 10px 5px;
+    font-size: 100%;
+    margin-right: 15px;
+    border-radius: 20px;
+    font-family: 'Ubuntu', serif;
+}
+
+.cancelReply {
+    background-color: var(--lightgray);
+    border: 2px solid var(--lightgray);
+}
+
+.postReply {
+    background-color: var(--green);
+    border: 2px solid var(--bg);
+    color: var(--bg);
+}
+
+.commentContainer {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0;
+}
+
+.comment {
+    width: 99%;
+    margin: 10px auto;
+}
+
+.comment .commentHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--darktext);
+}
+
+.comment .commentHeader div {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.comment .commentContent {
+    margin-left: 50px;
+    color: var(--text);
+}
+
+.comment .commentEngagement {
+    margin: 10px 0 10px 50px;
+    display: flex;
+    gap: 10px;
+}
+
+.comment .commentEngagement button {
+    background: none;
+    border: none;
+    color: var(--green);
+    font-size: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.comment .commentEngagement button .bx {
+    font-size: 140%;
+}
+
+.comment .comment {
+    margin-left: 45px;
+    width: 95%;
+}
+
+.comment .replyContainer {
+    margin-left: 45px;
+    width: 99%;
+}

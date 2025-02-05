@@ -1,303 +1,18 @@
-:root {
-    --bg: #fffaec;
-    --page: #f5ecd5;
-    --green: #578e7e;
-    --gray: #b5b3b3;
-    --darkgray: #49454f;
-    --border: #dbd2b9;
-    --text: #535353;
-    --blue: #7799ba;
+@import url('fundamentals.css');
+@import url('home.css');
+
+#postContainer {
+    margin-top: 61px;
 }
 
-::placeholder {
-    color: var(--gray);
-}
-
-body {
-    font-family: "Inter", serif;
-    background-color: var(--page);
-    margin: 0;
-}
-
-.header {
-    width: 98%;
-    padding: 5px 1%;
-    background-color: var(--green);
-    height: 5vh;
+.sortContainer {
+    position: absolute;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-.header > div {
-    width: 15vw;
-}
-
-.title {
-    font-family: "Roboto";
-    color: white;
-    font-size: 250%;
-    display: flex;
-    align-items: center;
-    gap: 2%;
-}
-
-.titleIcon {
-    padding: 5px;
-    border: 3px solid white;
-    border-radius: 50%;
-}
-
-.title span {
-    font-weight: bold;
-}
-
-.searchBar {
-    background-color: white;
-    padding: 5px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    gap: 1%;
-}
-
-.searchIcon {
-    padding: 0 5px;
-    font-size: 150%;
-    color: var(--gray);
-}
-
-#search {
-    font-size: 150%;
-    background: none;
-    border: none;
-    outline: none;
-}
-
-.account {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.account button {
-    font-family: "Ubuntu", serif;
-    background: none;
-    border: 3px solid var(--bg);
-    border-radius: 25px;
-    font-size: 150%;
-    width: 6vw;
-    height: 3.5vh;
-}
-
-#login {
-    color: var(--bg);
-}
-
-#signup {
-    background-color: var(--bg);
-    color: var(--text);
-}
-
-#createPost {
-    color: var(--bg);
-    width: 8vw;
-}
-
-.account .profilePic {
-    height: 4vh;
-}
-
-.account.hidden {
-    display: none;
-}
-
-.main {
-    display: grid;
-    grid-template-columns: 15vw 85vw;
-}
-
-.main .bx {
-    color: var(--green);
-}
-
-.tabGroup {
-    display: flex;
-    flex-direction: column;
-    margin: 10px;
-    padding: 10px;
-    background-color: var(--bg);
-    border-radius: 10px;
-}
-
-.tabGroup .bx {
-    font-size: 250%;
-}
-
-.buttonGroup {
-    background: none;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    height: 4vh;
-    gap: 5%;
-    margin: 5px;
-    color: var(--text);
-    font-size: 100%;
-    font-family: "Inter", serif;
-}
-
-.buttonGroup span {
-    font-size: 100%;
-    font-weight: bold;
-    color: var(--text);
-    font-family: "Roboto", serif;
-}
-
-.tabTitle {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    gap: 5%;
-}
-
-.communityIcon {
-    height: 3vh;
-    border-radius: 50%;
-}
-
-#sort {
-    width: 5vw;
-    background: var(--bg);
-    font-size: 125%;
-    margin: 10px;
-    padding: 5px 10px;
-    font-family: "Roboto", serif;
-    font-weight: bold;
-    border-radius: 30px;
-}
-
-#sort .bx {
-    font-size: 150%;
-}
-
-#sort #mainsort #current {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#sort .hidden {
-    display: none;
-}
-
-.post {
-    width: 95%;
-    margin: 10px;
-    padding: 20px;
-    background-color: var(--bg);
-    border-radius: 20px;
-}
-
-.postHeader {
-    display: flex;
-    gap: 0.5%;
-}
-
-.postHeader > div {
-    display: flex;
-    flex-direction: column;
-    font-family: "Roboto", serif;
-}
-
-.posterName {
-    font-size: 125%;
-    font-weight: bold;
-}
-
-.timePosted {
-    font-size: 75%;
-}
-
-.profilePic {
-    height: 3vh;
-    border: 1px solid var(--gray);
-    border-radius: 50%;
-}
-
-.postContent {
-    display: flex;
-    flex-direction: column;
-    color: var(--text);
-    margin: 0.5%;
-}
-
-.postTitle {
-    font-size: 200%;
-    font-weight: bold;
-    margin-bottom: 0.5%;
-}
-
-.postBody {
-    font-size: 120%;
-}
-
-.postImage {
-    border-radius: 10px;
-    max-height: 25vh;
-    margin: 0.5% 0;
-}
-
-.postEngagement {
-    margin: 0.5%;
-    display: flex;
-    gap: 1vw;
-}
-
-.postEngagement button {
-    background: none;
-    height: 3vh;
-    min-width: 3vw;
-    max-width: 8vw;
-    border: 2px solid var(--green);
-    border-radius: 20px;
-    font-size: 125%;
-    display: flex;
-    align-items: center;
-    gap: 5%;
-}
-
-.postEngagement .share {
-    min-width: 2vw;
-    width: 2vw;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.postEngagement button span {
-    width: 100%;
-    margin-right: 0.5vw;
-}
-
-.postEngagement button .bx {
-    font-size: 125%;
-}
-
-.likeButton.clicked {
-    background-color: var(--green);
-    color: var(--bg);
-}
-
-.dislikeButton.clicked {
-    background-color: var(--blue);
-    color: var(--bg);
-}
-
-.postEngagement .clicked .bx {
-    color: var(--bg);
+#sort, #viewOptions {
+    position: relative;
+    top: -10px;
 }
 
 .communityInfo {
@@ -322,7 +37,7 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 95%;
-    z-index: 3;
+    z-index: 2;
 }
 
 .communityInfo .communityFloatingContainer .community {
@@ -346,19 +61,6 @@ body {
     font-size: 300%;
 }
 
-.following {
-    color: var(--bg);
-    font-size: 150%;
-    background-color: var(--green);
-    padding: 10px 20px;
-    border: 2px solid var(--bg);
-    border-radius: 30px;
-}
-
-.following .bx {
-    color: var(--bg);
-}
-
 .communityDescription {
     position: relative;
     top: -4vw;
@@ -368,10 +70,6 @@ body {
     flex-direction: column;
     justify-content: space-between;
     height: 10vh;
-}
-
-.communityDescription .descriptionContent {
-    font-size: 115%;
 }
 
 .communityDescription .communityStats .bx {
@@ -401,37 +99,9 @@ body {
     min-width: 6vw;
 }
 
-#viewOptions {
-    width: 8vw;
-    background: var(--bg);
-    font-size: 125%;
-    margin: 10px;
-    padding: 5px 10px;
-    font-family: "Roboto", serif;
-    font-weight: bold;
-    border-radius: 30px;
-}
-
-#viewOptions .bx {
-    font-size: 150%;
-}
-
-#viewOptions #mainView #currentView {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#viewOptions .hidden {
-    display: none;
-}
-
-.sortContainer {
-    display: flex;
-}
-
 .communityOptionsContainer {
     display: flex;
+    gap: 10px;
 }
 
 .communityOptionsContainer .communityOptions {
@@ -442,16 +112,29 @@ body {
     margin: 0 2px;
     border: 2px solid #fff;
     border-radius: 30px;
+    display: flex;
+    gap: 3px;
+    align-items: center;
 }
 
-.communityOptions.createPost, .communityOptions.join {
+.communityOptions.createPost, .communityOptions.join.joined {
     color: var(--bg);
     background-color: var(--green);
     border: 2px solid var(--bg);
 }
 
-.communityOptions.createPost .bx, .communityOptions.join .bx {
+.communityOptions.join {
+    color: var(--text);
+    background-color: var(--lightgray);
+    border: 2px solid var(--text);
+}
+
+.communityOptions.createPost .bx, .communityOptions.join.joined .bx {
     color: var(--bg);
+}
+
+.communityOptions.join .bx {
+    color: var(--text);
 }
 
 .communityOptions.edit {

@@ -5,6 +5,11 @@
     <title>Profile Page</title>
 
     <link rel="stylesheet" href="styles/viewprofile.css">
+    <script type="text/javascript" src="scripts/account.js"></script>
+    <script type="text/javascript" src="scripts/sortPosts.js"></script>
+    <script type="text/javascript" src="scripts/likePosts.js"></script>
+    <script type="text/javascript" src="scripts/viewOptions.js"></script>
+    <script type="text/javascript" src="scripts/viewProfile.js"></script>
 
     <!-- Dependencies -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +18,23 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
+    <div id="unfocus" onclick="unfocus()"></div>
+    <div id="loginForm">
+        <div class="welcome">WELCOME</div>
+        <input type="text" placeholder="Email or Username" required>
+        <input type="password" placeholder="Password" required>
+        <span class="signupButton" onclick="signup()">Sign up?</span>
+        <button id="loginButton">Log In</button>
+    </div>
+    <div id="signupForm">
+        <div class="signup">Sign Up</div>
+        <input type="text" placeholder="Username" required>
+        <input type="text" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <input type="password" placeholder="Confirm Password" required>
+        <span class="loginButton" onclick="login()">Log In?</span>
+        <button id="signupButton">Sign Up</button>
+    </div>
     <div class="header">
         <div class="title">
             <i class='bx bx-conversation titleIcon'></i>
@@ -23,8 +45,8 @@
             <input id="search" type="text" placeholder="Search">
         </div>
         <div class="account hidden">
-            <button id="login">Log In</button>
-            <button id="signup">Sign Up</button>
+            <button id="login" onclick="login()">Log In</button>
+            <button id="signup" onclick="signup()">Sign Up</button>
         </div>
         <div class="account">
             <button id="createPost"><i class='bx bx-plus'></i>Create Post</button>
@@ -79,14 +101,14 @@
                         <img src="images/seoldamPfp.jpg" class="profilePic">
                         <span class="profileName">Seoldam</span>
                     </div>
-                    <div class="profileOptions following"><i class='bx bxs-bookmark'></i>Following</div>
+                    <div class="profileOptions following" onclick="followProfile(this)"><i class='bx bx-bookmark'></i>Follow</div>
                 </div>
                 <div class="profileDescription">
                     <div class="descriptionContent">
                         Keep it up. Screw up, and they're on us! Let's blow them over. Sweet, that went well! Alright, same thing this time. Nice, killed it! And them. We definitely killed them. Last round won while in the lead
                     </div>
                     <div class="profileStats">
-                        <span class="followers"><i class='bx bxs-group'></i>25 Followers</span>
+                        <span class="followers"><i class='bx bxs-group'></i><span>25</span> Followers</span>
                         <span class="posts"><i class='bx bx-note'></i>10 Posts</span>
                         <span class="comments"><i class='bx bxs-comment'></i>5 Comments</span>
                     </div>
@@ -95,20 +117,20 @@
 
             <div class="sortContainer">
                 <div id="sort">
-                    <div id="mainsort">
+                    <div id="mainsort" onclick="sortClicked()">
                         <span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
                     </div>
-                    <div class="choices hidden"><i class='bx bxs-hot'></i>Hot</div>
-                    <div class="choices hidden"><i class='bx bx-up-arrow-alt'></i>Top</div>
-                    <div class="choices hidden"><i class='bx bxs-time'></i>New</div>
+                    <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-hot'></i>Hot</div>
+                    <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bx-up-arrow-alt'></i>Top</div>
+                    <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-time'></i>New</div>
                 </div>
                 <div id="viewOptions">
-                    <div id="mainView">
+                    <div id="mainView" onclick="viewClicked()">
                         <span id="currentView"><i class='bx bxs-grid'></i>All<i class='bx bx-chevron-down'></i></span>
                     </div>
-                    <div class="choices hidden"><i class='bx bxs-grid'></i>All</span></div>
-                    <div class="choices hidden"><i class='bx bx-note'></i>Posts</div>
-                    <div class="choices hidden"><i class='bx bxs-comment'></i>Comments</div>
+                    <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bxs-grid'></i>All</span></div>
+                    <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bx-note'></i>Posts</div>
+                    <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bxs-comment'></i>Comments</div>
                 </div>
             </div>
 
@@ -127,8 +149,8 @@
                         <img src="images/steveHouse.jpg" class="postImage">
                     </div>
                     <div class="postEngagement">
-                        <button class="likeButton clicked"><i class='bx bxs-like'></i><span>161</span></button>
-                        <button class="dislikeButton"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
                         <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
                         <button class="share"><i class='bx bxs-share-alt'></i></button>
                     </div>
@@ -147,8 +169,8 @@
                         <span class="postBody">I think it's very cool and made of wood and all.</span>
                     </div>
                     <div class="postEngagement">
-                        <button class="likeButton"><i class='bx bxs-like'></i><span>161</span></button>
-                        <button class="dislikeButton clicked"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton clicked" onclick="dislikePost(this)"><i class='bx bxs-dislike'></i><span>2</span></button>
                         <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
                         <button class="share"><i class='bx bxs-share-alt'></i></button>
                     </div>

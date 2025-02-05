@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Create Post Page</title>
+
+    <link rel="stylesheet" href="styles/createpost.css">
+    <script type="text/javascript" src="scripts/sortPosts.js"></script>
+    <script type="text/javascript" src="scripts/likePosts.js"></script>
+
+    <!-- Dependencies -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="header">
+        <div class="title">
+            <i class='bx bx-conversation titleIcon'></i>
+            <span>ForumName</span>
+        </div>
+        <div class="searchBar">
+            <i class='bx bx-search searchIcon'></i>
+            <input id="search" type="text" placeholder="Search">
+        </div>
+        <div class="account">
+            <button id="createPost"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/anime.jpg" class="profilePic">
+        </div>
+    </div>
+    <div class="main">
+        <div class="textEditorBody">
+            <div class="editorTitle"><i class='bx bx-edit'></i>Edit Post</div>
+            <div class="communitySelection">
+                <div id="communityList">
+                    <div class="communitySelected">
+                        <img src="images/minecraft.png" class="communityPic">Minecraft<i></i>
+                    </div>
+                </div>
+            </div>
+            <input id="postTitle" placeholder="Post Title">
+            <textarea id="postBody" placeholder="Post Body" rows="10"></textarea>
+            <div class="buttonHolder">
+                <button class="cancelPost">Cancel</button>
+                <button class="confirmPost">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll("textarea").forEach(function(textarea) {
+            textarea.style.height = textarea.scrollHeight + "px";
+            textarea.style.overflowY = "hidden";
+
+            textarea.addEventListener("input", function() {
+                this.style.height = "auto";
+                this.style.height = this.scrollHeight + "px";
+            });
+        });
+    </script>
+</body>
+</html>

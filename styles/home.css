@@ -1,230 +1,70 @@
-@import url('typography.css');
 @import url('fundamentals.css');
-@import url('icons.css');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html {
-    font-size: 62.5%;
-  }
-
-  body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-  }
-
-:root {
-    --bg: #fffaec;
-    --page: #f5ecd5;
-    --green: #578e7e;
-    --gray: #b5b3b3;
-    --border: #dbd2b9;
-    --text: #49454F;
-    --blue: #7799ba;
-}
-
-::placeholder {
-    color: var(--gray);
-}
-
-body {
-    font-family: "Inter", serif;
-    background-color: var(--page);
-    margin: 0;
-}
-
-.header {
-    width: 100%;
-    padding: 0.5rem 3rem;
-    background-color: var(--green);
-    height: 5.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
-}
-/* 
-.header > div {
-    width: 15%;
-} */
-
-.title {
-    display: flex;
-    align-items: center;
-    gap: 2%;
-}
-
-.titleIcon {
-    padding: 0.5rem;
-    border: 0.3rem solid white;
-    border-radius: 50%;
-}
-
-.title span {
+#sort, #viewOptions {
+    background: var(--bg);
+    font-size: 125%;
+    margin: 10px;
+    padding: 5px 10px;
+    font-family: "Roboto", serif;
     font-weight: bold;
-}
-
-.shading {
+    border-radius: 20px;
     filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
-}
-
-.rounden {
-    padding: 1rem;
-}
-
-.searchBar {
-    width: 40rem;
-    background-color: white;
-    padding: 0.5rem;
-    border-radius: 3rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border: 0.2rem solid var(--gray);
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
-}
-
-.searchIcon {
-    padding: 0 0.5rem;
-}
-
-#search {
-    background: none;
-    border: none;
-    outline: none;
-}
-
-.account {
-    width: 23rem;
-    display: flex;
-    justify-content: space-around;
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
-}
-
-#login {
-    color: var(--bg);
-}
-
-
-.main {
-    display: flex;
-    flex-direction: row;
-    width: 110rem;
-    margin: 0 auto;
-}
-
-.main .bx {
-    color: var(--green);
-}
-
-.tabGroup {
+    position: absolute;
+    top: 66px;
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    margin: 1rem;
-    padding: 0.5rem;
-    background-color: var(--bg);
-    border-radius: 1rem;
-    width: 25rem;
-}
-
-.tabGroup .bx {
-    font-size: 3rem;
-}
-
-.sidebar {
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
-}
-
-.sideTab {
-    background: none;
-    border: 0.2rem solid var(--border);
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    height: max-content + 0.5rem;
-    gap: 5%;
-    margin: 0.3rem;
-    padding: 0.5rem 1rem;
-}
-
-
-.sideTab-green {
-    background: none;
-    border: 0.2rem solid var(--green);
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    height: max-content + 0.5rem;
-    gap: 5%;
-    margin: 0.3rem;
-    padding: 0.5rem 0.5rem;
-}
-
-.buttonGroup span {
-    /* font-size: 100%;
-    font-weight: bold;
-    color: var(--text);
-    font-family: "Roboto", serif; */
-}
-
-.tabTitle {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    gap: 0.8rem;
-    margin: 0.5rem 1rem;
-}
-
-.communityIcon {
-    height: 4rem;
-    width: 4rem;
-    border-radius: 50%;
-    margin: 0.2rem 0;
-    border: 0.1rem solid var(--gray);
+    gap: 5px;
+    height: max-content;
 }
 
 #sort {
-    width: max-content;
-    background: var(--bg);
-    margin: 1rem;
-    display: flex;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 3rem;
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+    width: 120px;
 }
 
-#sort #mainsort #current {
+#viewOptions {
+    width: 165px;
+}
+
+#sort .bx, #viewOptions .bx {
+    font-size: 150%;
+}
+
+#sort #mainsort #current, #viewOptions #mainView #currentView {
     display: flex;
-    /* justify-content: space-between; */
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    gap: 3px;
 }
 
-#sort .hidden {
+#sort .choices, #viewOptions .choices {
+    align-items: center;
+    gap: 3px;
+}
+
+#sort .hidden, #viewOptions .hidden {
     display: none;
 }
 
-.posts {
-    width: 100%;
+.body {
+    margin-top: 51px;
+}
+
+.bodyContainer {
+    width: 84vw;
 }
 
 .post {
     width: 95%;
-    margin: 1rem;
-    padding: 2rem;
+    margin: 10px;
+    padding: 20px;
     background-color: var(--bg);
-    border-radius: 2rem;
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+    border-radius: 20px;
 }
 
 .postHeader {
     display: flex;
-    gap: 1rem;
+    gap: 0.5%;
 }
 
 .postHeader > div {
@@ -234,13 +74,17 @@ body {
 }
 
 .posterName {
-    margin-bottom: -0.6rem;
+    font-size: 125%;
+    font-weight: bold;
+}
+
+.timePosted {
+    font-size: 75%;
 }
 
 .profilePic {
-    height: 4rem;
-    width: 4rem;
-    border: 0.1rem solid var(--gray);
+    height: 4vh;
+    border: 1px solid var(--gray);
     border-radius: 50%;
 }
 
@@ -252,22 +96,58 @@ body {
 }
 
 .postTitle {
-    /* margin-bottom: 0.1rem; */
+    font-size: 200%;
+    font-weight: bold;
+    margin-bottom: 0.5%;
 }
 
 .postBody {
+    font-size: 120%;
 }
 
 .postImage {
-    border-radius: 1rem;
-    max-height: 25rem;
+    border-radius: 10px;
+    max-height: 25vh;
     margin: 0.5% 0;
 }
 
 .postEngagement {
     margin: 0.5%;
     display: flex;
-    gap: 1rem;
+    gap: 1vw;
+}
+
+.postEngagement button {
+    background: none;
+    height: 4vh;
+    min-width: 3vw;
+    max-width: 8vw;
+    border: 2px solid var(--green);
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 125%;
+    display: flex;
+    align-items: center;
+    gap: 5%;
+}
+
+.postEngagement .share {
+    min-width: 2vw;
+    width: 2vw;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.postEngagement button span {
+    width: 100%;
+    margin-right: 0.5vw;
+    color: var(--text);
+}
+
+.postEngagement button .bx {
+    font-size: 120%;
 }
 
 .likeButton.clicked {
@@ -280,7 +160,6 @@ body {
     color: var(--bg);
 }
 
-.postEngagement .clicked .bx {
+.postEngagement .clicked .bx, .postEngagement .clicked span {
     color: var(--bg);
 }
-
