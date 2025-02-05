@@ -60,6 +60,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1%;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .searchIcon {
@@ -89,6 +90,41 @@ body {
     font-size: 125%;
     width: 6vw;
     height: 5vh;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
+
+#profileSettings {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: absolute;
+    top: 60px;
+    right: 30px;
+    padding: 10px;
+    background-color: var(--bg);
+    border-radius: 10px;
+    z-index: 3;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
+}
+
+#profileSettings.hidden {
+    display: none;
+}
+
+#profileSettings button {
+    background-color: var(--bg);
+    color: var(--text);
+    font-size: 18px;
+    padding: 5px;
+    border: none;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+#profileSettings button .bx {
+    color: var(--green);
+    font-size: 24px;
 }
 
 #login {
@@ -107,6 +143,7 @@ body {
 
 .account .profilePic {
     height: 4vh;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .account.hidden {
@@ -129,6 +166,7 @@ body {
     padding: 10px;
     background-color: var(--bg);
     border-radius: 10px;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .tabGroup .bx {

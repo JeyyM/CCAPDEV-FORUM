@@ -37,3 +37,7 @@ function dislikePost(element) {
         element.childNodes[1].innerHTML = element.childNodes[1].innerHTML - 1;
     }
 }
+
+function postSettings(element) {
+    element.parentNode.getElementsByClassName("floatingSettings")[0].classList.toggle("hidden");
+}

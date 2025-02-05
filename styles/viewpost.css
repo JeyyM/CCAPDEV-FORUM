@@ -11,7 +11,7 @@
 
 .postHeader {
     display: flex;
-    gap: 0.5%;
+    gap: 5px;
     color: var(--darktext);
 }
 
@@ -97,6 +97,7 @@
     margin-right: 15px;
     border-radius: 20px;
     font-family: 'Ubuntu', serif;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .cancelReply {
@@ -124,8 +125,9 @@
 .comment .commentHeader {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     color: var(--darktext);
+    width: max-content;
 }
 
 .comment .commentHeader div {

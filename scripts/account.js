@@ -15,3 +15,7 @@ function unfocus() {
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("signupForm").style.display = "none";
 }
+
+function profileSettings() {
+    document.getElementById("profileSettings").classList.toggle("hidden");
+}

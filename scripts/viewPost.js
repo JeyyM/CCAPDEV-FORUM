@@ -20,9 +20,13 @@ function hidePostButtons(element) {
 
 function addComment(element) {
     let comment = element.parentNode.parentNode;
+    if (document.getElementById("tempReply")) {
+        document.getElementById("tempReply").remove();
+    }
 
     let replyContainer = document.createElement("div");
     replyContainer.classList.add("replyContainer");
+    replyContainer.id = "tempReply";
 
     let commentReply = document.createElement("textarea");
     commentReply.classList.add("replyContent");

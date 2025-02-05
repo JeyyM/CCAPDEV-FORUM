@@ -13,6 +13,7 @@
     background-color: var(--bg);
     border-radius: 10px;
     padding: 20px;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .editorTitle {
@@ -44,6 +45,7 @@
     gap: 5px;
     width: 40%;
     border: 1px solid var(--gray);
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 #searchCommunity {
@@ -64,6 +66,7 @@
     width: 140px;
     height: 30px;
     padding: 5px;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .communitySelected .bx {
@@ -108,6 +111,7 @@
     width: 120px;
     padding: 10px;
     border-radius: 20px;
+    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .cancelPost {

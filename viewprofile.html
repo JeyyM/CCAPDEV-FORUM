@@ -49,14 +49,18 @@
             <button id="signup" onclick="signup()">Sign Up</button>
         </div>
         <div class="account">
-            <button id="createPost"><i class='bx bx-plus'></i>Create Post</button>
-            <img src="images/anime.jpg" class="profilePic">
+            <button id="createPost" onclick="window.location.href='createpost.html'"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/anime.jpg" class="profilePic" onclick="profileSettings()">
         </div>
+    </div>
+    <div id="profileSettings" class="hidden">
+        <button id="viewProfile" onclick="window.location.href='selfprofile.html'"><i class='bx bx-user'></i>View Profile</button>
+        <button id="logout"><i class='bx bx-log-out'></i>Log Out</button>
     </div>
     <div class="main">
         <div class="sidebar">
             <div class="tabGroup tabs">
-                <button class="buttonGroup">
+                <button class="buttonGroup" onclick="window.location.href='home.html'">
                     <i class='bx bx-home'></i>
                     <span>Home</span>
                 </button>
@@ -71,22 +75,22 @@
                     <i class='bx bx-plus'></i>
                     <span>Create New Community</span>
                 </button>
-                <button class="buttonGroup">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
                     <img src="images/minecraft.png" class="communityIcon">
                     Minecraft
                 </button>
-                <button class="buttonGroup">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
                     <img src="images/anime.jpg" class="communityIcon">
                     Anime
                 </button>
             </div>
             <div class="tabGroup explore">
                 <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
-                <button class="buttonGroup">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
                     <img src="images/minecraft.png" class="communityIcon">
                     Minecraft
                 </button>
-                <button class="buttonGroup">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
                     <img src="images/anime.jpg" class="communityIcon">
                     Anime
                 </button>
@@ -136,14 +140,14 @@
 
             <div id="postContainer">
                 <div class="post">
-                    <div class="postHeader">
+                    <div class="postHeader" onclick="window.location.href='viewprofile.html'">
                         <img src="images/steve.png" class="profilePic">
                         <div>
                             <span class="posterName">Steve</span>
                             <span class="timePosted">1 day ago</span>
                         </div>
                     </div>
-                    <div class="postContent">
+                    <div class="postContent" onclick="window.location.href='viewpost.html'">
                         <span class="postTitle">I built a house</span>
                         <span class="postBody">I think it's very cool and made of wood and all.</span>
                         <img src="images/steveHouse.jpg" class="postImage">
@@ -151,27 +155,28 @@
                     <div class="postEngagement">
                         <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
                         <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
-                        <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpost.html'"><i class='bx bxs-comment'></i><span>2</span></button>
                         <button class="share"><i class='bx bxs-share-alt'></i></button>
                     </div>
                 </div>
 
                 <div class="post">
-                    <div class="postHeader">
+                    <div class="postHeader" onclick="window.location.href='viewprofile.html'">
                         <img src="images/steve.png" class="profilePic">
                         <div>
                             <span class="posterName">Steve</span>
                             <span class="timePosted">1 day ago</span>
                         </div>
                     </div>
-                    <div class="postContent">
+                    <div class="postContent" onclick="window.location.href='viewpost.html'">
                         <span class="postTitle">I built a house</span>
                         <span class="postBody">I think it's very cool and made of wood and all.</span>
+                        <img src="images/steveHouse.jpg" class="postImage">
                     </div>
                     <div class="postEngagement">
-                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
-                        <button class="dislikeButton clicked" onclick="dislikePost(this)"><i class='bx bxs-dislike'></i><span>2</span></button>
-                        <button class="commentButton"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpost.html'"><i class='bx bxs-comment'></i><span>2</span></button>
                         <button class="share"><i class='bx bxs-share-alt'></i></button>
                     </div>
                 </div>
