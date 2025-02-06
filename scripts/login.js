@@ -15,5 +15,11 @@ function tryLogIn() {
             
             window.location = filename.replace("Signout", "Mia");
         }
+        else {
+            alert("User does not exist!");
+        }
+    }
+    else {
+        alert("Incorrect password!");
     }
 }
