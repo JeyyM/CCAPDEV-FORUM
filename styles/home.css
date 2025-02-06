@@ -152,6 +152,7 @@
     border-radius: 10px;
     max-height: 25vh;
     margin: 0.5% 0;
+    object-fit: cover;
 }
 
 .postEngagement {

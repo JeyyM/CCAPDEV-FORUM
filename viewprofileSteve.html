@@ -21,8 +21,8 @@
     <div id="unfocus" onclick="unfocus()"></div>
     <div id="loginForm">
         <div class="welcome">WELCOME</div>
-        <input type="text" placeholder="Email or Username" required>
-        <input type="password" placeholder="Password" required>
+        <input id="username" type="text" placeholder="Email or Username" required>
+        <input id="password" type="password" placeholder="Password" required>
         <span class="signupButton" onclick="signup()">Sign up?</span>
         <button id="loginButton">Log In</button>
     </div>
@@ -36,7 +36,7 @@
         <button id="signupButton">Sign Up</button>
     </div>
     <div class="header">
-        <div class="title">
+        <div class="title" onclick="window.location.href='homeSteve.html'">
             <i class='bx bx-conversation titleIcon'></i>
             <span>ForumName</span>
         </div>
@@ -49,24 +49,20 @@
             <button id="signup" onclick="signup()">Sign Up</button>
         </div>
         <div class="account">
-            <button id="createPost" onclick="window.location.href='createpost.html'"><i class='bx bx-plus'></i>Create Post</button>
-            <img src="images/anime.jpg" class="profilePic" onclick="profileSettings()">
+            <button id="createPost" onclick="window.location.href='createpostSteve.html'"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/steve.jpg" class="profilePic" onclick="profileSettings()">
         </div>
     </div>
     <div id="profileSettings" class="hidden">
-        <button id="viewProfile" onclick="window.location.href='selfprofile.html'"><i class='bx bx-user'></i>View Profile</button>
-        <button id="logout"><i class='bx bx-log-out'></i>Log Out</button>
+        <button id="viewProfile" onclick="window.location.href='selfprofileSteve.html'"><i class='bx bx-user'></i>View Profile</button>
+        <button id="logout" onclick="window.location.href='homeSignout.html'"><i class='bx bx-log-out'></i>Log Out</button>
     </div>
     <div class="main">
         <div class="sidebar">
             <div class="tabGroup tabs">
-                <button class="buttonGroup" onclick="window.location.href='home.html'">
+                <button class="buttonGroup" onclick="window.location.href='homeSteve.html'">
                     <i class='bx bx-home'></i>
                     <span>Home</span>
-                </button>
-                <button class="buttonGroup">
-                    <i class='bx bx-trending-up'></i>
-                    <span>Popular</span>
                 </button>
             </div>
             <div class="tabGroup communities">
@@ -75,45 +71,53 @@
                     <i class='bx bx-plus'></i>
                     <span>Create New Community</span>
                 </button>
-                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
-                    <img src="images/minecraft.png" class="communityIcon">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySteve.html'">
+                    <img src="images/minecraft.jpg" class="communityIcon">
                     Minecraft
-                </button>
-                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
-                    <img src="images/anime.jpg" class="communityIcon">
-                    Anime
                 </button>
             </div>
             <div class="tabGroup explore">
                 <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
-                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
-                    <img src="images/minecraft.png" class="communityIcon">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySteve.html'">
+                    <img src="images/minecraft.jpg" class="communityIcon">
                     Minecraft
                 </button>
-                <button class="buttonGroup" onclick="window.location.href='viewcommunity.html'">
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySteve.html'">
                     <img src="images/anime.jpg" class="communityIcon">
                     Anime
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySteve.html'">
+                    <img src="images/csgo.jpg" class="communityIcon">
+                    CS:GO
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySteve.html'">
+                    <img src="images/valorant.jpg" class="communityIcon">
+                    Valorant
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySteve.html'">
+                    <img src="images/fortnite.jpg" class="communityIcon">
+                    Fortnite
                 </button>
             </div>
         </div>
         
         <div class="bodyContainer">
             <div class="profileInfo">
-                <img src="images/bannerSeoldam.jpg" class="bannerPic">
+                <img src="images/bannerMia.jpg" class="bannerPic">
                 <div class="profileFloatingContainer">
                     <div class="profile">
-                        <img src="images/seoldamPfp.jpg" class="profilePic">
-                        <span class="profileName">Seoldam</span>
+                        <img src="images/mia.jpg" class="profilePic">
+                        <span class="profileName">BuilderMia</span>
                     </div>
                     <div class="profileOptions following" onclick="followProfile(this)"><i class='bx bx-bookmark'></i>Follow</div>
                 </div>
                 <div class="profileDescription">
                     <div class="descriptionContent">
-                        Keep it up. Screw up, and they're on us! Let's blow them over. Sweet, that went well! Alright, same thing this time. Nice, killed it! And them. We definitely killed them. Last round won while in the lead
+                        Passionate Minecraft builder who loves creating everything from cozy cottages to massive castles! Always experimenting with different styles, from medieval to modern. If you need building tips or design inspiration, I'm happy to help!
                     </div>
                     <div class="profileStats">
                         <span class="followers"><i class='bx bxs-group'></i><span>25</span> Followers</span>
-                        <span class="posts"><i class='bx bx-note'></i>10 Posts</span>
+                        <span class="posts"><i class='bx bx-note'></i>2 Posts</span>
                         <span class="comments"><i class='bx bxs-comment'></i>5 Comments</span>
                     </div>
                 </div>
@@ -140,43 +144,47 @@
 
             <div id="postContainer">
                 <div class="post">
-                    <div class="postHeader" onclick="window.location.href='viewprofile.html'">
-                        <img src="images/steve.png" class="profilePic">
-                        <div>
-                            <span class="posterName">Steve</span>
-                            <span class="timePosted">1 day ago</span>
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSteve.html'">
+                            <img src="images/mia.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">BuilderMia</span>
+                                <span class="timePosted">1h ago</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="postContent" onclick="window.location.href='viewpost.html'">
-                        <span class="postTitle">I built a house</span>
-                        <span class="postBody">I think it's very cool and made of wood and all.</span>
-                        <img src="images/steveHouse.jpg" class="postImage">
+                    <div class="postContent" onclick="window.location.href='viewpostSteve.html'">
+                        <span class="postTitle">My Medieval Castle is Finally Complete!</span>
+                        <span class="postBody">Just finished building my medieval castle! Took me three weeks, but totally worth it. What do you guys think?</span>
+                        <img src="images/castle.jpg" class="postImage">
                     </div>
                     <div class="postEngagement">
                         <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
                         <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
-                        <button class="commentButton" onclick="window.location.href='viewpost.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSteve.html'"><i class='bx bxs-comment'></i><span>2</span></button>
                         <button class="share"><i class='bx bxs-share-alt'></i></button>
                     </div>
                 </div>
 
                 <div class="post">
-                    <div class="postHeader" onclick="window.location.href='viewprofile.html'">
-                        <img src="images/steve.png" class="profilePic">
-                        <div>
-                            <span class="posterName">Steve</span>
-                            <span class="timePosted">1 day ago</span>
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSteve.html'">
+                            <img src="images/mia.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">BuilderMia</span>
+                                <span class="timePosted">4h ago</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="postContent" onclick="window.location.href='viewpost.html'">
-                        <span class="postTitle">I built a house</span>
-                        <span class="postBody">I think it's very cool and made of wood and all.</span>
-                        <img src="images/steveHouse.jpg" class="postImage">
+                    <div class="postContent" onclick="window.location.href='viewpostSteve.html'">
+                        <span class="postTitle">Creeper Blew Up My Base... AGAIN</span>
+                        <span class="postBody">I think I might actually cry. My entire storage room? GONE. Any tips to prevent this from happening again?</span>
+                        <img src="images/blow.jpg" class="postImage">
                     </div>
                     <div class="postEngagement">
                         <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
                         <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
-                        <button class="commentButton" onclick="window.location.href='viewpost.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSteve.html'"><i class='bx bxs-comment'></i><span>2</span></button>
                         <button class="share"><i class='bx bxs-share-alt'></i></button>
                     </div>
                 </div>

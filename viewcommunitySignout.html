@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Community Page</title>
+
+    <link rel="stylesheet" href="styles/viewcommunity.css">
+    <script type="text/javascript" src="scripts/account.js"></script>
+    <script type="text/javascript" src="scripts/sortPosts.js"></script>
+    <script type="text/javascript" src="scripts/likePosts.js"></script>
+    <script type="text/javascript" src="scripts/viewOptions.js"></script>
+    <script type="text/javascript" src="scripts/viewCommunity.js"></script>
+    <script type="text/javascript" src="scripts/login.js"></script>
+
+    <!-- Dependencies -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div id="unfocus" onclick="unfocus()"></div>
+    <div id="loginForm">
+        <div class="welcome">WELCOME</div>
+        <input id="username" type="text" placeholder="Email or Username" required>
+        <input id="password" type="password" placeholder="Password" required>
+        <span class="signupButton" onclick="signup()">Sign up?</span>
+        <button id="loginButton" onclick="tryLogIn()">Log In</button>
+    </div>
+    <div id="signupForm">
+        <div class="signup">Sign Up</div>
+        <input type="text" placeholder="Username" required>
+        <input type="text" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <input type="password" placeholder="Confirm Password" required>
+        <span class="loginButton" onclick="login()">Log In?</span>
+        <button id="signupButton">Sign Up</button>
+    </div>
+    <div class="header">
+        <div class="title" onclick="window.location.href='homeSignout.html'">
+            <i class='bx bx-conversation titleIcon'></i>
+            <span>ForumName</span>
+        </div>
+        <div class="searchBar">
+            <i class='bx bx-search searchIcon'></i>
+            <input id="search" type="text" placeholder="Search">
+        </div>
+        <div class="account">
+            <button id="login" onclick="login()">Log In</button>
+            <button id="signup" onclick="signup()">Sign Up</button>
+        </div>
+        <div class="account hidden">
+            <button id="createPost" onclick="window.location.href='createpostSignout.html'"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/steve.jpg" class="profilePic" onclick="profileSettings()">
+        </div>
+    </div>
+    <div id="profileSettings" class="hidden">
+        <button id="viewProfile" onclick="window.location.href='viewprofileSignout.html'"><i class='bx bx-user'></i>View Profile</button>
+        <button id="logout" onclick="window.location.href='homeSignout.html'"><i class='bx bx-log-out'></i>Log Out</button>
+    </div>
+    <div class="main">
+        <div class="sidebar">
+            <div class="tabGroup tabs">
+                <button class="buttonGroup" onclick="window.location.href='homeSignout.html'">
+                    <i class='bx bx-home'></i>
+                    <span>Home</span>
+                </button>
+            </div>
+            <div class="tabGroup explore">
+                <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/minecraft.jpg" class="communityIcon">
+                    Minecraft
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/anime.jpg" class="communityIcon">
+                    Anime
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/csgo.jpg" class="communityIcon">
+                    CS:GO
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/valorant.jpg" class="communityIcon">
+                    Valorant
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/fortnite.jpg" class="communityIcon">
+                    Fortnite
+                </button>
+            </div>
+        </div>
+        
+        <div class="bodyContainer">
+            <div class="communityInfo">
+                <img src="images/bannerMinecraft.jpg" class="bannerPic">
+                <div class="communityFloatingContainer">
+                    <div class="community">
+                        <img src="images/minecraft.jpg" class="communityPic profilePic">
+                        <span class="communityName">Minecraft</span>
+                    </div>
+                    <div class="communityOptionsContainer">
+                        <div class="communityOptions createPost"><i class='bx bx-plus'></i>Create Post</div>
+                        <div class="communityOptions join" onclick="joinCommunity(this)"><i class='bx bx-bookmark'></i>Join</div>
+                    </div>
+                </div>
+                <div class="communityDescription">
+                    <div class="descriptionContent">
+                        Welcome to the ultimate Minecraft hub! Whether you're a redstone genius, a master builder, a hardcore survivor, or just starting out, this is the place for you. Share your epic builds, survival adventures, redstone creations, and favorite seeds. Ask for tips, discuss updates, and connect with fellow crafters. Let's build, explore, and survive together!
+                    </div>
+                    <div class="communityStats">
+                        <span class="followers"><i class='bx bxs-group'></i>25 Members</span>
+                        <span class="posts"><i class='bx bx-note'></i>9 Posts</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sortContainer">
+                <div id="sort">
+                    <div id="mainsort" onclick="sortClicked()">
+                        <span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-hot'></i>Hot</div>
+                    <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bx-up-arrow-alt'></i>Top</div>
+                    <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-time'></i>New</div>
+                </div>
+                <div id="viewOptions">
+                    <div id="mainView" onclick="viewClicked()">
+                        <span id="currentView"><i class='bx bxs-grid'></i>All<i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bxs-grid'></i>All</span></div>
+                    <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bx-note'></i>Posts</div>
+                    <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bxs-comment'></i>Comments</div>
+                </div>
+            </div>
+
+            <div id="postContainer">
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mia.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">BuilderMia</span>
+                                <span class="timePosted">1h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">My Medieval Castle is Finally Complete!</span>
+                        <span class="postBody">Just finished building my medieval castle! Took me three weeks, but totally worth it. What do you guys think?</span>
+                        <img src="images/castle.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">2h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Found a Woodland Mansion! Any Tips?</span>
+                        <span class="postBody">Just found a Woodland Mansion in my survival world! Any tips before I go in?</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mia.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">BuilderMia</span>
+                                <span class="timePosted">4h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Creeper Blew Up My Base... AGAIN</span>
+                        <span class="postBody">I think I might actually cry. My entire storage room? GONE. Any tips to prevent this from happening again?</span>
+                        <img src="images/blow.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mod.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">MineMaster_22</span>
+                                <span class="timePosted">5h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">100 Days in Hardcore Challenge - Day 23!</span>
+                        <span class="postBody">I challenged myself to survive 100 days in Hardcore mode. Almost died to a baby zombie today. Wish me luck!</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mod.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">MineMaster_22</span>
+                                <span class="timePosted">10h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">What's the Most Underrated Minecraft Block?</span>
+                        <span class="postBody">I think smooth basalt deserves more love. What block do you think is underrated?</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">2d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Exploring a Village</span>
+                        <span class="postBody">I stumbled across a village today while out gathering resources, and it was like finding a treasure chest in the middle of nowhere. The villagers were friendly, and I traded some of my excess wheat for emeralds. I also found a blacksmith with a chest full of iron and armor! I decided to stay the night there and defend them from a few zombies, but now I'm thinking about moving in. It's a nice change from the wilderness, and it feels like the perfect spot to expand my survival base.                        </span>
+                        <img src="images/village.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">3d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">The Hunt for the Enderman</span>
+                        <span class="postBody">Tonight was all about gathering ender pearls. I spotted an Enderman in the distance while exploring a desert at night, and after a short chase, I managed to take it down. The pearl dropped, and I felt like I was one step closer to going to the End! I've been collecting Blaze Powder and other resources, and it's so exciting knowing that I'm getting closer to taking on the Ender Dragon. It's going to be a tough battle, but I think I'm ready.</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">4d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Building My First House</span>
+                        <span class="postBody">After surviving a few nights out in the open, I decided it was time to build a proper shelter. I gathered wood and cobblestone all day, and I finally have the basic framework up! It's a simple little house-nothing fancy yet-but it's warm and safe from the mobs. I even managed to craft a few windows so I can see the beautiful sunrise each morning. There's still so much to do, like adding a second floor and maybe a garden, but this feels like a huge accomplishment!</span>
+                        <img src="images/steveHouse.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">5d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">A Close Call with the Creeper</span>
+                        <span class="postBody">Today was a wild day in the survival world. I was out mining in a cave when I turned the corner, and BAM! A creeper was right there, just waiting for me. I panicked, trying to back away, but it got way too close. Thankfully, I had my shield up in time and only took a little bit of damage. I quickly finished off the creeper with my iron sword, but I'm not sure my heart can take much more of these close calls. Guess I'll stick to mining in safer areas for now!</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="title">
+        <div class="title" onclick="window.location.href='homeSteve.html'">
             <i class='bx bx-conversation titleIcon'></i>
             <span>ForumName</span>
         </div>
@@ -26,13 +26,13 @@
             <input id="search" type="text" placeholder="Search">
         </div>
         <div class="account">
-            <button id="createPost" onclick="window.location.href='createpost.html'"><i class='bx bx-plus'></i>Create Post</button>
-            <img src="images/anime.jpg" class="profilePic" onclick="profileSettings()">
+            <button id="createPost" onclick="window.location.href='createpostSteve.html'"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/steve.jpg" class="profilePic" onclick="profileSettings()">
         </div>
     </div>
     <div id="profileSettings" class="hidden">
-        <button id="viewProfile" onclick="window.location.href='selfprofile.html'"><i class='bx bx-user'></i>View Profile</button>
-        <button id="logout"><i class='bx bx-log-out'></i>Log Out</button>
+        <button id="viewProfile" onclick="window.location.href='selfprofileSteve.html'"><i class='bx bx-user'></i>View Profile</button>
+        <button id="logout" onclick="window.location.href='homeSignout.html'"><i class='bx bx-log-out'></i>Log Out</button>
     </div>
     <div class="main">
         <div class="textEditorBody">
@@ -40,14 +40,14 @@
             <div class="communitySelection">
                 <div id="communityList">
                     <div class="communitySelected">
-                        <img src="images/minecraft.png" class="communityPic">Minecraft<i></i>
+                        <img src="images/minecraft.jpg" class="communityPic">Minecraft<i></i>
                     </div>
                 </div>
             </div>
             <input id="postTitle" placeholder="Post Title">
             <textarea id="postBody" placeholder="Post Body" rows="10"></textarea>
             <div class="buttonHolder">
-                <button class="cancelPost" onclick="window.location.href='home.html'">Cancel</button>
+                <button class="cancelPost" onclick="window.location.href='homeSteve.html'">Cancel</button>
                 <button class="confirmPost">Edit</button>
             </div>
         </div>
