@@ -122,6 +122,11 @@
     margin: 10px auto;
 }
 
+.commentHeaderContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
 .comment .commentHeader {
     display: flex;
     align-items: center;
