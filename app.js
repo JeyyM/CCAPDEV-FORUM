@@ -294,6 +294,8 @@ server.get('/editPost/:postId', function(req, resp){
         title: 'Edit Post Page',
         pageStyle: "createpost",
         pageScripts: ["account", "likePosts", "sortPosts"],
+        myCommunities: myCommunities,
+        communities: communities,
         user: user,
         post: post,
         community: communities.find(c => c.communityId === post.communityId)
@@ -309,6 +311,8 @@ server.get('/editProfile/:profileName', function(req, resp){
         title: 'Edit Profile Page',
         pageStyle: "editprofile",
         pageScripts: ["account", "likePosts", "sortPosts"],
+        myCommunities: myCommunities,
+        communities: communities,
         user: user,
         profile: profile
     });
@@ -323,6 +327,8 @@ server.get('/createPost/:communityName?', function(req, resp){
         title: 'Create Post Page',
         pageStyle: "createpost",
         pageScripts: ["account", "sortPosts", "likePosts"],
+        myCommunities: myCommunities,
+        communities: communities,
         user: user,
         community: community
     });
