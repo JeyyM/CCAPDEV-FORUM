@@ -1,0 +1,237 @@
+<body>
+    <h1>Tester</h1>
+
+    <h2>Forums</h2>
+    <div style="display: flex;">
+        <button onclick="fetchForums()">Refresh</button>
+        <input type="text" id="forumName" placeholder="Forum Name" required>
+        <input type="text" id="forumDescription" placeholder="Description" required>
+        <input type="text" id="bannerImage" placeholder="Banner Image" required>
+        <input type="text" id="forumImage" placeholder="Forum Image" required>
+        <button onclick="addForum()">Add forum</button>
+ 
+    </div>
+    <form id="forumsForm">
+        <table id="forumsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Banner Image</th>
+                    <th>Forum Image</th>
+                    <th>Members</th>
+                    <th>Posts</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="forumsList">
+
+            </tbody>
+        </table>
+        <button type="submit">Edit All</button>
+    </form>
+
+    <script>
+        async function fetchForums() {
+            try {
+                const response = await fetch('/api/get-forums');
+                const forums = await response.json();
+                const tbody = document.getElementById("forumsList");
+
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+
+                forums.forEach(forum => {
+                    const row = document.createElement("tr");
+
+                    const nameCell = document.createElement("td");
+                    const nameInput = document.createElement("input");
+                    nameInput.type = "text";
+                    nameInput.name = `name_${forum._id}`;
+                    nameInput.value = forum.name;
+                    nameInput.required = true;
+                    nameCell.appendChild(nameInput);
+
+                    const descCell = document.createElement("td");
+                    const descInput = document.createElement("input");
+                    descInput.type = "text";
+                    descInput.name = `description_${forum._id}`;
+                    descInput.value = forum.description;
+                    descInput.required = true;
+                    descCell.appendChild(descInput);
+
+                    const bannerCell = document.createElement("td");
+                    const bannerInput = document.createElement("input");
+                    bannerInput.type = "text";
+                    bannerInput.name = `bannerImage_${forum._id}`;
+                    bannerInput.value = forum.bannerImage;
+                    bannerInput.required = true;
+                    bannerCell.appendChild(bannerInput);
+
+                    const forumImageCell = document.createElement("td");
+                    const forumImageInput = document.createElement("input");
+                    forumImageInput.type = "text";
+                    forumImageInput.name = `forumImage_${forum._id}`;
+                    forumImageInput.value = forum.forumImage;
+                    forumImageInput.required = true;
+                    forumImageCell.appendChild(forumImageInput);
+
+                    const membersCell = document.createElement("td");
+                    membersCell.textContent = forum.membersCount;
+
+                    const postsCell = document.createElement("td");
+                    postsCell.textContent = forum.postsCount;
+
+                    const actionsCell = document.createElement("td");
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.type = "button";
+                    deleteButton.textContent = "Delete";
+                    deleteButton.onclick = () => {deleteForum(forum._id)};
+
+                    const editButton = document.createElement("button");
+                    editButton.type = "button";
+                    editButton.textContent = "Edit One";
+                    editButton.onclick = () => { updateForum(
+                        forum._id,
+                        nameInput.value,
+                        descInput.value,
+                        bannerInput.value,
+                        forumImageInput.value
+                    )};
+
+                    actionsCell.appendChild(deleteButton);
+                    actionsCell.appendChild(editButton);
+
+                    row.appendChild(nameCell);
+                    row.appendChild(descCell);
+                    row.appendChild(bannerCell);
+                    row.appendChild(forumImageCell);
+                    row.appendChild(membersCell);
+                    row.appendChild(postsCell);
+                    row.appendChild(actionsCell);
+
+                    tbody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error("Error fetching forums: ", error);
+            }
+        }
+
+        document.getElementById("forumsForm").addEventListener("submit", async function updateAll(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const updatedForums = [];
+
+            for (let entry of formData.entries()) {
+                const [key, value] = entry;
+                const [field, id] = key.split("_");
+
+                let forum = updatedForums.find(f => f._id === id);
+                if (!forum) {
+                    forum = { _id: id };
+                    updatedForums.push(forum);
+                }
+                forum[field] = value;
+            }
+
+            try {
+                const response = await fetch('/api/update-forums', {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ forums: updatedForums })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchForums();
+            } catch (error) {
+                console.error("Error updating forums: ", error);
+            }
+        });
+
+        async function updateForum(forumId, newName, newDescription, newBannerImage, newForumImage) {
+            try {
+                const response = await fetch(`/api/update-forum/${forumId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: newName,
+                        description: newDescription,
+                        bannerImage: newBannerImage,
+                        forumImage: newForumImage
+                    })
+                });
+
+                const result = await response.json();
+
+                alert("Successfully edited forum");
+                fetchForums();
+            } catch (error) {
+                console.error("Error updating forum:", error);
+            }
+        }
+
+        async function addForum() {
+            const name = document.getElementById("forumName").value.trim();
+            const description = document.getElementById("forumDescription").value.trim();
+            const bannerImage = document.getElementById("bannerImage").value.trim();
+            const forumImage = document.getElementById("forumImage").value.trim();
+
+            if (!name || !description || !bannerImage || !forumImage) {
+                alert("Missing fields");
+                return;
+            }
+
+            const newForum = {
+                name,
+                description,
+                bannerImage,
+                forumImage,
+                membersCount: 0,
+                postsCount: 0
+            };
+
+            try {
+                const response = await fetch('/api/add-forum', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newForum)
+                });
+
+                const result = await response.json();
+
+                alert("Forum added successfully!");
+                fetchForums();
+
+                nameInput.value = "";
+                descriptionInput.value = "";
+                bannerImageInput.value = "";
+                forumImageInput.value = "";
+            } catch (error) {
+                console.error("Error adding forum: ", error);
+            }
+        }
+
+
+        async function deleteForum(forumId) {
+            if (confirm("Are you sure you want to delete this forum?")) {
+                try {
+                    const response = await fetch(`/api/delete-forum/${forumId}`, { method: "DELETE" });
+                    const data = await response.json();
+
+                    alert("Successfully deleted forum");
+                    fetchForums();
+                } catch (error) {
+                    console.error("Error deleting forum: ", error);
+                }
+            }
+        }
+
+        fetchForums();
+    </script>
+</body>

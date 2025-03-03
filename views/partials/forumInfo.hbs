@@ -1,0 +1,24 @@
+<div class="communityInfo">
+    <img src="{{bannerImage}}" class="bannerPic">
+    <div class="communityFloatingContainer">
+        <div class="community">
+            <img src="{{forumImage}}" class="communityPic profilePic">
+            <span class="communityName">{{forumName}}</span>
+        </div>
+        <div class="communityOptionsContainer">
+            <div class="communityOptions createPost"><i class='bx bx-plus'></i>Create Post</div>
+            <div class="communityOptions join" onclick="joinCommunity(this)">
+                <i class='bx bx-bookmark'></i>Join
+            </div>
+        </div>
+    </div>
+    <div class="communityDescription">
+        <div class="descriptionContent">
+            {{description}}
+        </div>
+        <div class="communityStats">
+            <span class="followers"><i class='bx bxs-group'></i>{{membersCount}} Members</span>
+            <span class="posts"><i class='bx bx-note'></i>{{postsCount}} Posts</span>
+        </div>
+    </div>
+</div>

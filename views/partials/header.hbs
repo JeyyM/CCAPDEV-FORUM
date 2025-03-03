@@ -1,0 +1,39 @@
+    <div id="unfocus" onclick="unfocus()"></div>
+    <div id="loginForm">
+        <div class="welcome">WELCOME</div>
+        <input id="username" type="text" placeholder="Email or Username" required>
+        <input id="password" type="password" placeholder="Password" required>
+        <span class="signupButton" onclick="signup()">Sign up?</span>
+        <button id="loginButton" onclick="tryLogIn()">Log In</button>
+    </div>
+    <div id="signupForm">
+        <div class="signup">Sign Up</div>
+        <input type="text" placeholder="Username" required>
+        <input type="text" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <input type="password" placeholder="Confirm Password" required>
+        <span class="loginButton" onclick="login()">Log In?</span>
+        <button id="signupButton">Sign Up</button>
+    </div>
+    <div class="header">
+        <div class="title" onclick="window.location.href='homeSignout.html'">
+            <i class='bx bx-conversation titleIcon'></i>
+            <span>ForumName</span>
+        </div>
+        <div class="searchBar">
+            <i class='bx bx-search searchIcon'></i>
+            <input id="search" type="text" placeholder="Search">
+        </div>
+        <div class="account">
+            <button id="login" onclick="login()">Log In</button>
+            <button id="signup" onclick="signup()">Sign Up</button>
+        </div>
+        <div class="account hidden">
+            <button id="createPost" onclick="window.location.href='createpostSignout.html'"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/steve.jpg" class="profilePic" onclick="profileSettings()">
+        </div>
+    </div>
+    <div id="profileSettings" class="hidden">
+        <button id="viewProfile" onclick="window.location.href='viewprofileSignout.html'"><i class='bx bx-user'></i>View Profile</button>
+        <button id="logout" onclick="window.location.href='homeSignout.html'"><i class='bx bx-log-out'></i>Log Out</button>
+    </div>

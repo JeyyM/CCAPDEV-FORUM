@@ -1,9 +1,0 @@
-localhost/{param}
-
-param
-- search that in db
-- it get all of the data related
-
-mincrefat
-- not exist
-

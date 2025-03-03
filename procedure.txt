@@ -1,0 +1,11 @@
+1. windows downloaded here:
+https://www.mongodb.com/try/download/community
+- just ran the installer, make sure MongoDB Compass is checked
+
+2. npm install
+- the dependencies like mongodb, node, and express are now in package.lock
+
+3. in mongodb compass:
+- create new connection: mongodb://localhost:27017
+- thats the default
+- name it "Database" it doesn't really matter

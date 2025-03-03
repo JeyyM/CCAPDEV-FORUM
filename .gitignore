@@ -1,0 +1,210 @@
+# ===========================
+# General System Files
+# ===========================
+.DS_Store
+Thumbs.db
+*.bak
+*.swp
+*.swo
+*.swn
+*.tmp
+*.log
+
+# ===========================
+# Dependency Folders
+# ===========================
+node_modules/
+vendor/
+venv/
+__pycache__/
+
+# ===========================
+# OS-Specific Files
+# ===========================
+# macOS
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+.nfs*
+
+# ===========================
+# Logs & Debug Files
+# ===========================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pip-log.txt
+pip-delete-this-directory.txt
+*.pid
+*.seed
+*.cover
+coverage/
+
+# ===========================
+# Build Folders & Artifacts
+# ===========================
+dist/
+build/
+out/
+bin/
+obj/
+target/
+release/
+debug/
+
+# ===========================
+# IDE / Editor-Specific Files
+# ===========================
+# VS Code
+.vscode/
+
+# JetBrains (IntelliJ, PyCharm, WebStorm)
+.idea/
+*.iml
+
+# Eclipse
+.metadata/
+*.class
+
+# NetBeans
+/nbproject/private/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===========================
+# Environment & Secret Files
+# ===========================
+.env
+.env.local
+.env.production
+.env.test
+*.pem
+*.key
+*.crt
+
+# ===========================
+# Database & Cache Files
+# ===========================
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+*.dat
+*.ndb
+*.lock
+
+# MongoDB
+/data/
+*.lock
+mongod.lock
+
+# MySQL & PostgreSQL
+*.sql
+*.bak
+*.log
+dump.rdb
+
+# ===========================
+# Python-Specific Files
+# ===========================
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.mypy_cache/
+*.pytest_cache/
+
+# ===========================
+# Java-Specific Files
+# ===========================
+*.class
+*.jar
+*.war
+*.ear
+*.java~
+/.gradle/
+/.mvn/
+/target/
+
+# ===========================
+# Node.js / JavaScript
+# ===========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/.next/
+/out/
+/coverage/
+/.babelrc
+
+# ===========================
+# C / C++ / CMake
+# ===========================
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.out
+*.a
+*.lib
+*.exe
+*.class
+
+# ===========================
+# Go-Specific Files
+# ===========================
+/bin/
+/pkg/
+*.exe
+*.test
+
+# ===========================
+# Rust-Specific Files
+# ===========================
+target/
+Cargo.lock
+
+# ===========================
+# Flutter / Dart
+# ===========================
+/build/
+/android/.gradle/
+/ios/.generated/
+/ios/.symlinks/
+/ios/Pods/
+pubspec.lock
+.flutter-plugins
+
+# ===========================
+# Miscellaneous
+# ===========================
+# Lock Files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+poetry.lock
+composer.lock
+Gemfile.lock
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.tgz
+

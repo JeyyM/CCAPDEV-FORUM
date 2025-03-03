@@ -1,0 +1,355 @@
+<body>
+    <div id="unfocus" onclick="unfocus()"></div>
+    <div id="loginForm">
+        <div class="welcome">WELCOME</div>
+        <input id="username" type="text" placeholder="Email or Username" required>
+        <input id="password" type="password" placeholder="Password" required>
+        <span class="signupButton" onclick="signup()">Sign up?</span>
+        <button id="loginButton" onclick="tryLogIn()">Log In</button>
+    </div>
+    <div id="signupForm">
+        <div class="signup">Sign Up</div>
+        <input type="text" placeholder="Username" required>
+        <input type="text" placeholder="Email" required>
+        <input type="password" placeholder="Password" required>
+        <input type="password" placeholder="Confirm Password" required>
+        <span class="loginButton" onclick="login()">Log In?</span>
+        <button id="signupButton">Sign Up</button>
+    </div>
+    <div class="header">
+        <div class="title" onclick="window.location.href='homeSignout.html'">
+            <i class='bx bx-conversation titleIcon'></i>
+            <span>ForumName</span>
+        </div>
+        <div class="searchBar">
+            <i class='bx bx-search searchIcon'></i>
+            <input id="search" type="text" placeholder="Search">
+        </div>
+        <div class="account">
+            <button id="login" onclick="login()">Log In</button>
+            <button id="signup" onclick="signup()">Sign Up</button>
+        </div>
+        <div class="account hidden">
+            <button id="createPost" onclick="window.location.href='createpostSignout.html'"><i class='bx bx-plus'></i>Create Post</button>
+            <img src="images/steve.jpg" class="profilePic" onclick="profileSettings()">
+        </div>
+    </div>
+    <div id="profileSettings" class="hidden">
+        <button id="viewProfile" onclick="window.location.href='viewprofileSignout.html'"><i class='bx bx-user'></i>View Profile</button>
+        <button id="logout" onclick="window.location.href='homeSignout.html'"><i class='bx bx-log-out'></i>Log Out</button>
+    </div>
+    <div class="main">
+        <div class="sidebar">
+            <div class="tabGroup tabs">
+                <button class="buttonGroup" onclick="window.location.href='homeSignout.html'">
+                    <i class='bx bx-home'></i>
+                    <span>Home</span>
+                </button>
+            </div>
+            <div class="tabGroup explore">
+                <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/minecraft.jpg" class="communityIcon">
+                    Minecraft
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/anime.jpg" class="communityIcon">
+                    Anime
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/csgo.jpg" class="communityIcon">
+                    CS:GO
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/valorant.jpg" class="communityIcon">
+                    Valorant
+                </button>
+                <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
+                    <img src="images/fortnite.jpg" class="communityIcon">
+                    Fortnite
+                </button>
+            </div>
+        </div>
+        
+        <div class="body">
+            <div id="sort">
+                <div id="mainsort" onclick="sortClicked()">
+					<span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
+				</div>
+				<div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-hot'></i>Hot</div>
+				<div class="choices hidden" onclick="sortSelected(this)"><i class='bx bx-up-arrow-alt'></i>Top</div>
+				<div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-time'></i>New</div>
+            </div>
+
+            <div id="postContainer">
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mia.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">BuilderMia</span>
+                                <span class="timePosted">1h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">My Medieval Castle is Finally Complete!</span>
+                        <span class="postBody">Just finished building my medieval castle! Took me three weeks, but totally worth it. What do you guys think?</span>
+                        <img src="images/castle.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">2h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Found a Woodland Mansion! Any Tips?</span>
+                        <span class="postBody">Just found a Woodland Mansion in my survival world! Any tips before I go in?</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mia.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">BuilderMia</span>
+                                <span class="timePosted">4h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Creeper Blew Up My Base... AGAIN</span>
+                        <span class="postBody">I think I might actually cry. My entire storage room? GONE. Any tips to prevent this from happening again?</span>
+                        <img src="images/blow.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mod.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">MineMaster_22</span>
+                                <span class="timePosted">5h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">100 Days in Hardcore Challenge - Day 23!</span>
+                        <span class="postBody">I challenged myself to survive 100 days in Hardcore mode. Almost died to a baby zombie today. Wish me luck!</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/mod.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">MineMaster_22</span>
+                                <span class="timePosted">10h ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">What's the Most Underrated Minecraft Block?</span>
+                        <span class="postBody">I think smooth basalt deserves more love. What block do you think is underrated?</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSteve.html'">
+                            <img src="images/reyna.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Reyna</span>
+                                <span class="timePosted">1d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSteve.html'">
+                        <span class="postTitle">Clutch Moments: A Reynas Redemption</span>
+                        <span class="postBody">Its moments like these that make me love Reyna. After a rough start with a few early rounds lost, my team was on the brink of defeat. I was down to just 1v3, and my heart was racing. But then, I got that first kill-no turning back. I popped my Dismiss, got another, and before I knew it, the last two were down. A flawless Ace to close the game! My team went wild, and I couldnt stop grinning. Sometimes, the pressure fuels me, and tonight, I proved I can handle it. Clutch moments like that remind me why I play.</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSteve.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">2d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Exploring a Village</span>
+                        <span class="postBody">I stumbled across a village today while out gathering resources, and it was like finding a treasure chest in the middle of nowhere. The villagers were friendly, and I traded some of my excess wheat for emeralds. I also found a blacksmith with a chest full of iron and armor! I decided to stay the night there and defend them from a few zombies, but now I'm thinking about moving in. It's a nice change from the wilderness, and it feels like the perfect spot to expand my survival base.                        </span>
+                        <img src="images/village.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSteve.html'">
+                            <img src="images/phoenix.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Phoenix</span>
+                                <span class="timePosted">2d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSteve.html'">
+                        <span class="postTitle">A Phoenixs Flame Never Dies</span>
+                        <span class="postBody">I swear, I just cant seem to catch a break sometimes. One minute, Im popping off with my Phoenix abilities-getting those flashes, setting up the perfect wall-but then the next, Im getting caught off guard by a Sovas Recon Dart or a lurking Jett. But I dont give up that easily. The game isnt over until the final round, and I had to remind my team of that. A couple of well-placed Mollys later, and we made a stunning comeback from match point down! Sometimes, its about playing smart and staying calm under pressure. Feels good to carry my team to victory.</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSteve.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">3d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">The Hunt for the Enderman</span>
+                        <span class="postBody">Tonight was all about gathering ender pearls. I spotted an Enderman in the distance while exploring a desert at night, and after a short chase, I managed to take it down. The pearl dropped, and I felt like I was one step closer to going to the End! I've been collecting Blaze Powder and other resources, and it's so exciting knowing that I'm getting closer to taking on the Ender Dragon. It's going to be a tough battle, but I think I'm ready.</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSteve.html'">
+                            <img src="images/breach.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Breach</span>
+                                <span class="timePosted">3d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSteve.html'">
+                        <span class="postTitle">Breach and Clear - A Breachs Perspective</span>
+                        <span class="postBody">Breachs utility is SO underrated. Everyone focuses on the guns, but nothing beats an entry frag where I pop my fault line and the entire enemy team is disoriented. We were on Split, and I saw an opportunity to push A site. I used my ultimate to clear the area, flashed into the choke points, and watched as my teammates cleaned up. It felt like we had total control. We won that round with no casualties, all thanks to good utility usage. Pro tip: Team coordination is key, but with Breach, timing your abilities to disrupt the enemy is a game-changer.</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSteve.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">4d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">Building My First House</span>
+                        <span class="postBody">After surviving a few nights out in the open, I decided it was time to build a proper shelter. I gathered wood and cobblestone all day, and I finally have the basic framework up! It's a simple little house-nothing fancy yet-but it's warm and safe from the mobs. I even managed to craft a few windows so I can see the beautiful sunrise each morning. There's still so much to do, like adding a second floor and maybe a garden, but this feels like a huge accomplishment!</span>
+                        <img src="images/steveHouse.jpg" class="postImage">
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+
+                <div class="post">
+                    <div class="postHeaderContainer">
+                        <div class="postHeader" onclick="window.location.href='viewprofileSignout.html'">
+                            <img src="images/steve.jpg" class="profilePic">
+                            <div>
+                                <span class="posterName">Steve</span>
+                                <span class="timePosted">5d ago</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="postContent" onclick="window.location.href='viewpostSignout.html'">
+                        <span class="postTitle">A Close Call with the Creeper</span>
+                        <span class="postBody">Today was a wild day in the survival world. I was out mining in a cave when I turned the corner, and BAM! A creeper was right there, just waiting for me. I panicked, trying to back away, but it got way too close. Thankfully, I had my shield up in time and only took a little bit of damage. I quickly finished off the creeper with my iron sword, but I'm not sure my heart can take much more of these close calls. Guess I'll stick to mining in safer areas for now!</span>
+                    </div>
+                    <div class="postEngagement">
+                        <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>161</span></button>
+                        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>2</span></button>
+                        <button class="commentButton" onclick="window.location.href='viewpostSignout.html'"><i class='bx bxs-comment'></i><span>2</span></button>
+                        <button class="share"><i class='bx bxs-share-alt'></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
