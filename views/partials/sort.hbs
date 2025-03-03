@@ -1,0 +1,18 @@
+<div class="sortContainer">
+    <div id="sort">
+        <div id="mainsort" onclick="sortClicked()">
+            <span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
+        </div>
+        <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-hot'></i>Hot</div>
+        <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bx-up-arrow-alt'></i>Top</div>
+        <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-time'></i>New</div>
+    </div>
+    <div id="viewOptions">
+        <div id="mainView" onclick="viewClicked()">
+            <span id="currentView"><i class='bx bxs-grid'></i>All<i class='bx bx-chevron-down'></i></span>
+        </div>
+        <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bxs-grid'></i>All</span></div>
+        <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bx-note'></i>Posts</div>
+        <div class="choices hidden" onclick="viewSelected(this)"><i class='bx bxs-comment'></i>Comments</div>
+    </div>
+</div>

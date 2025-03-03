@@ -1,0 +1,38 @@
+<div class="main">
+    <div class="textEditorBody">
+        <div class="editorTitle"><i class='bx bx-edit'></i>Edit Profile</div>
+        <div class="bannerContainer">
+            <img src="{{profile.bannerPic}}" class="banner">
+        </div>
+        <div class="floatingContainer">
+            <div class="profilePicContainer">
+                <img src="{{profile.profilePic}}" class="profilePicture">
+                <i class='bx bx-image-add'></i>
+            </div>
+            <i class='bx bx-image-add'></i>
+        </div>
+        <div class="inputContainer">
+            <span>Change Username</span>
+            <input id="username" placeholder="New Username">
+            
+            <span>Edit Biography</span>
+            <textarea id="biographyBody" placeholder="Biography" rows="10"></textarea>
+            <div class="buttonHolder">
+                <button class="cancelPost" onclick="window.history.back()">Cancel</button>
+                <button class="confirmPost">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll("textarea").forEach(function(textarea) {
+        textarea.style.height = textarea.scrollHeight + "px";
+        textarea.style.overflowY = "hidden";
+
+        textarea.addEventListener("input", function() {
+            this.style.height = "auto";
+            this.style.height = this.scrollHeight + "px";
+        });
+    });
+</script>

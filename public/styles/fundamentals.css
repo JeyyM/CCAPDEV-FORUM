@@ -28,6 +28,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 3;
 }
 
 .header > div {
@@ -151,12 +154,18 @@ body {
 }
 
 .main {
-    display: grid;
-    grid-template-columns: 15vw 84vw;
+    width: 50%;
+    margin: auto;
 }
 
 .main .bx {
     color: var(--green);
+}
+
+.sidebar {
+    position: fixed;
+    width: 15vw;
+    top: 70px;
 }
 
 .tabGroup {
@@ -213,6 +222,7 @@ body {
     height: 100%;
     z-index: 3;
     position: absolute;
+    top: 0;
 }
 
 #loginForm {

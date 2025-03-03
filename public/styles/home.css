@@ -47,11 +47,11 @@
 }
 
 .body {
-    margin-top: 51px;
+    margin-top: 130px;
 }
 
 .bodyContainer {
-    width: 84vw;
+    width: 100%;
 }
 
 .post {
@@ -60,7 +60,6 @@
     padding: 20px;
     background-color: var(--bg);
     border-radius: 20px;
-    filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
 .postHeaderContainer {

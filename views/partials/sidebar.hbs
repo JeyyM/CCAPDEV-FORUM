@@ -1,10 +1,15 @@
 <div class="sidebar">
     <div class="tabGroup tabs">
+<<<<<<< HEAD
         <button class="buttonGroup" onclick="window.location.href='homeSignout.html'">
+=======
+        <button class="buttonGroup" onclick="window.location.href='/'">
+>>>>>>> ce40dce7eb4d9f9a57af3472d6deebbc72bc9934
             <i class='bx bx-home'></i>
             <span>Home</span>
         </button>
     </div>
+<<<<<<< HEAD
     <div class="tabGroup explore">
         <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
         <button class="buttonGroup" onclick="window.location.href='viewcommunitySignout.html'">
@@ -27,5 +32,24 @@
             <img src="/images/fortnite.jpg" class="communityIcon">
             Fortnite
         </button>
+=======
+    {{#if user}}
+        <div class="tabGroup communities">
+            <span class="tabTitle"><i class='bx bx-star'></i>My Communities</span>
+            <button class="buttonGroup">
+                <i class='bx bx-plus'></i>
+                <span>Create New Community</span>
+            </button>
+            {{#each myCommunities}}
+                {{> community this}}
+            {{/each}}
+        </div>
+    {{/if}}
+    <div class="tabGroup explore">
+        <span class="tabTitle"><i class='bx bxs-rocket'></i>Explore</span>
+        {{#each communities}}
+            {{> community this}}
+        {{/each}}
+>>>>>>> ce40dce7eb4d9f9a57af3472d6deebbc72bc9934
     </div>
 </div>

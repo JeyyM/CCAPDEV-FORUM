@@ -1,0 +1,34 @@
+<div class="main">
+    <div class="bodyContainer">
+        <div class="profileInfo">
+            <img src="{{profile.bannerPic}}" class="bannerPic">
+            <div class="profileFloatingContainer">
+                <div class="profile">
+                    <img src="{{profile.profilePic}}" class="profilePic">
+                    <span class="profileName">{{profile.profileName}}</span>
+                </div>
+                {{#if (isEqual profile.profileName user.userName)}}
+                    <div class="profileOptions editProfile" onclick="window.location.href='/editProfile/{{profile.profileName}}'"><i class='bx bx-edit-alt'></i>Edit</div>
+                {{else}}
+                    <div class="profileOptions following" onclick="followProfile(this)"><i class='bx bx-bookmark'></i>Follow</div>
+                {{/if}}
+            </div>
+            <div class="profileDescription">
+                <div class="descriptionContent">
+                    {{profile.bio}}    
+                </div>
+                <div class="profileStats">
+                    <span class="followers"><i class='bx bxs-group'></i><span>{{profile.followers}}</span> Followers</span>
+                    <span class="posts"><i class='bx bx-note'></i>{{profile.posts}} Posts</span>
+                    <span class="comments"><i class='bx bxs-comment'></i>{{profile.comments}} Comments</span>
+                </div>
+            </div>
+        </div>
+        {{> sort}}
+        <div id="postContainer">
+            {{#each posts}}
+                {{> post post=this user=../user}}
+            {{/each}}            
+        </div>
+    </div>
+</div>
