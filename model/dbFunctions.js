@@ -36,7 +36,6 @@ const mongo = {
 
     async insertSampleForum() {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
     
@@ -117,7 +116,6 @@ const mongo = {
 
     async insertSampleUser() {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
     
@@ -134,7 +132,10 @@ const mongo = {
                         createdAt: new Date(),
                         bio: "I love apples",
                         joinedForums: [],
-                        followers: []
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 0,
+                        commentsCount: 0
                     },
                     {
                         _id: new ObjectId(),
@@ -146,7 +147,10 @@ const mongo = {
                         createdAt: new Date(),
                         bio: "I love bananas",
                         joinedForums: [],
-                        followers: []
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 0,
+                        commentsCount: 0
                     },
                     {
                         _id: new ObjectId(),
@@ -158,7 +162,10 @@ const mongo = {
                         createdAt: new Date(),
                         bio: "I love oranges",
                         joinedForums: [],
-                        followers: []
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 0,
+                        commentsCount: 0
                     },
                     {
                         _id: new ObjectId(),
@@ -170,7 +177,10 @@ const mongo = {
                         createdAt: new Date(),
                         bio: "I love melons",
                         joinedForums: [],
-                        followers: []
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 0,
+                        commentsCount: 0
                     },
                     {
                         _id: new ObjectId(),
@@ -182,7 +192,10 @@ const mongo = {
                         createdAt: new Date(),
                         bio: "I love kiwis",
                         joinedForums: [],
-                        followers: []
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 0,
+                        commentsCount: 0
                     }
                 ];
     
@@ -200,7 +213,6 @@ const mongo = {
     
     async getForums() {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
@@ -213,7 +225,6 @@ const mongo = {
 
     async getForumById(forumId) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
@@ -226,7 +237,6 @@ const mongo = {
 
     async getForumByName(forumName) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
     
@@ -244,7 +254,6 @@ const mongo = {
 
     async addForum(forumData) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
@@ -264,7 +273,6 @@ const mongo = {
 
     async updateForum(forumId, updatedData) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
@@ -275,14 +283,13 @@ const mongo = {
 
             return { success: true, message: "Forum updated successfully!" };
         } catch (error) {
-            console.error("Error updating forum:", error);
+            console.error("Error updating forum: ", error);
             return { success: false, error: "Error updating forum" };;
         }
     },
 
     async updateForums(forums) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
@@ -303,15 +310,14 @@ const mongo = {
 
     async deleteForum(forumId) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
             const result = await forumsCollection.deleteOne({ _id: new ObjectId(forumId) });
-            return result.deletedCount > 0;
+            return { success: true, message: "Forum deleted successfully!" };
         } catch (error) {
             console.error("Error deleting forum: ", error);
-            return false;
+            return { success: false, error: "Error deleting forum" };
         }
     },
 
@@ -319,7 +325,6 @@ const mongo = {
 
     async getUsers() {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
@@ -332,29 +337,44 @@ const mongo = {
 
     async getUserById(userId) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const userCollection = db.collection(usersVar);
 
             return await userCollection.findOne({ _id: new ObjectId(userId) });
         } catch (error) {
-            console.error("Error fetching user by ID:", error);
+            console.error("Error fetching user by ID: ", error);
             return null;
         }
     },
 
     async getUserByName(username) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const userCollection = db.collection(usersVar);
     
             // Regex to remove case sensitivity
-            const forum = await userCollection.findOne({
-                name: { $regex: `^${username}$`, $options: "i" }
+            const user = await userCollection.findOne({
+                username: { $regex: `^${username}$`, $options: "i" }
             });
     
-            return forum;
+            return user;
+        } catch (error) {
+            console.error("Error fetching user by name:", error);
+            return null;
+        }
+    },
+
+    async getUserByEmail(email) {
+        try {
+            const db = client.db(dbName);
+            const userCollection = db.collection(usersVar);
+    
+            // Regex to remove case sensitivity
+            const user = await userCollection.findOne({
+                email: { $regex: `^${email}$`, $options: "i" }
+            });
+    
+            return user;
         } catch (error) {
             console.error("Error fetching user by name:", error);
             return null;
@@ -363,7 +383,6 @@ const mongo = {
 
     async addUser(userData) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const userCollection = db.collection(usersVar);
 
@@ -383,7 +402,6 @@ const mongo = {
 
     async updateUser(userId, updatedData) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
@@ -392,25 +410,25 @@ const mongo = {
                 { $set: updatedData }
             );
 
-            return result.modifiedCount > 0;
+            return { success: true, message: "User updated successfully!" };
         } catch (error) {
             console.error("Error updating user: ", error);
-            return false;
+            return { success: false, error: "Error updating user" };;
         }
     },
 
     async updateUsers(users) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
             for (let user of users) {
                 const { _id, ...updatedData } = user;
-                await usersCollection.updateOne(
+
+                const result = await usersCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
-                );
+                );    
             }
 
             return { success: true, message: "Users updated successfully!" };
@@ -422,17 +440,109 @@ const mongo = {
 
     async deleteUser(userId) {
         try {
-            await client.connect();
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
             const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
-            return result.deletedCount > 0;
+            return { success: true, message: "User deleted successfully!" };
         } catch (error) {
             console.error("Error deleting forum:", error);
-            return false;
+            return { success: false, error: "Error deleting user" };;
+        }
+    },
+
+    //////////////////////// ACCOUNT INTERACTIONS /////////////////////
+    async toggleForumJoin(userId, forumId) {
+        try {
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+            const forumsCollection = db.collection(forumsVar);
+
+            const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+            if (!user) {
+                return { success: false, message: "User not found" };
+            }
+
+            const isJoined = user.joinedForums.includes(forumId);
+                        
+            if (isJoined) {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    {$pull: { joinedForums: forumId }}
+                );
+    
+                await forumsCollection.updateOne(
+                    { _id: new ObjectId(forumId) },
+                    { $inc: { membersCount: -1 }}
+                );
+            } else {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    {$push: { joinedForums: forumId }}
+                );
+    
+                await forumsCollection.updateOne(
+                    { _id: new ObjectId(forumId) },
+                    { $inc: { membersCount: 1 }}
+                );
+            }
+
+            return { success: true, 
+                     message: isJoined ? "Successfully left forum" : "Successfully joined joined",
+                     presentStatus: isJoined ? false : true 
+                    };
+        } catch (error) {
+            console.error("Error toggling forum join: ", error);
+            return { success: false, error: "Error toggling forum join" };
+        }
+    },
+
+    async toggleUserFollow(currentUserId, targetUserId) {
+        try {
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+
+            const user = await usersCollection.findOne({ _id: new ObjectId(currentUserId) });
+
+            if (currentUserId === targetUserId){
+                return { success: false, message: "Cannot follow self" };
+            }
+
+            const isFollowed = user.following.includes(targetUserId);
+                        
+            if (isFollowed) {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(currentUserId) },
+                    {$pull: { following: targetUserId }}
+                );
+    
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(targetUserId) },
+                    { $inc: { followersCount: -1 }}
+                );
+            } else {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(currentUserId) },
+                    {$push: { following: targetUserId }}
+                );
+    
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(targetUserId) },
+                    { $inc: { followersCount: 1 }}
+                );
+            }
+
+            return { success: true, 
+                     message: isFollowed ? "Successfully unfollowed" : "Successfully followed",
+                     presentStatus: isFollowed ? false : true 
+                    };
+        } catch (error) {
+            console.error("Error toggling follow: ", error);
+            return { success: false, error: "Error toggling follow" };
         }
     }
+
 };
 
 module.exports = mongo;

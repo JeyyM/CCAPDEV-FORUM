@@ -12,7 +12,29 @@
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
         <script>
+        let currentSession = null;
 
+        async function checkSession() {
+            try {
+                const response = await fetch("/api/session");
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(`Logged in as: ${result.user.username}`);
+                    console.log("Current session:", result.user);
+
+                    currentSession = result.user;
+                    return true
+                } else {
+                    console.log("No current session");
+                    alert("No current session");
+                    return false
+                }
+            } catch (error) {
+                console.error("Error checking session:", error);
+            }
+        }
+        
         </script>
     </head>
   <body>

@@ -21,6 +21,7 @@
                     <th>Forum Image</th>
                     <th>Members</th>
                     <th>Posts</th>
+                    <th>Creation Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -31,12 +32,105 @@
         <button type="submit">Edit All</button>
     </form>
 
+
+    <h2>Users</h2>
+    <div style="display: flex;">
+        <button onclick="fetchUsers()">Refresh</button>
+        <input type="text" id="userName" placeholder="User Name" required>
+        <input type="text" id="userBio" placeholder="Bio" required>
+        <input type="email" id="userEmail" placeholder="Email" required>
+        <input type="text" id="userPassword" placeholder="Password" required>
+        <input type="text" id="userBanner" placeholder="User Banner" required>
+        <input type="text" id="userImage" placeholder="User Image" required>
+        <button onclick="addUser()">Add User</button>
+ 
+    </div>
+    <form id="usersForm">
+        <table id="usersTable" border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Bio</th>
+                    <th>User Banner</th>
+                    <th>User Image</th>
+                    <th>Creation Date</th>
+                    <th>Joined Forums</th>
+                    <th>Followers</th>
+                    <th>Following</th>
+                    <th>Posts</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="usersList">
+
+            </tbody>
+        </table>
+        <button type="submit">Edit All</button>
+    </form>
+
+    <div style="display: flex;">
+        <h2>Accounts</h2>
+        <button id="logoutButton">Log Out</button>
+        
+    </div>
+    <form id="accountForm">
+        <input type="email" id="email" placeholder="Enter email" required>
+        <input type="password" id="password" placeholder="Enter password" required>
+        <button type="submit">Login</button>
+
+        <div style="display: flex;">
+            <h3 id="userDisplay">Not logged</h3>
+        </div>
+    </form>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
     <script>
+        const sessionDisplay = document.getElementById("userDisplay");
+        // To check if logged in
+        let isLoggedIn;
+        window.addEventListener("load", async () => {
+            isLoggedIn = await checkSession();
+            console.log("Session active:", isLoggedIn);
+
+            if (isLoggedIn){
+                sessionDisplay.textContent = `Logged-in as: ${currentSession.username}`;
+            }
+        });
+
+        ///////////////////// FORUMS ///////////////////////
         async function fetchForums() {
             try {
-                const response = await fetch('/api/get-forums');
+                const response = await fetch("/api/get-forums");
                 const forums = await response.json();
                 const tbody = document.getElementById("forumsList");
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
+                let currentUser;
+
+                if (hasSession) { 
+                    try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
+                        currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
 
                 while (tbody.firstChild) {
                     tbody.removeChild(tbody.firstChild);
@@ -83,6 +177,16 @@
                     const postsCell = document.createElement("td");
                     postsCell.textContent = forum.postsCount;
 
+                    const dateCell = document.createElement("td");
+                    dateCell.textContent = new Date(forum.createdAt).toLocaleString('en-US', {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    });
+
                     const actionsCell = document.createElement("td");
 
                     const deleteButton = document.createElement("button");
@@ -101,8 +205,49 @@
                         forumImageInput.value
                     )};
 
+                    const joinButton = document.createElement("button");
+                    joinButton.type = "button";
+                    joinButton.textContent = "Join Forum";
+
+                    if (hasSession){
+                        if (currentUser.joinedForums.includes(forum._id)){
+                            joinButton.textContent = "Leave Forum";
+                        }
+                    }
+
+                    joinButton.onclick = async () => {
+                        if (hasSession){
+                            try {
+                                const response = await fetch("/api/toggle-forum-join", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ userId: currentUser._id, forumId: forum._id })
+                                });
+
+                                const result = await response.json();
+
+                                if (result.success) {
+                                    console.log("Join status changed:", result.presentStatus);
+
+                                    fetchForums();
+                                    fetchUsers();
+
+                                } else {
+                                    alert(result.message);
+                                }
+                            } catch (error) {
+                                console.error("Error toggling forum join:", error);
+                            }
+    
+                        } else {
+                            alert("Not logged in");
+                        }
+                    };
+
+
                     actionsCell.appendChild(deleteButton);
                     actionsCell.appendChild(editButton);
+                    actionsCell.appendChild(joinButton);
 
                     row.appendChild(nameCell);
                     row.appendChild(descCell);
@@ -110,6 +255,7 @@
                     row.appendChild(forumImageCell);
                     row.appendChild(membersCell);
                     row.appendChild(postsCell);
+                    row.appendChild(dateCell);
                     row.appendChild(actionsCell);
 
                     tbody.appendChild(row);
@@ -120,7 +266,7 @@
             }
         }
 
-        document.getElementById("forumsForm").addEventListener("submit", async function updateAll(event) {
+        async function updateAllForums(event) {
             event.preventDefault();
 
             const formData = new FormData(event.target);
@@ -139,7 +285,7 @@
             }
 
             try {
-                const response = await fetch('/api/update-forums', {
+                const response = await fetch("/api/update-forums", {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ forums: updatedForums })
@@ -152,7 +298,9 @@
             } catch (error) {
                 console.error("Error updating forums: ", error);
             }
-        });
+        }
+
+        document.getElementById("forumsForm").addEventListener("submit", updateAllForums);
 
         async function updateForum(forumId, newName, newDescription, newBannerImage, newForumImage) {
             try {
@@ -197,7 +345,7 @@
             };
 
             try {
-                const response = await fetch('/api/add-forum', {
+                const response = await fetch("/api/add-forum", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(newForum)
@@ -205,7 +353,7 @@
 
                 const result = await response.json();
 
-                alert("Forum added successfully!");
+                alert(result.message);
                 fetchForums();
 
                 nameInput.value = "";
@@ -222,9 +370,9 @@
             if (confirm("Are you sure you want to delete this forum?")) {
                 try {
                     const response = await fetch(`/api/delete-forum/${forumId}`, { method: "DELETE" });
-                    const data = await response.json();
+                    const result = await response.json();
 
-                    alert("Successfully deleted forum");
+                    alert(result.message);
                     fetchForums();
                 } catch (error) {
                     console.error("Error deleting forum: ", error);
@@ -232,6 +380,398 @@
             }
         }
 
+        //////////////////// USERS //////////////////
+
+        async function fetchUsers() {
+            try {
+                const response = await fetch("/api/get-users");
+                const users = await response.json();
+                const tbody = document.getElementById("usersList");
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
+                let currentUser;
+
+                if (hasSession) { 
+                    try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
+                        currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
+
+                while (tbody.firstChild) {
+                    tbody.removeChild(tbody.firstChild);
+                }
+
+                users.forEach(user => {
+                    const row = document.createElement("tr");
+
+                    const nameCell = document.createElement("td");
+                    const nameInput = document.createElement("input");
+                    nameInput.type = "text";
+                    nameInput.name = `username_${user._id}`;
+                    nameInput.value = user.username;
+                    nameInput.required = true;
+                    nameCell.appendChild(nameInput);
+
+                    const emailCell = document.createElement("td");
+                    const emailInput = document.createElement("input");
+                    emailInput.type = "text";
+                    emailInput.name = `email_${user._id}`;
+                    emailInput.value = user.email;
+                    emailInput.required = true;
+                    emailCell.appendChild(emailInput);
+
+                    const passCell = document.createElement("td");
+                    const passInput = document.createElement("input");
+                    passInput.type = "text";
+                    passInput.name = `password_${user._id}`;
+                    passInput.value = user.password;
+                    passInput.required = true;
+                    passCell.appendChild(passInput);
+
+                    const bioCell = document.createElement("td");
+                    const bioInput = document.createElement("input");
+                    bioInput.type = "text";
+                    bioInput.name = `bio_${user._id}`;
+                    bioInput.value = user.bio;
+                    bioInput.required = true;
+                    bioCell.appendChild(bioInput);
+
+                    const bannerCell = document.createElement("td");
+                    const bannerInput = document.createElement("input");
+                    bannerInput.type = "text";
+                    bannerInput.name = `bannerImage_${user._id}`;
+                    bannerInput.value = user.bannerImage;
+                    bannerInput.required = true;
+                    bannerCell.appendChild(bannerInput);
+
+                    const userImageCell = document.createElement("td");
+                    const userImageInput = document.createElement("input");
+                    userImageInput.type = "text";
+                    userImageInput.name = `profileImage_${user._id}`;
+                    userImageInput.value = user.profileImage;
+                    userImageInput.required = true;
+                    userImageCell.appendChild(userImageInput);
+
+                    const joinedCell = document.createElement("td");
+                    if (user.joinedForums.length > 0) {
+                        const list = document.createElement("ul");
+                        user.joinedForums.forEach(forum => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = forum;
+                            list.appendChild(listItem);
+                        });
+                        joinedCell.appendChild(list);
+                    } else {
+                        joinedCell.textContent = "None";
+                    }
+
+                    const followersCell = document.createElement("td");
+                    followersCell.textContent = user.followersCount;
+
+                    const followingCell = document.createElement("td");
+                    if (user.following.length > 0) {
+                        const list = document.createElement("ul");
+                        user.following.forEach(followed => {
+                            const listItem = document.createElement("li");
+                            listItem.textContent = followed;
+                            list.appendChild(listItem);
+                        });
+                        followingCell.appendChild(list);
+                    } else {
+                        followingCell.textContent = "None";
+                    }
+
+                    const postsCell = document.createElement("td");
+                    postsCell.textContent = user.postsCount;
+
+                    const commentsCell = document.createElement("td");
+                    commentsCell.textContent = user.commentsCount;
+
+                    const dateCell = document.createElement("td");
+                    dateCell.textContent = new Date(user.createdAt).toLocaleString('en-US', {
+                        month: 'short',
+                        day: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    });
+
+                    const actionsCell = document.createElement("td");
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.type = "button";
+                    deleteButton.textContent = "Delete";
+                    deleteButton.onclick = () => {deleteUser(user._id)};
+
+                    const editButton = document.createElement("button");
+                    editButton.type = "button";
+                    editButton.textContent = "Edit User";
+                    editButton.onclick = () => { updateUser(
+                        user._id,
+                        nameInput.value,
+                        emailInput.value,
+                        passInput.value,
+                        bioInput.value,
+                        bannerInput.value,
+                        userImageInput.value
+                    )};
+
+                    const followButton = document.createElement("button");
+                    followButton.type = "button";
+                    followButton.textContent = "Follow";
+
+                    if (hasSession){
+                        if (currentUser.following.includes(user._id)){
+                            followButton.textContent = "Unfollow";
+                        }
+                    }
+
+                    followButton.onclick = async () => {
+                        if (hasSession){
+                            try {
+                                const response = await fetch("/api/toggle-user-follow", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ userId: currentUser._id, targetId: user._id })
+                                });
+
+                                const result = await response.json();
+
+                                if (result.success) {
+                                    console.log("Join status changed:", result.presentStatus);
+
+                                    fetchForums();
+                                    fetchUsers();
+
+                                } else {
+                                    alert(result.message);
+                                }
+                            } catch (error) {
+                                console.error("Error toggling user follow:", error);
+                            }
+    
+                        } else {
+                            alert("Not logged in");
+                        }
+                    };
+
+                    actionsCell.appendChild(deleteButton);
+                    actionsCell.appendChild(editButton);
+                    actionsCell.appendChild(followButton);
+
+                    row.appendChild(nameCell);
+                    row.appendChild(emailCell);
+                    row.appendChild(passCell);
+                    row.appendChild(bioCell);
+                    row.appendChild(bannerCell);
+                    row.appendChild(userImageCell);
+                    row.appendChild(dateCell);
+                    row.appendChild(joinedCell);
+                    row.appendChild(followersCell);
+                    row.appendChild(followingCell);
+                    row.appendChild(postsCell);
+                    row.appendChild(commentsCell);
+                    row.appendChild(actionsCell);
+
+                    tbody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error("Error fetching users: ", error);
+            }
+        }
+
+        async function updateAllUsers(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const updatedUsers = [];
+
+            for (let entry of formData.entries()) {
+                const [key, value] = entry;
+                const [field, id] = key.split("_");
+
+                let user = updatedUsers.find(u => u._id === id);
+                if (!user) {
+                    user = { _id: id };
+                    updatedUsers.push(user);
+                }
+                user[field] = value;
+            }
+
+            try {
+                const response = await fetch("/api/update-users", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ users: updatedUsers })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchUsers();
+            } catch (error) {
+                console.error("Error updating users:", error);
+            }
+        }
+
+        document.getElementById("usersForm").addEventListener("submit", updateAllUsers);
+
+        async function updateUser(userId, newName, newEmail, newPass, newBio, newBannerImage, newProfileImage) {
+            try {
+                const response = await fetch(`/api/update-user/${userId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: newName,
+                        email: newEmail,
+                        password: newPass,
+                        bio: newBio,
+                        bannerImage: newBannerImage,
+                        profileImage: newProfileImage
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchUsers();
+            } catch (error) {
+                console.error("Error updating forum:", error);
+            }
+        }
+
+        async function addUser() {
+            const username = document.getElementById("userName").value.trim();
+            const bio = document.getElementById("userBio").value.trim();
+            const email = document.getElementById("userEmail").value.trim();
+            const password = document.getElementById("userPassword").value.trim();
+            const userBanner = document.getElementById("userBanner").value.trim();
+            const userImage = document.getElementById("userImage").value.trim();
+
+            if (!username || !bio || !email || !password || !userBanner || !userImage ) {
+                alert("Missing fields");
+                return;
+            }
+
+            const newProfile = {
+                username,
+                email,
+                bio,
+                password,
+                bannerImage: userBanner,
+                profileImage: userImage,
+                joinedForums: [],
+                followers: 0,
+                following: []
+            };
+
+            try {
+                const response = await fetch("/api/add-user", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newProfile)
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchUsers();
+
+                username.value = "";
+                bio.value = "";
+                email.value = "";
+                password.value = "";
+                userBanner.value = "";
+                userImage.value = "";
+
+            } catch (error) {
+                console.error("Error adding user: ", error);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (confirm("Are you sure you want to delete this user?")) {
+                try {
+                    const response = await fetch(`/api/delete-user/${userId}`, { method: "DELETE" });
+                    const result = await response.json();
+
+                    alert(result.message);
+                    fetchUsers();
+                } catch (error) {
+                    console.error("Error deleting user: ", error);
+                }
+            }
+        }
+
+        /////////////////// ACCOUNT ///////////////////////////////////////
+
+        document.getElementById("accountForm").addEventListener("submit", async function login(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+
+            if (!email || !password) {
+                alert("Missing fields");
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    alert(result.message);
+                } else {
+                    alert("Login successful");
+                    location.reload();
+                    console.log("User: ", result.user);
+                }
+            } catch (error) {
+                console.error("Error logging in: ", error);
+            }
+        });
+
+
+        async function logout() {
+            try {
+                const response = await fetch("/api/logout", { method: "POST" });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message);
+                    location.reload(); 
+                }
+            } catch (error) {
+                console.error("Error logging out:", error);
+            }
+        }
+
+        document.getElementById("logoutButton").addEventListener("click", logout);
+
         fetchForums();
+        fetchUsers();
     </script>
 </body>
