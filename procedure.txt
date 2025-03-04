@@ -9,3 +9,5 @@ https://www.mongodb.com/try/download/community
 - create new connection: mongodb://localhost:27017
 - thats the default
 - name it "Database" it doesn't really matter
+
+4. I have put stuff to initialize contents

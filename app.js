@@ -281,7 +281,7 @@ server.get('/api/get-forums', async (req, res) => {
     try {
         const forums = await mongo.getForums();
         res.json(forums);
-        // console.log("Forums fetched:", forums);
+        // console.log("Forums fetched: ", forums);
 
     } catch (error) {
         console.error("Error fetching forums:", error);
@@ -359,6 +359,49 @@ server.delete('/api/delete-forum/:forumId', async (req, res) => {
         res.status(500).json({ error: "Error deleting forum" });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 server.get('/forum/:forumName', async (req, resp) => {

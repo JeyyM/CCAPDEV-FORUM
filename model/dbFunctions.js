@@ -195,6 +195,8 @@ const mongo = {
             console.error("Error inserting sample users: ", error);
         }
     },
+
+    ////////////////////// FORUM INTERACTIONS ////////////////////////
     
     async getForums() {
         try {
@@ -204,7 +206,7 @@ const mongo = {
 
             return await forumsCollection.find().toArray();
         } catch (error) {
-            console.error("Error fetching forums:", error);
+            console.error("Error fetching forums: ", error);
             return [];
         }
     },
@@ -217,7 +219,7 @@ const mongo = {
 
             return await forumsCollection.findOne({ _id: new ObjectId(forumId) });
         } catch (error) {
-            console.error("Error fetching forum by ID:", error);
+            console.error("Error fetching forum by ID: ", error);
             return null;
         }
     },
@@ -235,7 +237,7 @@ const mongo = {
     
             return forum;
         } catch (error) {
-            console.error("Error fetching forum by name:", error);
+            console.error("Error fetching forum by name: ", error);
             return null;
         }
     },
@@ -271,10 +273,10 @@ const mongo = {
                 { $set: updatedData }
             );
 
-            return result.modifiedCount > 0;
+            return { success: true, message: "Forum updated successfully!" };
         } catch (error) {
             console.error("Error updating forum:", error);
-            return false;
+            return { success: false, error: "Error updating forum" };;
         }
     },
 
@@ -306,6 +308,125 @@ const mongo = {
             const forumsCollection = db.collection(forumsVar);
 
             const result = await forumsCollection.deleteOne({ _id: new ObjectId(forumId) });
+            return result.deletedCount > 0;
+        } catch (error) {
+            console.error("Error deleting forum: ", error);
+            return false;
+        }
+    },
+
+    /////////////////////// USER INTERACTIONS ///////////////////////////////
+
+    async getUsers() {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+
+            return await usersCollection.find().toArray();
+        } catch (error) {
+            console.error("Error fetching users:", error);
+            return [];
+        }
+    },
+
+    async getUserById(userId) {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const userCollection = db.collection(usersVar);
+
+            return await userCollection.findOne({ _id: new ObjectId(userId) });
+        } catch (error) {
+            console.error("Error fetching user by ID:", error);
+            return null;
+        }
+    },
+
+    async getUserByName(username) {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const userCollection = db.collection(usersVar);
+    
+            // Regex to remove case sensitivity
+            const forum = await userCollection.findOne({
+                name: { $regex: `^${username}$`, $options: "i" }
+            });
+    
+            return forum;
+        } catch (error) {
+            console.error("Error fetching user by name:", error);
+            return null;
+        }
+    },
+
+    async addUser(userData) {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const userCollection = db.collection(usersVar);
+
+            const newUser = {
+                _id: new ObjectId(),
+                ...userData,
+                createdAt: new Date(),
+            };
+
+            const result = await userCollection.insertOne(newUser);
+            return result.insertedId;
+        } catch (error) {
+            console.error("Error adding user: ", error);
+            return null;
+        }
+    },
+
+    async updateUser(userId, updatedData) {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+
+            const result = await usersCollection.updateOne(
+                { _id: new ObjectId(userId) },
+                { $set: updatedData }
+            );
+
+            return result.modifiedCount > 0;
+        } catch (error) {
+            console.error("Error updating user: ", error);
+            return false;
+        }
+    },
+
+    async updateUsers(users) {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+
+            for (let user of users) {
+                const { _id, ...updatedData } = user;
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(_id) },
+                    { $set: updatedData }
+                );
+            }
+
+            return { success: true, message: "Users updated successfully!" };
+        } catch (error) {
+            console.error("Error updating users: ", error);
+            return { success: false, error: "Error updating users" };
+        }
+    },
+
+    async deleteUser(userId) {
+        try {
+            await client.connect();
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+
+            const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
             return result.deletedCount > 0;
         } catch (error) {
             console.error("Error deleting forum:", error);
