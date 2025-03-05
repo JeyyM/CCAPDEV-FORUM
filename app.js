@@ -601,7 +601,7 @@ server.patch("/api/update-user/:userId", async (req, res) => {
         const userId = req.params.userId;
         const updatedData = req.body;
 
-        console.log("Updating forum: ", { userId, updatedData });
+        console.log("Updating user: ", { userId, updatedData });
         const result = await mongo.updateUser(userId, updatedData);
         console.log("Update result: ", result);
 
@@ -611,7 +611,7 @@ server.patch("/api/update-user/:userId", async (req, res) => {
             res.status(400).json({ error: result.error });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error updating forum" });
+        res.status(500).json({ error: "Error updating user" });
     }
 });
 
@@ -627,7 +627,7 @@ server.put("/api/update-users", async (req, res) => {
             res.status(500).json({ error: result.error });
         }
     } catch (error) {
-        res.status(500).json({ error: "Error updating forums" });
+        res.status(500).json({ error: "Error updating users" });
     }
 });
 
@@ -764,4 +764,74 @@ server.get("/api/get-posts-by-forum/:forumId", async (req, res) => {
         console.error("Error fetching posts: ", error);
         res.status(500).json({ error: "Error fetching posts" });
     }
-}) ;
+});
+
+server.put("/api/update-posts", async (req, res) => {
+    try {
+        // console.log("Updating multiple posts: ", req.body.posts);
+        const result = await mongo.updatePosts(req.body.posts);
+        // console.log("Update multiple posts result: ", result);
+
+        if (result.success) {
+            res.json({ message: result.message });
+        } else {
+            res.status(500).json({ error: result.error });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Error updating post" });
+    }
+});
+
+server.patch("/api/update-post/:postId", async (req, res) => {
+    try {
+        const postId = req.params.postId;
+        const updatedData = req.body;
+
+        console.log("Updating post: ", { postId, updatedData });
+        const result = await mongo.updatePost(postId, updatedData);
+        console.log("Update result: ", result);
+
+        if (result) {
+            res.json({ message: result.message });
+        } else {
+            res.status(400).json({ error: result.error });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Error updating post" });
+    }
+});
+
+server.delete("/api/delete-post/:postId", async (req, res) => {
+    try {
+        console.log("Deleting post: ", req.params.postId);
+        const result = await mongo.deletePost(req.params.postId);
+        console.log("Delete post result: ", result);
+
+        if (result.success) {
+            res.json({ message: result.message });
+        } else {
+            res.status(500).json({ error: result.error });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Error deleting user" });
+    }
+});
+
+server.patch("/api/toggle-vote", async (req, res) => {
+    try {
+        const { userId, postId, voteValue } = req.body;
+
+        console.log("Toggling vote:", userId, postId, voteValue);
+
+        const result = await mongo.toggleVote(userId, postId, voteValue);
+
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(400).json(result);
+        }
+    } catch (error) {
+        console.error("Error toggling vote: ", error);
+        res.status(500).json({ success: false, error: "Toggling vote error" });
+    }
+});

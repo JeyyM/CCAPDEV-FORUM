@@ -43,9 +43,8 @@
 
             </tbody>
         </table>
-        <button type="submit">Edit All</button>
+        <button type="submit">Update All</button>
     </form>
-
 
     <h2>Users</h2>
     <div style="display: flex;">
@@ -82,9 +81,8 @@
 
             </tbody>
         </table>
-        <button type="submit">Edit All</button>
+        <button type="submit">Update All</button>
     </form>
-
 
     <h2>Posts</h2>
     <label for="forumDropdown">Select a Forum:</label>
@@ -105,7 +103,7 @@
         let isLoggedIn;
         window.addEventListener("load", async () => {
             isLoggedIn = await checkSession();
-            console.log("Session active:", isLoggedIn);
+            console.log("Session active: ", isLoggedIn);
 
             if (isLoggedIn){
                 sessionDisplay.textContent = `Logged-in as: ${currentSession.username}`;
@@ -226,7 +224,7 @@
 
                     const editButton = document.createElement("button");
                     editButton.type = "button";
-                    editButton.textContent = "Edit One";
+                    editButton.textContent = "Update One";
                     editButton.onclick = () => { updateForum(
                         forum._id,
                         nameInput.value,
@@ -260,7 +258,7 @@
                                 const result = await response.json();
 
                                 if (result.success) {
-                                    console.log("Join status changed:", result.presentStatus);
+                                    console.log("Join status changed: ", result.presentStatus);
 
                                     fetchForums();
                                     fetchUsers();
@@ -269,7 +267,7 @@
                                     alert(result.message);
                                 }
                             } catch (error) {
-                                console.error("Error toggling forum join:", error);
+                                console.error("Error toggling forum join: ", error);
                             }
     
                         } else {
@@ -362,7 +360,7 @@
                 alert(result.message);
                 fetchForums();
             } catch (error) {
-                console.error("Error updating forum:", error);
+                console.error("Error updating forum: ", error);
             }
         }
 
@@ -577,7 +575,7 @@
 
                     const editButton = document.createElement("button");
                     editButton.type = "button";
-                    editButton.textContent = "Edit User";
+                    editButton.textContent = "Update User";
                     editButton.onclick = () => { updateUser(
                         user._id,
                         nameInput.value,
@@ -613,7 +611,7 @@
                                 const result = await response.json();
 
                                 if (result.success) {
-                                    console.log("Join status changed:", result.presentStatus);
+                                    console.log("Join status changed: ", result.presentStatus);
 
                                     fetchForums();
                                     fetchUsers();
@@ -622,7 +620,7 @@
                                     alert(result.message);
                                 }
                             } catch (error) {
-                                console.error("Error toggling user follow:", error);
+                                console.error("Error toggling user follow: ", error);
                             }
     
                         } else {
@@ -690,7 +688,7 @@
                 alert(result.message);
                 fetchUsers();
             } catch (error) {
-                console.error("Error updating users:", error);
+                console.error("Error updating users: ", error);
             }
         }
 
@@ -717,7 +715,7 @@
                 alert(result.message);
                 fetchUsers();
             } catch (error) {
-                console.error("Error updating forum:", error);
+                console.error("Error updating forum: ", error);
             }
         }
 
@@ -835,7 +833,7 @@
                     location.reload(); 
                 }
             } catch (error) {
-                console.error("Error logging out:", error);
+                console.error("Error logging out: ", error);
             }
         }
 
@@ -845,11 +843,35 @@
 
         async function fetchPostsByForum(forumId) {
             try {
-                const response = await fetch(`/api/get-posts-by-forum/${forumId}`);
-                const posts = await response.json();
+                const postsResponse = await fetch(`/api/get-posts-by-forum/${forumId}`);
+                const posts = await postsResponse.json();
 
-                const response2 = await fetch(`/api/get-forum-by-id/${forumId}`);
-                const forum = await response2.json();
+                const forumResponse = await fetch(`/api/get-forum-by-id/${forumId}`);
+                const forum = await forumResponse.json();
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
+                let currentUser;
+
+                if (hasSession) { 
+                    try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
+                        currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
 
                 {{!-- console.log("Fetched posts: ", posts);
                 console.log("Current forum: ", forum); --}}
@@ -861,11 +883,11 @@
                     }
                 });
 
-                posts.forEach(async (post) => {
+                for (const post of posts) {
                     const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
                     const user = await userResponse.json();
 
-                    {{!-- console.log("Fetched user:", user); --}}
+                    {{!-- console.log("Fetched user: ", user); --}}
 
                     const postContainer = document.createElement("div");
                     postContainer.style.display = "flex";
@@ -889,16 +911,19 @@
                     forumTitle.textContent = forum.name;
 
                     const editButton = document.createElement("button");
-                    editButton.textContent = "Edit Post";
-                    editButton.onclick = () => {
-                        alert(`Editing post: ${post.title}`);
-                    };
+                    editButton.textContent = "Update Post";
+                    editButton.type = "button";
+                    editButton.onclick = () => { updatePost(
+                        post._id,
+                        postTitle.value,
+                        postContent.value,
+                        forumId
+                    )};
 
                     const deleteButton = document.createElement("button");
                     deleteButton.textContent = "Delete";
-                    deleteButton.onclick = () => {
-                        alert(`Deleting post: ${post.title}`);
-                    };
+                    deleteButton.type = "button";
+                    deleteButton.onclick = () => {deletePost(post._id, forumId)};
                     
                     forumDiv.appendChild(forumImg);
                     forumDiv.appendChild(forumTitle);
@@ -941,7 +966,7 @@
                     postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
 
                     const editedDate = document.createElement("h4");
-                    editedDate.textContent = `Edited Date: ${new Date(post.lastUpdated).toLocaleString()}`;
+                    editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
 
                     contentDiv.appendChild(postTitle);
                     contentDiv.appendChild(lineBreak);
@@ -953,15 +978,26 @@
                     voteDiv.style.display = "flex";
                     voteDiv.style.alignItems = "center";
 
+                    const currentVote = currentUser.votes.find(vote => {
+                        {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
+                        return vote.postId == post._id; 
+                    });
+
+                    const voteValue = currentVote ? currentVote.vote : 0
+
                     const upvoteButton = document.createElement("button");
-                    upvoteButton.textContent = "Upvote";
+                    upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
+                    upvoteButton.type = "button";
+                    upvoteButton.onclick = () => { toggleVote(post._id, 1, sessionData) };
 
                     const voteCount = document.createElement("h4");
                     voteCount.textContent = post.voteValue;
                     voteCount.style.margin = "0 10px";
 
                     const downvoteButton = document.createElement("button");
-                    downvoteButton.textContent = "Downvote";
+                    downvoteButton.textContent = voteValue === -1 ? "UPVOTED" : "Upvote";
+                    downvoteButton.type = "button";
+                    downvoteButton.onclick = () => { toggleVote(post._id, -1, sessionData) };
 
                     voteDiv.appendChild(upvoteButton);
                     voteDiv.appendChild(voteCount);
@@ -973,13 +1009,12 @@
                     postContainer.appendChild(voteDiv);
 
                     postSection.appendChild(postContainer);
-                });
+                };
 
             } catch (error) {
-                console.error("Error fetching posts:", error);
+                console.error("Error fetching posts: ", error);
             }
         }
-
 
         document.getElementById("forumDropdown").addEventListener("change", function () {
             const selectedForumId = this.value;
@@ -1021,23 +1056,79 @@
                 const forumDropdown = document.getElementById("forumDropdown");
                 fetchPostsByForum(forumDropdown.value);
             } catch (error) {
-                console.error("Error updating posts:", error);
+                console.error("Error updating posts: ", error);
             }
         }
 
-
         const postSection = document.getElementById("postSection");
-
-        // Ensure the form handles submission
         postSection.addEventListener("submit", updateAllPosts);
 
-        // Create submit button inside form dynamically
         const submitAll = document.createElement("button");
         submitAll.id = "editAllPosts";
-        submitAll.type = "submit"; // This ensures form submission
-        submitAll.textContent = "Edit All";
+        submitAll.type = "submit";
+        submitAll.textContent = "Update All";
         postSection.appendChild(submitAll);
 
+
+        async function updatePost(postId, postTitle, postContent, forumId) {
+            try {
+                const response = await fetch(`/api/update-post/${postId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        title: postTitle,
+                        content: postContent,
+                        updatedAt: new Date()
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchPostsByForum(forumId);
+            } catch (error) {
+                console.error("Error updating post: ", error);
+            }
+        }
+
+        async function deletePost(postId, forumId) {
+            if (confirm("Are you sure you want to delete this post?")) {
+                try {
+                    const response = await fetch(`/api/delete-post/${postId}`, { method: "DELETE" });
+                    const result = await response.json();
+
+                    alert(result.message);
+                    fetchPostsByForum(forumId);
+                } catch (error) {
+                    console.error("Error deleting post: ", error);
+                }
+            }
+        }
+
+        async function toggleVote(postId, voteValue, sessionData) {
+            if (!sessionData) {
+                alert("Not logged in");
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/toggle-vote", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: sessionData.user.id, postId, voteValue })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    fetchPostsByForum(document.getElementById("forumDropdown").value);
+                } else {
+                    alert(result.error);
+                }
+            } catch (error) {
+                console.error("Error toggling vote:", error);
+            }
+        }
 
         fetchForums();
         fetchUsers();

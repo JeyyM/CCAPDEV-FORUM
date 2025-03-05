@@ -31,7 +31,7 @@ const mongo = {
             await db.collection(forumsVar).createIndex({ createdAt: 1 });
             await db.collection(usersVar).createIndex({ createdAt: 1 });
         } catch (error) {
-            console.error("Connection Error: ", error);
+            console.error("Connection message: ", error);
         }
     },
 
@@ -259,7 +259,7 @@ const mongo = {
                             title: `${username} in ${forumName}`,
                             content: `User ${username} posting something in ${forumName}`,
                             createdAt: new Date(),
-                            lastUpdated: new Date(),
+                            updatedAt: new Date(),
                             comments: [],
                             voteValue: 0
                         });
@@ -351,7 +351,7 @@ const mongo = {
             return { success: true, message: "Forum updated successfully!" };
         } catch (error) {
             console.error("Error updating forum: ", error);
-            return { success: false, error: "Error updating forum" };;
+            return { success: false, message: "Error updating forum" };;
         }
     },
 
@@ -371,7 +371,7 @@ const mongo = {
             return { success: true, message: "Forums updated successfully!" };
         } catch (error) {
             console.error("Error updating forums: ", error);
-            return { success: false, error: "Error updating forums" };
+            return { success: false, message: "Error updating forums" };
         }
     },
 
@@ -384,7 +384,7 @@ const mongo = {
             return { success: true, message: "Forum deleted successfully!" };
         } catch (error) {
             console.error("Error deleting forum: ", error);
-            return { success: false, error: "Error deleting forum" };
+            return { success: false, message: "Error deleting forum" };
         }
     },
 
@@ -485,7 +485,7 @@ const mongo = {
             return { success: true, message: "User updated successfully!" };
         } catch (error) {
             console.error("Error updating user: ", error);
-            return { success: false, error: "Error updating user" };;
+            return { success: false, message: "Error updating user" };;
         }
     },
 
@@ -506,7 +506,7 @@ const mongo = {
             return { success: true, message: "Users updated successfully!" };
         } catch (error) {
             console.error("Error updating users: ", error);
-            return { success: false, error: "Error updating users" };
+            return { success: false, message: "Error updating users" };
         }
     },
 
@@ -519,7 +519,7 @@ const mongo = {
             return { success: true, message: "User deleted successfully!" };
         } catch (error) {
             console.error("Error deleting forum: ", error);
-            return { success: false, error: "Error deleting user" };;
+            return { success: false, message: "Error deleting user" };;
         }
     },
 
@@ -566,7 +566,7 @@ const mongo = {
                     };
         } catch (error) {
             console.error("Error toggling forum join: ", error);
-            return { success: false, error: "Error toggling forum join" };
+            return { success: false, message: "Error toggling forum join" };
         }
     },
 
@@ -611,7 +611,7 @@ const mongo = {
                     };
         } catch (error) {
             console.error("Error toggling follow: ", error);
-            return { success: false, error: "Error toggling follow" };
+            return { success: false, message: "Error toggling follow" };
         }
     },
 
@@ -652,6 +652,110 @@ const mongo = {
         }
     },
 
+    async updatePosts(posts) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+
+            for (let post of posts) {
+                const { _id, ...updatedData } = post;
+
+                const result = await postsCollection.updateOne(
+                    { _id: new ObjectId(_id) },
+                    { $set: updatedData }
+                );    
+            }
+
+            return { success: true, message: "Posts updated successfully!" };
+        } catch (error) {
+            console.error("Error updating posts: ", error);
+            return { success: false, message: "Error updating posts" };
+        }
+    },
+
+    async updatePost(postId, updatedData) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+
+            const result = await postsCollection.updateOne(
+                { _id: new ObjectId(postId) },
+                { $set: updatedData }
+            );
+
+            return { success: true, message: "Post updated successfully!" };
+        } catch (error) {
+            console.error("Error updating post: ", error);
+            return { success: false, message: "Error updating post" };;
+        }
+    },
+
+    async deletePost(postId) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+
+            const result = await postsCollection.deleteOne({ _id: new ObjectId(postId) });
+            return { success: true, message: "User deleted successfully!" };
+        } catch (error) {
+            console.error("Error deleting forum: ", error);
+            return { success: false, message: "Error deleting user" };;
+        }
+    },
+
+    async toggleVote(userId, postId, voteValue) {
+        try {
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+            const postsCollection = db.collection(postsVar);
+    
+            const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+            if (!user) {
+                return { success: false, message: "User not found" };
+            }
+    
+            const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+            if (!post) {
+                return { success: false, message: "Post not found" };
+            }
+    
+            const existingVote = user.votes.find(entry => entry.postId === post._id);
+            let voteChange = 0;
+    
+            if (existingVote) {
+                if (existingVote.vote === voteValue) {
+                    await usersCollection.updateOne(
+                        { _id: new ObjectId(userId) },
+                        { $pull: { votes: { postId: new ObjectId(postId) } } }
+                    );
+                    voteChange = -voteValue;
+                } else {
+                    await usersCollection.updateOne(
+                        { _id: new ObjectId(userId), "votes.postId": new ObjectId(postId) },
+                        // NOTE POSITIONAL OPERATORS, this allows you to specifically edit an array item
+                        { $set: { "votes.$.vote": voteValue } }
+                    );
+                    voteChange = voteValue - existingVote.vote;
+                }
+            } else {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    { $push: { votes: { postId: new ObjectId(postId), vote: voteValue } } }
+                );
+                voteChange = voteValue;
+            }
+    
+            await postsCollection.updateOne(
+                { _id: new ObjectId(postId) },
+                { $inc: { voteValue: voteChange } }
+            );
+    
+            return { success: true, message: "Vote updated successfully", voteValue: post.voteValue + voteChange };
+        } catch (error) {
+            console.error("Error toggling vote: ", error);
+            return { success: false, message: "Error toggling vote" };
+        }
+    }
 };
 
 module.exports = mongo;
