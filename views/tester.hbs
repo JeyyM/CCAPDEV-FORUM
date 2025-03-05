@@ -910,6 +910,10 @@
                     const forumTitle = document.createElement("h3");
                     forumTitle.textContent = forum.name;
 
+
+                    forumTitle.textContent = post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
+
+
                     const editButton = document.createElement("button");
                     editButton.textContent = "Update Post";
                     editButton.type = "button";
