@@ -704,6 +704,7 @@ const mongo = {
     },
 
     async toggleVote(userId, postId, voteValue) {
+        // console.log("PREVIOUS: ", voteValue);
         try {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
@@ -719,28 +720,31 @@ const mongo = {
                 return { success: false, message: "Post not found" };
             }
     
-            const existingVote = user.votes.find(entry => entry.postId === post._id);
             let voteChange = 0;
     
+            const existingVote = user.votes.find(entry => String(entry.postId) === String(post._id));
+    
             if (existingVote) {
+                // console.log("Existing Vote: ", existingVote);
+    
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    { $pull: { votes: { postId: post._id } } }
+                );
+    
                 if (existingVote.vote === voteValue) {
-                    await usersCollection.updateOne(
-                        { _id: new ObjectId(userId) },
-                        { $pull: { votes: { postId: new ObjectId(postId) } } }
-                    );
                     voteChange = -voteValue;
                 } else {
                     await usersCollection.updateOne(
-                        { _id: new ObjectId(userId), "votes.postId": new ObjectId(postId) },
-                        // NOTE POSITIONAL OPERATORS, this allows you to specifically edit an array item
-                        { $set: { "votes.$.vote": voteValue } }
+                        { _id: new ObjectId(userId) },
+                        { $push: { votes: { postId: post._id, vote: voteValue } } }
                     );
                     voteChange = voteValue - existingVote.vote;
                 }
             } else {
                 await usersCollection.updateOne(
                     { _id: new ObjectId(userId) },
-                    { $push: { votes: { postId: new ObjectId(postId), vote: voteValue } } }
+                    { $push: { votes: { postId: post._id, vote: voteValue } } }
                 );
                 voteChange = voteValue;
             }
@@ -750,12 +754,15 @@ const mongo = {
                 { $inc: { voteValue: voteChange } }
             );
     
-            return { success: true, message: "Vote updated successfully", voteValue: post.voteValue + voteChange };
+            const updatedPost = await postsCollection.findOne({ _id: new ObjectId(postId) });
+    
+            return { success: true, message: "Vote updated successfully", voteValue: updatedPost.voteValue };
         } catch (error) {
             console.error("Error toggling vote: ", error);
             return { success: false, message: "Error toggling vote" };
         }
-    }
+    },
+    
 };
 
 module.exports = mongo;

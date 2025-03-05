@@ -873,6 +873,8 @@
                     console.log("No session");
                 }
 
+                console.log("CURRENT USER:", currentUser);
+
                 {{!-- console.log("Fetched posts: ", posts);
                 console.log("Current forum: ", forum); --}}
 
@@ -911,7 +913,7 @@
                     forumTitle.textContent = forum.name;
 
 
-                    forumTitle.textContent = post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
+                    forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
 
 
                     const editButton = document.createElement("button");
@@ -982,12 +984,14 @@
                     voteDiv.style.display = "flex";
                     voteDiv.style.alignItems = "center";
 
-                    const currentVote = currentUser.votes.find(vote => {
-                        {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
-                        return vote.postId == post._id; 
-                    });
+                    const currentVote = currentUser && currentUser.votes.find(vote => {
+                            {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
+                            return vote.postId == post._id; 
+                        });
 
-                    const voteValue = currentVote ? currentVote.vote : 0
+                    const voteValue = currentVote ? currentVote.vote : 0;
+
+                    console.log(voteValue);
 
                     const upvoteButton = document.createElement("button");
                     upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
@@ -999,7 +1003,7 @@
                     voteCount.style.margin = "0 10px";
 
                     const downvoteButton = document.createElement("button");
-                    downvoteButton.textContent = voteValue === -1 ? "UPVOTED" : "Upvote";
+                    downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
                     downvoteButton.type = "button";
                     downvoteButton.onclick = () => { toggleVote(post._id, -1, sessionData) };
 
@@ -1110,7 +1114,7 @@
         }
 
         async function toggleVote(postId, voteValue, sessionData) {
-            if (!sessionData) {
+            if (!sessionData.success) {
                 alert("Not logged in");
                 return;
             }
