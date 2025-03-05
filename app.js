@@ -314,7 +314,7 @@ server.get("/forum/:forumName", async (req, resp) => {
     }
 });
 
-server.get("/viewPost/:postId", function(req, resp){
+server.get("/viewPost/:postId/:post", function(req, resp){
     const postId = parseInt(req.params.postId);
     const post = posts.find(p => p.postId === postId);
 
@@ -366,7 +366,7 @@ server.get("/viewProfile/:profileName", function(req, resp){
     });
 });
 
-server.get("/editPost/:postId", function(req, resp){
+server.get("/editPost/:postId/:post", function(req, resp){
     const postId = parseInt(req.params.postId);
     const post = posts.find(p => p.postId === postId);
 
@@ -434,7 +434,7 @@ server.get("/api/get-forums", async (req, res) => {
     }
 });
 
-server.get("/api/get-forum-by-id/:forumId", async (req, res) => {
+server.get("/api/get-forum-by-id/:forumId/:forum", async (req, res) => {
     try {
         const forumId = req.params.forumId;
 
@@ -472,7 +472,7 @@ server.get("/api/get-forum-by-name/:forumName", async (req, res) => {
     }
 });
 
-server.patch("/api/update-forum/:forumId", async (req, res) => {
+server.patch("/api/update-forum/:forumId/:forum", async (req, res) => {
     try {
         const forumId = req.params.forumId;
         const updatedData = req.body;
@@ -527,7 +527,7 @@ server.post("/api/add-forum", async (req, res) => {
 });
 
 
-server.delete("/api/delete-forum/:forumId", async (req, res) => {
+server.delete("/api/delete-forum/:forumId/:forum", async (req, res) => {
     try {
         console.log("Deleting forum: ", req.params.forumId);
         const result = await mongo.deleteForum(req.params.forumId);
@@ -557,7 +557,7 @@ server.get("/api/get-users", async (req, res) => {
     }
 });
 
-server.get("/api/get-user-by-id/:userId", async (req, res) => {
+server.get("/api/get-user-by-id/:userId/:user", async (req, res) => {
     try {
         const userId = req.params.userId;
 
@@ -596,7 +596,7 @@ server.get("/api/get-user-by-name/:username", async (req, res) => {
 });
 
 
-server.patch("/api/update-user/:userId", async (req, res) => {
+server.patch("/api/update-user/:userId/:user", async (req, res) => {
     try {
         const userId = req.params.userId;
         const updatedData = req.body;
@@ -650,7 +650,7 @@ server.post("/api/add-user", async (req, res) => {
     }
 });
 
-server.delete("/api/delete-user/:userId", async (req, res) => {
+server.delete("/api/delete-user/:userId/:user", async (req, res) => {
     try {
         console.log("Deleting user: ", req.params.userId);
         const result = await mongo.deleteUser(req.params.userId);
@@ -754,7 +754,7 @@ server.patch("/api/toggle-user-follow", async (req, res) => {
 });
 
 /////////////////////////// POST INTERACTIONS ////////////
-server.get("/api/get-posts-by-forum/:forumId", async (req, res) => {
+server.get("/api/get-posts-by-forum/:forumId/:forum", async (req, res) => {
     try {
         const forumId = req.params.forumId;
         const posts = await mongo.getPostsByForumId(forumId);
@@ -782,7 +782,7 @@ server.put("/api/update-posts", async (req, res) => {
     }
 });
 
-server.patch("/api/update-post/:postId", async (req, res) => {
+server.patch("/api/update-post/:postId/:post", async (req, res) => {
     try {
         const postId = req.params.postId;
         const updatedData = req.body;
@@ -801,7 +801,7 @@ server.patch("/api/update-post/:postId", async (req, res) => {
     }
 });
 
-server.delete("/api/delete-post/:postId", async (req, res) => {
+server.delete("/api/delete-post/:postId/:post", async (req, res) => {
     try {
         console.log("Deleting post: ", req.params.postId);
         const result = await mongo.deletePost(req.params.postId);
