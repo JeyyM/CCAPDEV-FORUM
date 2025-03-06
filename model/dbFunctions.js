@@ -5,6 +5,7 @@ const dbName = "forum";
 const forumsVar = "forums";
 const usersVar = "users"
 const postsVar = "posts"
+const commentsVar = "comments"
 
 const client = new MongoClient(uri);
 
@@ -26,10 +27,6 @@ const mongo = {
                 console.log(`Collection "${forumsVar}" already exists`);
             }
 
-            // Indexes are so we can query faster and limit them
-            // 1 means oldest to newest
-            await db.collection(forumsVar).createIndex({ createdAt: 1 });
-            await db.collection(usersVar).createIndex({ createdAt: 1 });
         } catch (error) {
             console.error("Connection message: ", error);
         }
@@ -52,7 +49,7 @@ const mongo = {
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         membersCount: 0,
-                        postsCount: 0,
+                        postsCount: 5,
                         admins: ["67c792cfb3ba6d9c76f699d5", "67c792cfb3ba6d9c76f699d6"],
                         bannedUsers: []
                     },
@@ -65,7 +62,7 @@ const mongo = {
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         membersCount: 0,
-                        postsCount: 0,
+                        postsCount: 5,
                         admins: ["67c792cfb3ba6d9c76f699d7", "67c792cfb3ba6d9c76f699d9"],
                         bannedUsers: []
                     },
@@ -78,7 +75,7 @@ const mongo = {
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         membersCount: 0,
-                        postsCount: 0,
+                        postsCount: 5,
                         admins: ["67c792cfb3ba6d9c76f699d5", "67c792cfb3ba6d9c76f699d6"],
                         bannedUsers: []
                     },
@@ -91,7 +88,7 @@ const mongo = {
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         membersCount: 0,
-                        postsCount: 0,
+                        postsCount: 5,
                         admins: ["67c792cfb3ba6d9c76f699d5", "67c792cfb3ba6d9c76f699d6"],
                         bannedUsers: []
                     },
@@ -104,7 +101,7 @@ const mongo = {
                         createdAt: new Date(),
                         updatedAt: new Date(),
                         membersCount: 0,
-                        postsCount: 0,
+                        postsCount: 5,
                         admins: ["67c792cfb3ba6d9c76f699d7", "67c792cfb3ba6d9c76f699d9"],
                         bannedUsers: []
                     }
@@ -141,9 +138,10 @@ const mongo = {
                         joinedForums: [],
                         following: [],
                         followersCount: 0,
-                        postsCount: 0,
-                        commentsCount: 0,
-                        votes: []
+                        postsCount: 5,
+                        commentsCount: 25,
+                        votes: [],
+                        commentVotes: []
                     },
                     {
                         _id: new ObjectId("67c792cfb3ba6d9c76f699d6"),
@@ -158,8 +156,8 @@ const mongo = {
                         joinedForums: [],
                         following: [],
                         followersCount: 0,
-                        postsCount: 0,
-                        commentsCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
                         votes: []
                     },
                     {
@@ -175,8 +173,8 @@ const mongo = {
                         joinedForums: [],
                         following: [],
                         followersCount: 0,
-                        postsCount: 0,
-                        commentsCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
                         votes: []
                     },
                     {
@@ -192,8 +190,8 @@ const mongo = {
                         joinedForums: [],
                         following: [],
                         followersCount: 0,
-                        postsCount: 0,
-                        commentsCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
                         votes: []
                     },
                     {
@@ -209,8 +207,8 @@ const mongo = {
                         joinedForums: [],
                         following: [],
                         followersCount: 0,
-                        postsCount: 0,
-                        commentsCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
                         votes: []
                     }
                 ];
@@ -223,12 +221,13 @@ const mongo = {
         } catch (error) {
             console.error("Error inserting sample users: ", error);
         }
-    },
+    },  
 
     async insertSamplePosts() {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
+            const commentsCollection = db.collection(commentsVar);
     
             const existingPosts = await postsCollection.countDocuments();
             if (existingPosts === 0) {
@@ -248,12 +247,27 @@ const mongo = {
                     "kiwi": "67c792cfb3ba6d9c76f699d9"
                 };
     
-                const samplePosts = [];
+                const ids = [
+                    "67c94be9b7d17daa0a4df1a3", "67c94be9b7d17daa0a4df1a4", "67c94be9b7d17daa0a4df1a5",
+                    "67c94be9b7d17daa0a4df1a6", "67c94be9b7d17daa0a4df1a7", "67c94be9b7d17daa0a4df1a8",
+                    "67c94be9b7d17daa0a4df1a9", "67c94be9b7d17daa0a4df1aa", "67c94be9b7d17daa0a4df1ab",
+                    "67c94be9b7d17daa0a4df1ac", "67c94be9b7d17daa0a4df1ad", "67c94be9b7d17daa0a4df1ae",
+                    "67c94be9b7d17daa0a4df1af", "67c94be9b7d17daa0a4df1b0", "67c94be9b7d17daa0a4df1b1",
+                    "67c94be9b7d17daa0a4df1b2", "67c94be9b7d17daa0a4df1b3", "67c94be9b7d17daa0a4df1b4",
+                    "67c94be9b7d17daa0a4df1b5", "67c94be9b7d17daa0a4df1b6", "67c94be9b7d17daa0a4df1b7",
+                    "67c94be9b7d17daa0a4df1b8", "67c94be9b7d17daa0a4df1b9", "67c94be9b7d17daa0a4df1ba",
+                    "67c94be9b7d17daa0a4df1bb"].map(id => new ObjectId(id));
     
-                Object.entries(forums).forEach(([forumName, forumId]) => {
-                    Object.entries(users).forEach(([username, userId]) => {
+                let index = 0;
+                let samplePosts = [];
+                let sampleComments = [];
+    
+                for (const [forumName, forumId] of Object.entries(forums)) {
+                    for (const [username, userId] of Object.entries(users)) {
+                        const postId = ids[index];
+
                         samplePosts.push({
-                            _id: new ObjectId(),
+                            _id: postId,
                             forumId: new ObjectId(forumId),
                             authorId: new ObjectId(userId),
                             title: `${username} in ${forumName}`,
@@ -261,20 +275,39 @@ const mongo = {
                             createdAt: new Date(),
                             updatedAt: new Date(),
                             comments: [],
-                            voteValue: 0
+                            voteValue: 0,
+                            commentsCount: 5
                         });
-                    });
-                });
+
+                        for (const [user, userId] of Object.entries(users)) {
+                            sampleComments.push({
+                                _id: new ObjectId(),
+                                postId: new ObjectId(postId),
+                                authorId: new ObjectId(userId),
+                                parentId: null,
+                                content: `${user}'s comment on post ${postId}`,
+                                createdAt: new Date(),
+                                updatedAt: new Date(),
+                                voteValue: 0,
+                            });
+                        }
+
+                        index++;
+                    }
+                }
     
                 await postsCollection.insertMany(samplePosts);
+                await commentsCollection.insertMany(sampleComments);
+    
                 console.log(`${samplePosts.length} Sample posts inserted successfully.`);
+                console.log(`${sampleComments.length} Sample comments inserted successfully.`);
             } else {
                 console.log("Posts data already exists.");
             }
         } catch (error) {
             console.error("Error inserting sample posts: ", error);
         }
-    },    
+    },
 
     ////////////////////// FORUM INTERACTIONS ////////////////////////
     
@@ -459,9 +492,10 @@ const mongo = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 followersCount: 0,
-                postsCount: 0,
+                postsCount: 5,
                 commentsCount: 0,
-                votes: []
+                votes: [],
+                commentVotes: []
             };
 
             const result = await userCollection.insertOne(newUser);
@@ -690,16 +724,70 @@ const mongo = {
         }
     },
 
+    async addPost(postData) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+            const usersCollection = db.collection(usersVar);
+            const forumsCollection = db.collection(forumsVar);
+    
+            const forumId = new ObjectId(postData.forumId);
+            const authorId = new ObjectId(postData.authorId);
+
+            console.log("Is ObjectId?", forumId instanceof ObjectId, authorId instanceof ObjectId);
+    
+            const newPost = {
+                _id: new ObjectId(),
+                ...postData,
+                forumId: forumId,
+                authorId: authorId,
+                createdAt: new Date(),
+            };
+    
+            const result = await postsCollection.insertOne(newPost);
+    
+            await usersCollection.updateOne(
+                { _id: authorId },
+                { $inc: { postsCount: 1 } }
+            );
+    
+            await forumsCollection.updateOne(
+                { _id: forumId },
+                { $inc: { postsCount: 1 } }
+            );
+    
+            return result.insertedId;
+        } catch (error) {
+            console.error("Error adding post: ", error);
+            return null;
+        }
+    },    
+
     async deletePost(postId) {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
+            const usersCollection = db.collection(usersVar);
+            const forumsCollection = db.collection(forumsVar);
+
+            const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
 
             const result = await postsCollection.deleteOne({ _id: new ObjectId(postId) });
-            return { success: true, message: "User deleted successfully!" };
+
+            await usersCollection.updateOne(
+                { _id: post.authorId },
+                { $inc: { postsCount: -1 } }
+            );
+    
+            await forumsCollection.updateOne(
+                { _id: post.forumId },
+                { $inc: { postsCount: -1 } }
+            );
+
+            return { success: true, message: "Post deleted successfully!" };
         } catch (error) {
             console.error("Error deleting forum: ", error);
-            return { success: false, message: "Error deleting user" };;
+            return { success: false, message: "Error deleting post" };;
         }
     },
 
@@ -762,7 +850,64 @@ const mongo = {
             return { success: false, message: "Error toggling vote" };
         }
     },
-    
+
+    /////////////////// COMMENT INTERACTIONS ///////////
+    async getCommentsByPostId(postId) {
+        try {
+            const db = client.db(dbName);
+            const commentsCollection = db.collection(commentsVar);
+
+            return await commentsCollection.find({ postId: new ObjectId(postId) }).toArray();
+        } catch (error) {
+            console.error("Error fetching posts by forum ID: ", error);
+            return [];
+        }
+    },
+
+    async updateComment(commentId, updatedData) {
+        try {
+            const db = client.db(dbName);
+            const commentsCollection = db.collection(commentsVar);
+
+            const result = await commentsCollection.updateOne(
+                { _id: new ObjectId(commentId) },
+                { $set: updatedData }
+            );
+
+            return { success: true, message: "Comment updated successfully!" };
+        } catch (error) {
+            console.error("Error updating comment: ", error);
+            return { success: false, message: "Error updating comment" };;
+        }
+    },
+
+    async deleteComment(commentId) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+            const usersCollection = db.collection(usersVar);
+            const commentsCollection = db.collection(commentsVar);
+
+            const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
+            const result = await commentsCollection.deleteOne({ _id: new ObjectId(commentId) });
+
+            await usersCollection.updateOne(
+                { _id: comment.authorId },
+                { $inc: { commentsCount: -1 } }
+            );
+
+            await postsCollection.updateOne(
+                { _id: comment.postId },
+                { $inc: { commentsCount: -1 } }
+            );
+
+            return { success: true, message: "Comment deleted successfully!" };
+        } catch (error) {
+            console.error("Error deleting comment: ", error);
+            return { success: false, message: "Error deleting comment" };;
+        }
+    },
+
 };
 
 module.exports = mongo;

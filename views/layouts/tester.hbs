@@ -21,7 +21,7 @@
 
                     if (result.success) {
                         alert(`Logged in as: ${result.user.username}`);
-                        console.log("Current session:", result.user);
+                        console.log("Current session:", result);
 
                         currentSession = result.user;
                         return true
