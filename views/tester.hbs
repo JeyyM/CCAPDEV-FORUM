@@ -852,11 +852,6 @@
         /////////////////// POSTS ///////////////////////////////////////
 
         async function fetchPostsByForum(forumId) {
-            const forumDropdown = document.getElementById("forumDropdown");
-            if (forumDropdown.value !== forumId) {
-                forumDropdown.value = forumId;
-            }
-
             try {
                 const postsResponse = await fetch(`/api/get-posts-by-forum/${forumId}`);
                 const posts = await postsResponse.json();
