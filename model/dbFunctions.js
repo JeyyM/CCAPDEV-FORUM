@@ -704,7 +704,7 @@ const mongo = {
                 );    
             }
 
-            return { success: true, message: "Posts updated successfully!" };
+            return { success: true, message: "Posts updated successfully" };
         } catch (error) {
             console.error("Error updating posts: ", error);
             return { success: false, message: "Error updating posts" };

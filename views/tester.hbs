@@ -1424,14 +1424,16 @@
 
             const sendReplyButton = document.createElement("button");
             sendReplyButton.textContent = "Send";
-            sendReplyButton.onclick = async () => {
+            sendReplyButton.type = "button";
+            sendReplyButton.onclick = async () => {                
                 const content = replyInput.value.trim();
-                if (!content) {
-                    alert("Missing fields");
+
+                if (!currentSession) {
+                    alert("Can't make reply if not logged in");
                     return;
                 }
                 
-                if (!currentSession){
+                if (!content){
                     alert("Can't make reply if not logged in");
                     return;
                 } else {
