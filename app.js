@@ -27,7 +27,10 @@ server.engine('hbs', handlebars.engine({
     extname: 'hbs',
     helpers: {
         isEqual: (x, y) => x === y,
-        isNull: (x) => x === null 
+        isNull: (x) => x === null,
+        json: function (body) {
+            return JSON.stringify(body);
+        }
     }
 }));
 
@@ -284,34 +287,26 @@ server.get("/forum/:forumName", async (req, resp) => {
         const decodedForumName = decodeURIComponent(req.params.forumName);
 
         const forum = await mongo.getForumByName(decodedForumName);
+        const posts = await mongo.getPostsByForumId(forum._id);
 
-        // if (!forum) {
-        //     return resp.status(404).render("notFound", {
-        //         layout: "index",
-        //         title: "Forum Not Found",
-        //         message: `No forum found with the name "${decodedForumName}".`
-        //     });
-        // }
+        const postUsers = [];
+
+        for (const post of posts){
+            const user = await mongo.getUserById(post.authorId);
+            postUsers.push(user);
+        }
+
+        console.log("USERS", postUsers);
 
         resp.render("forum", {
             layout: "forumLayout",
-            title: forum.name,
-            forumName: forum.name,
-            description: forum.description,
-            forumImage: forum.forumImage,
-            bannerImage: forum.bannerImage,
-            createdAt: forum.createdAt.toDateString(),
-            membersCount: forum.membersCount,
-            postsCount: forum.postsCount
+            forumData: forum,
+            postData: posts,
+            userData: postUsers
         });
 
     } catch (error) {
         console.error("Error fetching forum: ", error);
-        // resp.status(500).render("error", {
-        //     layout: "index",
-        //     title: "Error",
-        //     message: "An error occurred while loading the forum."
-        // });
     }
 });
 
@@ -763,6 +758,9 @@ server.get("/api/get-posts-by-forum/:forumId", async (req, res) => {
     try {
         const forumId = req.params.forumId;
         const posts = await mongo.getPostsByForumId(forumId);
+
+        // .limit()
+        // .sortBy()
 
         res.json(posts);
     } catch (error) {
