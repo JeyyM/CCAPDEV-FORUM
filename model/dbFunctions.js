@@ -158,7 +158,8 @@ const mongo = {
                         followersCount: 0,
                         postsCount: 5,
                         commentsCount: 25,
-                        votes: []
+                        votes: [],
+                        commentVotes: []
                     },
                     {
                         _id: new ObjectId("67c792cfb3ba6d9c76f699d7"),
@@ -175,7 +176,8 @@ const mongo = {
                         followersCount: 0,
                         postsCount: 5,
                         commentsCount: 25,
-                        votes: []
+                        votes: [],
+                        commentVotes: []
                     },
                     {
                         _id: new ObjectId("67c792cfb3ba6d9c76f699d8"),
@@ -192,7 +194,8 @@ const mongo = {
                         followersCount: 0,
                         postsCount: 5,
                         commentsCount: 25,
-                        votes: []
+                        votes: [],
+                        commentVotes: []
                     },
                     {
                         _id: new ObjectId("67c792cfb3ba6d9c76f699d9"),
@@ -209,7 +212,8 @@ const mongo = {
                         followersCount: 0,
                         postsCount: 5,
                         commentsCount: 25,
-                        votes: []
+                        votes: [],
+                        commentVotes: []
                     }
                 ];
     
@@ -733,8 +737,6 @@ const mongo = {
     
             const forumId = new ObjectId(postData.forumId);
             const authorId = new ObjectId(postData.authorId);
-
-            console.log("Is ObjectId?", forumId instanceof ObjectId, authorId instanceof ObjectId);
     
             const newPost = {
                 _id: new ObjectId(),
@@ -881,6 +883,44 @@ const mongo = {
         }
     },
 
+    async addComment(commentData) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+            const usersCollection = db.collection(usersVar);
+            const commentsCollection = db.collection(commentsVar);
+    
+            const postId = new ObjectId(commentData.postId);
+            const authorId = new ObjectId(commentData.authorId);
+    
+            const newComment = {
+                _id: new ObjectId(),
+                ...commentData,
+                postId: postId,
+                authorId: authorId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            };
+    
+            const result = await commentsCollection.insertOne(newComment);
+    
+            await usersCollection.updateOne(
+                { _id: authorId },
+                { $inc: { commentsCount: 1 } }
+            );
+    
+            await postsCollection.updateOne(
+                { _id: postId },
+                { $inc: { commentsCount: 1 } }
+            );
+    
+            return result.insertedId;
+        } catch (error) {
+            console.error("Error adding comment: ", error);
+            return null;
+        }
+    },
+
     async deleteComment(commentId) {
         try {
             const db = client.db(dbName);
@@ -905,6 +945,65 @@ const mongo = {
         } catch (error) {
             console.error("Error deleting comment: ", error);
             return { success: false, message: "Error deleting comment" };;
+        }
+    },
+    
+    async toggleCommentVote(userId, commentId, voteValue) {
+        try {
+            const db = client.db(dbName);
+            const usersCollection = db.collection(usersVar);
+            const commentsCollection = db.collection(commentsVar);
+    
+            const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+            if (!user) {
+                return { success: false, message: "User not found" };
+            }
+    
+            const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
+            if (!comment) {
+                return { success: false, message: "Comment not found" };
+            }
+    
+            let voteChange = 0;
+    
+            const existingVote = user.commentVotes.find(entry => String(entry.commentId) === String(comment._id));
+    
+            if (existingVote) {
+                // console.log("Existing Vote: ", existingVote);
+    
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    { $pull: { commentVotes: { commentId: comment._id } } }
+                );
+    
+                if (existingVote.vote === voteValue) {
+                    voteChange = -voteValue;
+                } else {
+                    await usersCollection.updateOne(
+                        { _id: new ObjectId(userId) },
+                        { $push: { commentVotes: { commentId: comment._id, vote: voteValue } } }
+                    );
+                    voteChange = voteValue - existingVote.vote;
+                }
+            } else {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    { $push: { commentVotes: { commentId: comment._id, vote: voteValue } } }
+                );
+                voteChange = voteValue;
+            }
+    
+            await commentsCollection.updateOne(
+                { _id: new ObjectId(commentId) },
+                { $inc: { voteValue: voteChange } }
+            );
+    
+            const updatedComment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
+    
+            return { success: true, message: "Vote updated successfully", voteValue: updatedComment.voteValue };
+        } catch (error) {
+            console.error("Error toggling comment vote: ", error);
+            return { success: false, message: "Error toggling comment vote" };
         }
     },
 

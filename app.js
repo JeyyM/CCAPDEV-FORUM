@@ -13,7 +13,8 @@ server.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 60000 * 60 // to do 1 hour
+        secure: false,
+        httpOnly: true
     }
 }));
 
@@ -669,7 +670,7 @@ server.delete("/api/delete-user/:userId", async (req, res) => {
 //////////////////// ACCOUNT INTERACTIONS /////////////////
 server.post("/api/login", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, rememberMe } = req.body;
     
         const user = await mongo.getUserByEmail(email);
 
@@ -688,6 +689,10 @@ server.post("/api/login", async (req, res) => {
             // joinedForums: user.joinedForums,
             // following: user.joinedForums
         };
+
+        if (rememberMe) {
+            req.session.cookie.maxAge = 60 * 60 * 1000;
+        }
 
         res.json({ success: true, message: "Login successful", user });
     } catch (error) {
@@ -812,11 +817,11 @@ server.post("/api/add-post", async (req, res) => {
         if (result) {
             res.json({ message: "Post added successfully" });
         } else {
-            res.status(500).json({ message: "Error adding forum" });
+            res.status(500).json({ message: "Error adding post" });
         }
     } catch (error) {
         console.error("Error adding post: ", error);
-        res.status(500).json({ message: "Error adding forum" });
+        res.status(500).json({ message: "Error adding post" });
     }
 });
 
@@ -884,6 +889,44 @@ server.patch("/api/update-comment/:commentId", async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: "Error updating comment" });
+    }
+});
+
+server.post("/api/add-comment", async (req, res) => {
+    try {
+        const commentData = req.body;
+
+        // console.log("Adding comment: ", commentData);
+        const result = await mongo.addComment(commentData);
+        // console.log("Add forum result: ", result);
+
+        if (result) {
+            res.json({ message: "Comment added successfully" });
+        } else {
+            res.status(500).json({ message: "Error adding comment" });
+        }
+    } catch (error) {
+        console.error("Error adding comment: ", error);
+        res.status(500).json({ message: "Error adding comment" });
+    }
+});
+
+server.patch("/api/toggle-comment-vote", async (req, res) => {
+    try {
+        const { userId, commentId, voteValue } = req.body;
+
+        // console.log("Toggling vote:", userId, commentId, voteValue);
+
+        const result = await mongo.toggleCommentVote(userId, commentId, voteValue);
+
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(400).json(result);
+        }
+    } catch (error) {
+        console.error("Error toggling vote: ", error);
+        res.status(500).json({ success: false, message: "Toggling vote error" });
     }
 });
 
