@@ -51,3 +51,30 @@ function addComment(element) {
 function cancelComment(element) {
     element.parentNode.remove();
 }
+
+function editComment(element) {
+    let commentContainer = element.closest(".comment");
+
+    if (!commentContainer) {
+        console.error("Comment container not found.");
+        return;
+    }
+
+    let commentText = commentContainer.querySelector(".commentContent");
+
+    if (!commentText) {
+        console.error("Comment content not found inside the container.");
+        console.log("commentContainer content:", commentContainer.innerHTML);
+        return;
+    }
+
+    if (!commentText.getAttribute("contenteditable")) {
+        commentText.setAttribute("contenteditable", "true");
+        commentText.focus();
+        element.innerHTML = "<i class='bx bx-save'></i>Save";
+    } else {
+        commentText.removeAttribute("contenteditable");
+        element.innerHTML = "<i class='bx bx-edit-alt'></i>Edit";
+
+    }
+}
