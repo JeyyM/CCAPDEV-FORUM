@@ -17,6 +17,24 @@
         </div>
     </form>
 
+    <div style="display: flex;">
+        <h3>Sort By: </h3>
+        <select id="sortByDropdown">
+            <option value="createdAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="createdAt">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="orderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit (Meant to stay the same): </h3>
+        <input id="limitInput" value="3" placeholder="Limit">
+    </div>
+
     <h2>Forums</h2>
     <div style="display: flex;">
         <button onclick="fetchForums()">Refresh</button>
@@ -122,8 +140,12 @@
 
         ///////////////////// FORUMS ///////////////////////
         async function fetchForums() {
+            console.log("Current Skip: ", forumSkip);
+            const order = parseInt(document.getElementById("orderDropdown").value);
+            const limit = parseInt(document.getElementById("limitInput").value);
+            
             try {
-                const response = await fetch("/api/get-forums");
+                const response = await fetch("/api/get-forums?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}");
                 const forums = await response.json();
                 const tbody = document.getElementById("forumsList");
                 const dropdown = document.getElementById("forumDropdown");
