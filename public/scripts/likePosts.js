@@ -9,12 +9,20 @@ function likePost(element) {
             dislikePost(element.parentNode.getElementsByClassName("dislikeButton")[0]);
         }
 
-        element.childNodes[1].innerHTML = Number(element.childNodes[1].innerHTML) + 1;
+        console.log($(element).parent().find(".voteValue"));
+
+        $(element).parent().find(".voteValue").text(function(_, currentText) {
+            console.log("+1");
+            return Number(currentText) + 1;
+        });
     }
     else {
         element.getElementsByClassName("bx")[0].classList.remove("bxs-like");
         element.getElementsByClassName("bx")[0].classList.add("bx-like");
-        element.childNodes[1].innerHTML = element.childNodes[1].innerHTML - 1;
+
+        $(element).parent().find(".voteValue").text(function(_, currentText) {
+            return Number(currentText) - 1;
+        });
     }
 }
 
@@ -29,12 +37,17 @@ function dislikePost(element) {
             likePost(element.parentNode.getElementsByClassName("likeButton")[0]);
         }
 
-        element.childNodes[1].innerHTML = Number(element.childNodes[1].innerHTML) + 1;
+        $(element).parent().find(".voteValue").text(function(_, currentText) {
+            return Number(currentText) - 1;
+        });
     }
     else {
         element.getElementsByClassName("bx")[0].classList.remove("bxs-dislike");
         element.getElementsByClassName("bx")[0].classList.add("bx-dislike");
-        element.childNodes[1].innerHTML = element.childNodes[1].innerHTML - 1;
+
+        $(element).parent().find(".voteValue").text(function(_, currentText) {
+            return Number(currentText) + 1;
+        });
     }
 }
 
@@ -45,6 +58,13 @@ function postSettings(element) {
 $(document).ready(async function() {
     const infoResponse = await fetch(`/api/get-users`)
     const info = await infoResponse.json();
+    let sessionData = await getSession();
+    let profile;
+
+    if (sessionData != null) {
+        profile = await (await fetch("/api/get-user-by-id/" + sessionData.id)).json()
+        console.log(profile);
+    }
 
     $(".post").each(function (_, element) {
         let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
@@ -58,5 +78,89 @@ $(document).ready(async function() {
         if ($("#originalReply")) {
             $("#originalReply").attr("placeholder", "Reply to @" + poster.username);
         }
+
+        let postId = $(element).attr("id")
+
+        if (sessionData != null) {
+            let voteInfo = profile.votes.find(likedPosts => likedPosts.postId === postId);
+            
+            if (voteInfo) {
+                if (voteInfo.vote == 1) {
+                    $(element).find(".likeButton").addClass("clicked");
+                    let likeIcon = $(element).find(".bx-like");
+                    $(likeIcon).addClass("bxs-like");
+                    $(likeIcon).removeClass("bx-like");
+                }
+                else {
+                    $(element).find(".dislikeButton").addClass("clicked");
+                    let dislikeIcon = $(element).find(".bx-dislike");
+                    $(dislikeIcon).addClass("bxs-dislike");
+                    $(dislikeIcon).removeClass("bx-dislike");
+                }
+            }
+        }
     })
+
+    $(".likeButton").click(function() {
+        console.log(sessionData);
+        
+        toggleVote($(this.parentNode.parentNode).attr("id"), 1, sessionData);
+
+        if (sessionData != null) {
+            likePost(this);
+        }
+    });
+
+    $(".dislikeButton").click(function() {
+        console.log(sessionData);
+        
+        toggleVote($(this.parentNode.parentNode).attr("id"), -1, sessionData);
+
+        if (sessionData != null) {
+            dislikePost(this);
+        }
+    })
+
+    
 });
+
+async function getSession() {
+    try {
+        const response = await fetch("/api/session");
+        const result = await response.json();
+
+        if (result.success) {
+            console.log("Current session:", result);
+
+            currentSession = result.user;
+            return currentSession;
+        }
+        else {
+            console.log("No current session");
+            return null;
+        }
+    }
+    catch (error) {
+        console.error("Error checking session:", error);
+    }
+}
+
+async function toggleVote(postId, voteValue, sessionData) {
+    if (!sessionData) {
+        alert("Not logged in");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/toggle-vote", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: sessionData.id, postId, voteValue })
+        });
+
+        const success = await response.json();
+    } 
+    catch (error) {
+        console.error("Error toggling vote:", error);
+    }
+}

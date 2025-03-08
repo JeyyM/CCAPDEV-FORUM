@@ -1,4 +1,4 @@
-<div class="post">
+<div class="post" id={{post._id}}>
     <div class="postHeaderContainer">
         <div class="postHeader" onclick="window.location.href='/viewProfile/{{post.posterName}}'">
             <img src="{{profile.profileImage}}" class="profilePic">
@@ -25,8 +25,9 @@
         {{/if}}
     </div>
     <div class="postEngagement">
-        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>{{post.likes}}</span></button>
-        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>{{post.dislikes}}</span></button>
+        <button class="likeButton"><i class='bx bx-like'></i></button>
+        <span class="voteValue">{{post.voteValue}}</span>
+        <button class="dislikeButton"><i class='bx bx-dislike'></i></button>
         <button class="commentButton" onclick="window.location.href='/viewPost/{{post.postId}}'"><i class='bx bxs-comment'></i><span>{{post.commentsCount}}</span></button>
         <button class="share"><i class='bx bxs-share-alt'></i></button>
     </div>
