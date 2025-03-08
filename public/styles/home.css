@@ -126,6 +126,7 @@
 
 .profilePic {
     height: 4vh;
+    width: 4vh;
     border: 1px solid var(--gray);
     border-radius: 50%;
 }

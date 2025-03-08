@@ -1,12 +1,18 @@
 const express = require("express");
 const mongo = require("./model/dbFunctions");
 const session = require("express-session");
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
 
 const fs = require("fs");
 const path = require("path");
 
 const server = express();
+
+//controllers
+const userController = require('./controller/userController');
+const forumController = require('./controller/forumController');
+const postController = require('./controller/postController');
+const commentController = require('./controller/commentController');
 
 server.use(session({
     secret: "fuckingpassword",
@@ -27,7 +33,10 @@ server.engine('hbs', handlebars.engine({
     extname: 'hbs',
     helpers: {
         isEqual: (x, y) => x === y,
-        isNull: (x) => x === null 
+        isNull: (x) => x === null,
+        json: function (body) {
+            return JSON.stringify(body);
+        }
     }
 }));
 
@@ -45,7 +54,14 @@ server.use((req, res, next) => {
     next();
 });
 
+//register controllers under /api
+server.use("/api", userController);
+server.use("/api", forumController);
+server.use("/api", postController);
+server.use("/api", commentController);
+
 //////////////////////////////// Placeholders ///////////////////////////////////////////////
+/*
 const user = {
     userId: 1,
     userName: "BuilderMia",
@@ -56,7 +72,8 @@ const user = {
     posts: 2,
     comments: 5
 };
-// const user = null;
+*/
+let localUser = null;
 
 const myCommunities = [
     {
@@ -91,7 +108,7 @@ const communities = [
     },
     {
         communityId: 3,
-        communityName: "CS:GO",
+        communityName: "CSGO",
         communityIcon: "/images/csgo.jpg",
         bannerPic: "/images/bannerMinecraft.jpg",
         description: "Welcome to the ultimate Minecraft hub! Whether you're a redstone genius, a master builder, a hardcore survivor, or just starting out, this is the place for you. Share your epic builds, survival adventures, redstone creations, and favorite seeds. Ask for tips, discuss updates, and connect with fellow crafters. Let's build, explore, and survive together!",
@@ -118,6 +135,7 @@ const communities = [
     }
 ];
 
+/*
 const posts = [
     {
         postId: 1,
@@ -159,6 +177,7 @@ const posts = [
         comments: 2
     }
 ];
+*/
 
 const comments = [
     {
@@ -259,12 +278,15 @@ mongo.insertSampleUser();
 mongo.insertSamplePosts();
 
 server.get("/", async function(req, resp){
+    console.log("User: " + localUser);
+    const posts = await mongo.getPosts();
+
     resp.render("home",{
         layout: "index",
         title: "Home Page",
         pageStyle: "home",
-        pageScripts: ["account", "sortPosts", "likePosts", "login"],
-        user: user,
+        pageScripts: ["account", "sortPosts", "likePosts", "home"],
+        user: localUser,
         myCommunities: myCommunities,
         communities: communities,
         posts: posts
@@ -284,85 +306,120 @@ server.get("/forum/:forumName", async (req, resp) => {
         const decodedForumName = decodeURIComponent(req.params.forumName);
 
         const forum = await mongo.getForumByName(decodedForumName);
+        const posts = await mongo.getPostsByForumId(forum._id);
 
-        // if (!forum) {
-        //     return resp.status(404).render("notFound", {
-        //         layout: "index",
-        //         title: "Forum Not Found",
-        //         message: `No forum found with the name "${decodedForumName}".`
-        //     });
-        // }
+        const postUsers = [];
+
+        for (const post of posts){
+            const user = await mongo.getUserById(post.authorId);
+            postUsers.push(user);
+        }
+
+        console.log("USERS", postUsers);
 
         resp.render("forum", {
             layout: "forumLayout",
-            title: forum.name,
-            forumName: forum.name,
-            description: forum.description,
-            forumImage: forum.forumImage,
-            bannerImage: forum.bannerImage,
-            createdAt: forum.createdAt.toDateString(),
-            membersCount: forum.membersCount,
-            postsCount: forum.postsCount
+            forumData: forum,
+            postData: posts,
+            userData: postUsers
         });
 
     } catch (error) {
         console.error("Error fetching forum: ", error);
-        // resp.status(500).render("error", {
-        //     layout: "index",
-        //     title: "Error",
-        //     message: "An error occurred while loading the forum."
-        // });
     }
 });
 
-server.get("/viewPost/:postId", function(req, resp){
-    const postId = parseInt(req.params.postId);
-    const post = posts.find(p => p.postId === postId);
+server.get("/viewPost/:postId", async function(req, resp){
+    const postId = req.params.postId;
+    const posts = await mongo.getPosts();
+    const post = posts.find(p => p._id.toString() === postId.toString());
+
+    const comments = await mongo.getCommentsByPostId(post._id);
+    // const comments = await commentsResponse.json();
+    console.log(comments);
 
     resp.render("viewPost",{
         layout: "index",
         title: "View Post Page",
         pageStyle: "viewpost",
-        pageScripts: ["account", "likePosts", "viewPost", "login"],
-        user: user,
+        pageScripts: ["account", "likePosts", "viewPost", "login", "textarea"],
+        user: localUser,
         myCommunities: myCommunities,
         communities: communities,
         post: post,
-        comments: comments.filter(c => c.postId === postId)
+        comments: comments
     });
 });
 
-server.get("/viewCommunity/:communityName", function(req, resp){
+server.get("/viewCommunity/:communityName", async function(req, resp){
     const communityName = req.params.communityName;
-    const community = communities.find(c => c.communityName === communityName);
+
+    const communityList = await mongo.getForums();
+    const community = communityList.find(c => c.name === communityName);
+
+    const communityDB = await mongo.getForumByName(communityName);
+
+    const posts = await mongo.getPosts();
+    const postList = [];
+
+    console.log(community);
+
+    posts.forEach(function (post) {
+        if (post.forumId.toString() == community._id.toString()) {
+            postList.push(post);
+        }
+    })
+
+    let joinedCommunity = null;
+
+    if (localUser) {
+        console.log("Joined Forums: " + localUser.joinedForums);
+        joinedCommunity = localUser.joinedForums.some(c => c === communityDB._id.toString());
+    }
+    
+    console.log("Joined community: " + joinedCommunity);
 
     resp.render("viewCommunity",{
         layout: "index",
         title: "View Community Page",
         pageStyle: "viewcommunity",
         pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewCommunity", "login"],
-        user: user,
+        user: localUser,
         myCommunities: myCommunities,
         communities: communities,
         community: community,
-        posts: posts.filter(p => p.communityId === community.communityId)
+        joinedCommunity: joinedCommunity,
+        posts: postList
     });
 });
 
-server.get("/viewProfile/:profileName", function(req, resp){
+server.get("/viewProfile/:profileName", async function(req, resp){
     const profileName = req.params.profileName;
-    const profile = profiles.find(p => p.profileName === profileName);
+
+    const users = await mongo.getUsers();
+    const profile = users.find(u => u.username === profileName);
+    console.log(profile._id);
+
+    const posts = await mongo.getPosts();
+    const postList = [];
+    // console.log(posts);
+    
+    posts.forEach(function (post) {
+        if (post.authorId.toString() == profile._id.toString()) {
+            postList.push(post);
+        }
+    })
 
     resp.render("viewProfile",{
         layout: "index",
         title: "View Profile Page",
         pageStyle: "viewprofile",
         pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewProfile", "login"],
-        user: user,
+        user: localUser,
         myCommunities: myCommunities,
         communities: communities,
         profile: profile,
-        posts: posts.filter(p => p.posterName === profileName),
+        posts: postList,
         comments: comments.filter(c => c.posterName === profileName)
     });
 });
@@ -378,7 +435,7 @@ server.get("/editPost/:postId", function(req, resp){
         pageScripts: ["account", "likePosts", "sortPosts"],
         myCommunities: myCommunities,
         communities: communities,
-        user: user,
+        user: localUser,
         post: post,
         community: communities.find(c => c.communityId === post.communityId)
     });
@@ -395,7 +452,7 @@ server.get("/editProfile/:profileName", function(req, resp){
         pageScripts: ["account", "likePosts", "sortPosts"],
         myCommunities: myCommunities,
         communities: communities,
-        user: user,
+        user: localUser,
         profile: profile
     });
 });
@@ -411,7 +468,7 @@ server.get("/createPost/:communityName?", function(req, resp){
         pageScripts: ["account", "sortPosts", "likePosts"],
         myCommunities: myCommunities,
         communities: communities,
-        user: user,
+        user: localUser,
         community: community
     });
 });
@@ -421,527 +478,568 @@ server.listen(port, function(){
     console.log("Listening at port "+port);
 });
 
+// For Testing Stuff
+
+server.post("/update/userLogin", function(req, resp){
+    console.log(req.body.user);
+
+    localUser = req.body.user;
+    resp.json({ success: true, message: "User login updated" });
+})
+
+server.post("/update/userGeneral", function(req, resp){
+    console.log(req.body.user);
+
+    localUser = req.body.user;
+    resp.json({ success: true, message: "User updated" });
+});
+
+server.post("/update/userLogout", function(req, resp){
+    console.log("User Log Out");
+    localUser = null;
+    resp.json({ success: true, message: "User logout updated" });
+})
+
+server.get("/info/get-forum-info-by-name/:forumName", async function(req, resp) {
+    const forumName = req.params.forumName;
+
+    const users = await mongo.getUsers();
+    const forum = await mongo.getForumByName(forumName);
+    const userList = [];
+
+    users.forEach(function (user) {
+        if (user.joinedForums.some(c => c === forum._id.toString())) {
+            userList.push(user);
+        }
+    })
+
+    resp.send(userList);
+});
+
 ///////////////////////////// FORUM INTERACTIONS ///////////////////////////////
 
-server.get("/api/get-forums", async (req, res) => {
-    try {
-        const forums = await mongo.getForums();
-        res.json(forums);
-        // console.log("Forums fetched: ", forums);
+// server.get("/api/get-forums", async (req, res) => {
+//     try {
+//         const forums = await mongo.getForums();
+//         res.json(forums);
+//         // console.log("Forums fetched: ", forums);
 
-    } catch (error) {
-        console.error("Error fetching forums: ", error);
-        res.status(500).json({ message: "Error fetching forums" });
-    }
-});
+//     } catch (error) {
+//         console.error("Error fetching forums: ", error);
+//         res.status(500).json({ message: "Error fetching forums" });
+//     }
+// });
 
-server.get("/api/get-forum-by-id/:forumId", async (req, res) => {
-    try {
-        const forumId = req.params.forumId;
+// server.get("/api/get-forum-by-id/:forumId", async (req, res) => {
+//     try {
+//         const forumId = req.params.forumId;
 
-        const forum = await mongo.getForumById(forumId);
+//         const forum = await mongo.getForumById(forumId);
 
-        // console.log("Found forum: ", forum);
+//         // console.log("Found forum: ", forum);
 
-        if (!forum) {
-            return res.status(404).json({ message: "Forum not found" });
-        }
+//         if (!forum) {
+//             return res.status(404).json({ message: "Forum not found" });
+//         }
 
-        res.json(forum);
-    } catch (error) {
-        console.error("Error fetching forum by ID: ", error);
-        res.status(500).json({ message: "Error fetching forum" });
-    }
-});
+//         res.json(forum);
+//     } catch (error) {
+//         console.error("Error fetching forum by ID: ", error);
+//         res.status(500).json({ message: "Error fetching forum" });
+//     }
+// });
 
-server.get("/api/get-forum-by-name/:forumName", async (req, res) => {
-    try {
-        const forumName = req.params.forumName;
+// server.get("/api/get-forum-by-name/:forumName", async (req, res) => {
+//     try {
+//         const forumName = req.params.forumName;
 
-        const forum = await mongo.getForumByName(forumName);
+//         const forum = await mongo.getForumByName(forumName);
 
-        // console.log("Found forum: ", forum);
+//         // console.log("Found forum: ", forum);
 
-        if (!forum) {
-            return res.status(404).json({ message: "Forum not found" });
-        }
+//         if (!forum) {
+//             return res.status(404).json({ message: "Forum not found" });
+//         }
 
-        res.json(forum);
-    } catch (error) {
-        console.error("Error fetching forum by name: ", error);
-        res.status(500).json({ message: "Error fetching forum" });
-    }
-});
+//         res.json(forum);
+//     } catch (error) {
+//         console.error("Error fetching forum by name: ", error);
+//         res.status(500).json({ message: "Error fetching forum" });
+//     }
+// });
 
-server.patch("/api/update-forum/:forumId", async (req, res) => {
-    try {
-        const forumId = req.params.forumId;
-        const updatedData = req.body;
+// server.patch("/api/update-forum/:forumId", async (req, res) => {
+//     try {
+//         const forumId = req.params.forumId;
+//         const updatedData = req.body;
 
-        // console.log("Updating forum: ", { forumId, updatedData });
-        const result = await mongo.updateForum(forumId, updatedData);
-        // console.log("Update result: ", result);
+//         // console.log("Updating forum: ", { forumId, updatedData });
+//         const result = await mongo.updateForum(forumId, updatedData);
+//         // console.log("Update result: ", result);
 
-        if (result) {
-            res.json({ message: result.message });
-        } else {
-            res.status(400).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating forum" });
-    }
-});
+//         if (result) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(400).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating forum" });
+//     }
+// });
 
-server.put("/api/update-forums", async (req, res) => {
-    try {
-        // console.log("Updating multiple forums: ", req.body.forums);
-        const result = await mongo.updateForums(req.body.forums);
-        // console.log("Update multiple forums result: ", result);
+// server.put("/api/update-forums", async (req, res) => {
+//     try {
+//         // console.log("Updating multiple forums: ", req.body.forums);
+//         const result = await mongo.updateForums(req.body.forums);
+//         // console.log("Update multiple forums result: ", result);
 
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating forums" });
-    }
-});
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating forums" });
+//     }
+// });
 
-server.post("/api/add-forum", async (req, res) => {
-    try {
-        const forumData = req.body;
+// server.post("/api/add-forum", async (req, res) => {
+//     try {
+//         const forumData = req.body;
 
-        // console.log("Adding forum: ", forumData);
-        const result = await mongo.addForum(forumData);
-        // console.log("Add forum result: ", result);
+//         // console.log("Adding forum: ", forumData);
+//         const result = await mongo.addForum(forumData);
+//         // console.log("Add forum result: ", result);
 
-        if (result) {
-            res.json({ message: "Forum added successfully" });
-        } else {
-            res.status(500).json({ message: "Error adding forum" });
-        }
-    } catch (error) {
-        console.error("Error adding forum: ", error);
-        res.status(500).json({ message: "Error adding forum" });
-    }
-});
-
-
-server.delete("/api/delete-forum/:forumId", async (req, res) => {
-    try {
-        // console.log("Deleting forum: ", req.params.forumId);
-        const result = await mongo.deleteForum(req.params.forumId);
-        // console.log("Delete forum result: ", result);
-
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error deleting forum" });
-    }
-});
-
-/////////////////////////// USER INTERACTIONS ///////////////////
-
-server.get("/api/get-users", async (req, res) => {
-    try {
-        const users = await mongo.getUsers();
-        res.json(users);
-        // console.log("Users fetched: ", users);
-
-    } catch (error) {
-        console.error("Error fetching users: ", error);
-        res.status(500).json({ message: "Error fetching users" });
-    }
-});
-
-server.get("/api/get-user-by-id/:userId", async (req, res) => {
-    try {
-        const userId = req.params.userId;
-
-        const user = await mongo.getUserById(userId);
-
-        // console.log("Found user: ", user);
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        res.json(user);
-    } catch (error) {
-        console.error("Error fetching user by ID: ", error);
-        res.status(500).json({ message: "Error fetching user" });
-    }
-});
-
-server.get("/api/get-user-by-name/:username", async (req, res) => {
-    try {
-        const username = req.params.username;
-
-        const user = await mongo.getUserByName(username);
-
-        // console.log("Found user: ", user);
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        res.json(user);
-    } catch (error) {
-        console.error("Error fetching user by name: ", error);
-        res.status(500).json({ message: "Error fetching user" });
-    }
-});
+//         if (result) {
+//             res.json({ message: "Forum added successfully" });
+//         } else {
+//             res.status(500).json({ message: "Error adding forum" });
+//         }
+//     } catch (error) {
+//         console.error("Error adding forum: ", error);
+//         res.status(500).json({ message: "Error adding forum" });
+//     }
+// });
 
 
-server.patch("/api/update-user/:userId", async (req, res) => {
-    try {
-        const userId = req.params.userId;
-        const updatedData = req.body;
+// server.delete("/api/delete-forum/:forumId", async (req, res) => {
+//     try {
+//         // console.log("Deleting forum: ", req.params.forumId);
+//         const result = await mongo.deleteForum(req.params.forumId);
+//         // console.log("Delete forum result: ", result);
 
-        // console.log("Updating user: ", { userId, updatedData });
-        const result = await mongo.updateUser(userId, updatedData);
-        // console.log("Update result: ", result);
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error deleting forum" });
+//     }
+// });
 
-        if (result) {
-            res.json({ message: result.message });
-        } else {
-            res.status(400).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating user" });
-    }
-});
+// /////////////////////////// USER INTERACTIONS ///////////////////
 
-server.put("/api/update-users", async (req, res) => {
-    try {
-        // console.log("Updating multiple users: ", req.body.users);
-        const result = await mongo.updateUsers(req.body.users);
-        // console.log("Update multiple users result: ", result);
+// server.get("/api/get-users", async (req, res) => {
+//     try {
+//         const users = await mongo.getUsers();
+//         res.json(users);
+//         // console.log("Users fetched: ", users);
 
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating users" });
-    }
-});
+//     } catch (error) {
+//         console.error("Error fetching users: ", error);
+//         res.status(500).json({ message: "Error fetching users" });
+//     }
+// });
 
-server.post("/api/add-user", async (req, res) => {
-    try {
-        const userData = req.body;
+// server.get("/api/get-user-by-id/:userId", async (req, res) => {
+//     try {
+//         const userId = req.params.userId;
 
-        // console.log("Adding user: ", userData);
-        const result = await mongo.addUser(userData);
-        // console.log("Add user result: ", result);
+//         const user = await mongo.getUserById(userId);
 
-        if (result) {
-            res.json({ message: "User added successfully" });
-        } else {
-            res.status(500).json({ message: "Error adding user" });
-        }
-    } catch (error) {
-        console.error("Error adding user: ", error);
-        res.status(500).json({ message: "Error adding user" });
-    }
-});
+//         // console.log("Found user: ", user);
 
-server.delete("/api/delete-user/:userId", async (req, res) => {
-    try {
-        // console.log("Deleting user: ", req.params.userId);
-        const result = await mongo.deleteUser(req.params.userId);
-        // console.log("Delete user result: ", result);
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found" });
+//         }
 
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error deleting user" });
-    }
-});
+//         res.json(user);
+//     } catch (error) {
+//         console.error("Error fetching user by ID: ", error);
+//         res.status(500).json({ message: "Error fetching user" });
+//     }
+// });
 
-//////////////////// ACCOUNT INTERACTIONS /////////////////
-server.post("/api/login", async (req, res) => {
-    try {
-        const { email, password, rememberMe } = req.body;
+// server.get("/api/get-user-by-name/:username", async (req, res) => {
+//     try {
+//         const username = req.params.username;
+
+//         const user = await mongo.getUserByName(username);
+
+//         // console.log("Found user: ", user);
+
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found" });
+//         }
+
+//         res.json(user);
+//     } catch (error) {
+//         console.error("Error fetching user by name: ", error);
+//         res.status(500).json({ message: "Error fetching user" });
+//     }
+// });
+
+
+// server.patch("/api/update-user/:userId", async (req, res) => {
+//     try {
+//         const userId = req.params.userId;
+//         const updatedData = req.body;
+
+//         // console.log("Updating user: ", { userId, updatedData });
+//         const result = await mongo.updateUser(userId, updatedData);
+//         // console.log("Update result: ", result);
+
+//         if (result) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(400).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating user" });
+//     }
+// });
+
+// server.put("/api/update-users", async (req, res) => {
+//     try {
+//         // console.log("Updating multiple users: ", req.body.users);
+//         const result = await mongo.updateUsers(req.body.users);
+//         // console.log("Update multiple users result: ", result);
+
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating users" });
+//     }
+// });
+
+// server.post("/api/add-user", async (req, res) => {
+//     try {
+//         const userData = req.body;
+
+//         // console.log("Adding user: ", userData);
+//         const result = await mongo.addUser(userData);
+//         // console.log("Add user result: ", result);
+
+//         if (result) {
+//             res.json({ message: "User added successfully" });
+//         } else {
+//             res.status(500).json({ message: "Error adding user" });
+//         }
+//     } catch (error) {
+//         console.error("Error adding user: ", error);
+//         res.status(500).json({ message: "Error adding user" });
+//     }
+// });
+
+// server.delete("/api/delete-user/:userId", async (req, res) => {
+//     try {
+//         // console.log("Deleting user: ", req.params.userId);
+//         const result = await mongo.deleteUser(req.params.userId);
+//         // console.log("Delete user result: ", result);
+
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error deleting user" });
+//     }
+// });
+
+// //////////////////// ACCOUNT INTERACTIONS /////////////////
+// server.post("/api/login", async (req, res) => {
+//     try {
+//         const { email, password, rememberMe } = req.body;
     
-        const user = await mongo.getUserByEmail(email);
+//         const user = await mongo.getUserByEmail(email);
 
-        if (!user) {
-            return res.status(404).json({ success: false, message: "Email not found" });
-        }
+//         if (!user) {
+//             return res.status(404).json({ success: false, message: "Email not found" });
+//         }
 
-        if (user.password !== password) {
-            return res.status(401).json({ success: false, message: "Wrong password" });
-        }
+//         if (user.password !== password) {
+//             return res.status(401).json({ success: false, message: "Wrong password" });
+//         }
 
-        req.session.user = {
-            id: user._id,
-            username: user.username,
-            email: user.email,
-            // joinedForums: user.joinedForums,
-            // following: user.joinedForums
-        };
+//         req.session.user = {
+//             id: user._id,
+//             username: user.username,
+//             email: user.email,
+//             // joinedForums: user.joinedForums,
+//             // following: user.joinedForums
+//         };
 
-        if (rememberMe) {
-            req.session.cookie.maxAge = 60 * 60 * 1000;
-        }
+//         if (rememberMe) {
+//             req.session.cookie.maxAge = 60 * 60 * 1000;
+//         }
 
-        res.json({ success: true, message: "Login successful", user });
-    } catch (error) {
-        console.error("Error logging in: ", error);
-        res.status(500).json({ message: "Error logging in" });
-    }
-});
+//         res.json({ success: true, message: "Login successful", user });
+//     } catch (error) {
+//         console.error("Error logging in: ", error);
+//         res.status(500).json({ message: "Error logging in" });
+//     }
+// });
 
-// NOTE SESSIONS ARE BEING CHECKED IN HEADERS, check tester.hbs in layouts
+// // NOTE SESSIONS ARE BEING CHECKED IN HEADERS, check tester.hbs in layouts
 
-server.get("/api/session", (req, res) => {
-    if (req.session.user) {
-        res.json({ success: true, user: req.session.user });
-    } else {
-        res.json({ success: false, message: "No active session" });
-    }
-});
+// server.get("/api/session", (req, res) => {
+//     if (req.session.user) {
+//         res.json({ success: true, user: req.session.user });
+//     } else {
+//         res.json({ success: false, message: "No active session" });
+//     }
+// });
 
-server.post("/api/logout", (req, res) => {
-    req.session.destroy(error => {
-        if (error) {
-            return res.status(500).json({ success: false, message: "Error logging out" });
-        }
-        res.json({ success: true, message: "Logged out successfully" });
-    });
-});
+// server.post("/api/logout", (req, res) => {
+//     req.session.destroy(error => {
+//         if (error) {
+//             return res.status(500).json({ success: false, message: "Error logging out" });
+//         }
+//         res.json({ success: true, message: "Logged out successfully" });
+//     });
+// });
 
-server.patch("/api/toggle-forum-join", async (req, res) => {
-    try {
-        const {userId, forumId} = req.body;
+// server.patch("/api/toggle-forum-join", async (req, res) => {
+//     try {
+//         const {userId, forumId} = req.body;
 
-        const result = await mongo.toggleForumJoin(userId, forumId);
+//         const result = await mongo.toggleForumJoin(userId, forumId);
     
-        if (result.success){
-            res.json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error){
-        console.error("Error toggling: ", error);
-        res.status(500).json({ success: false, message: "Toggling error" });
-    }
+//         if (result.success){
+//             res.json(result);
+//         } else {
+//             res.status(400).json(result);
+//         }
+//     } catch (error){
+//         console.error("Error toggling: ", error);
+//         res.status(500).json({ success: false, message: "Toggling error" });
+//     }
 
-});
+// });
 
-server.patch("/api/toggle-user-follow", async (req, res) => {
-    try {
-        const {userId, targetId} = req.body;
+// server.patch("/api/toggle-user-follow", async (req, res) => {
+//     try {
+//         const {userId, targetId} = req.body;
 
-        // console.log("toggling follower", userId, targetId);
+//         // console.log("toggling follower", userId, targetId);
 
-        const result = await mongo.toggleUserFollow(userId, targetId);
+//         const result = await mongo.toggleUserFollow(userId, targetId);
     
-        if (result.success){
-            res.json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error){
-        console.error("Error toggling: ", error);
-        res.status(500).json({ success: false, message: "Toggling error" });
-    }
+//         if (result.success){
+//             res.json(result);
+//         } else {
+//             res.status(400).json(result);
+//         }
+//     } catch (error){
+//         console.error("Error toggling: ", error);
+//         res.status(500).json({ success: false, message: "Toggling error" });
+//     }
 
-});
+// });
 
-/////////////////////////// POST INTERACTIONS ////////////
-server.get("/api/get-posts-by-forum/:forumId", async (req, res) => {
-    try {
-        const forumId = req.params.forumId;
-        const posts = await mongo.getPostsByForumId(forumId);
+// /////////////////////////// POST INTERACTIONS ////////////
+// server.get("/api/get-posts-by-forum/:forumId", async (req, res) => {
+//     try {
+//         const forumId = req.params.forumId;
+//         const posts = await mongo.getPostsByForumId(forumId);
 
-        res.json(posts);
-    } catch (error) {
-        console.error("Error fetching posts: ", error);
-        res.status(500).json({ message: "Error fetching posts" });
-    }
-});
+//         // .limit()
+//         // .sortBy()
 
-server.put("/api/update-posts", async (req, res) => {
-    try {
-        // console.log("Updating multiple posts: ", req.body.posts);
-        const result = await mongo.updatePosts(req.body.posts);
-        // console.log("Update multiple posts result: ", result);
+//         res.json(posts);
+//     } catch (error) {
+//         console.error("Error fetching posts: ", error);
+//         res.status(500).json({ message: "Error fetching posts" });
+//     }
+// });
 
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating post" });
-    }
-});
+// server.put("/api/update-posts", async (req, res) => {
+//     try {
+//         // console.log("Updating multiple posts: ", req.body.posts);
+//         const result = await mongo.updatePosts(req.body.posts);
+//         // console.log("Update multiple posts result: ", result);
 
-server.patch("/api/update-post/:postId", async (req, res) => {
-    try {
-        const postId = req.params.postId;
-        const updatedData = req.body;
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating post" });
+//     }
+// });
 
-        // console.log("Updating post: ", { postId, updatedData });
-        const result = await mongo.updatePost(postId, updatedData);
-        // console.log("Update result: ", result);
+// server.patch("/api/update-post/:postId", async (req, res) => {
+//     try {
+//         const postId = req.params.postId;
+//         const updatedData = req.body;
 
-        if (result) {
-            res.json({ message: result.message });
-        } else {
-            res.status(400).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating post" });
-    }
-});
+//         // console.log("Updating post: ", { postId, updatedData });
+//         const result = await mongo.updatePost(postId, updatedData);
+//         // console.log("Update result: ", result);
 
-server.post("/api/add-post", async (req, res) => {
-    try {
-        const postData = req.body;
+//         if (result) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(400).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating post" });
+//     }
+// });
 
-        // console.log("Adding post: ", postData);
-        const result = await mongo.addPost(postData);
-        // console.log("Add forum result: ", result);
+// server.post("/api/add-post", async (req, res) => {
+//     try {
+//         const postData = req.body;
 
-        if (result) {
-            res.json({ message: "Post added successfully" });
-        } else {
-            res.status(500).json({ message: "Error adding post" });
-        }
-    } catch (error) {
-        console.error("Error adding post: ", error);
-        res.status(500).json({ message: "Error adding post" });
-    }
-});
+//         // console.log("Adding post: ", postData);
+//         const result = await mongo.addPost(postData);
+//         // console.log("Add forum result: ", result);
 
-server.delete("/api/delete-post/:postId", async (req, res) => {
-    try {
-        // console.log("Deleting post: ", req.params.postId);
-        const result = await mongo.deletePost(req.params.postId);
-        // console.log("Delete post result: ", result);
+//         if (result) {
+//             res.json({ message: "Post added successfully" });
+//         } else {
+//             res.status(500).json({ message: "Error adding post" });
+//         }
+//     } catch (error) {
+//         console.error("Error adding post: ", error);
+//         res.status(500).json({ message: "Error adding post" });
+//     }
+// });
 
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error deleting user" });
-    }
-});
+// server.delete("/api/delete-post/:postId", async (req, res) => {
+//     try {
+//         // console.log("Deleting post: ", req.params.postId);
+//         const result = await mongo.deletePost(req.params.postId);
+//         // console.log("Delete post result: ", result);
 
-server.patch("/api/toggle-vote", async (req, res) => {
-    try {
-        const { userId, postId, voteValue } = req.body;
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error deleting user" });
+//     }
+// });
 
-        // console.log("Toggling vote:", userId, postId, voteValue);
+// server.patch("/api/toggle-vote", async (req, res) => {
+//     try {
+//         const { userId, postId, voteValue } = req.body;
 
-        const result = await mongo.toggleVote(userId, postId, voteValue);
+//         // console.log("Toggling vote:", userId, postId, voteValue);
 
-        if (result.success) {
-            res.json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        console.error("Error toggling vote: ", error);
-        res.status(500).json({ success: false, message: "Toggling vote error" });
-    }
-});
+//         const result = await mongo.toggleVote(userId, postId, voteValue);
 
-/////////////////////////// COMMENT INTERACTIONS ////////////
-server.get("/api/get-comments-by-post/:postId", async (req, res) => {
-    try {
-        const postId = req.params.postId;
-        const comments = await mongo.getCommentsByPostId(postId);
+//         if (result.success) {
+//             res.json(result);
+//         } else {
+//             res.status(400).json(result);
+//         }
+//     } catch (error) {
+//         console.error("Error toggling vote: ", error);
+//         res.status(500).json({ success: false, message: "Toggling vote error" });
+//     }
+// });
 
-        res.json(comments);
-    } catch (error) {
-        console.error("Error fetching comments: ", error);
-        res.status(500).json({ message: "Error fetching comments" });
-    }
-});
+// /////////////////////////// COMMENT INTERACTIONS ////////////
+// server.get("/api/get-comments-by-post/:postId", async (req, res) => {
+//     try {
+//         const postId = req.params.postId;
+//         const comments = await mongo.getCommentsByPostId(postId);
 
-server.patch("/api/update-comment/:commentId", async (req, res) => {
-    try {
-        const commentId = req.params.commentId;
-        const updatedData = req.body;
+//         res.json(comments);
+//     } catch (error) {
+//         console.error("Error fetching comments: ", error);
+//         res.status(500).json({ message: "Error fetching comments" });
+//     }
+// });
 
-        // console.log("Updating comment: ", { commentId, updatedData });
-        const result = await mongo.updateComment(commentId, updatedData);
-        // console.log("Update result: ", result);
+// server.patch("/api/update-comment/:commentId", async (req, res) => {
+//     try {
+//         const commentId = req.params.commentId;
+//         const updatedData = req.body;
 
-        if (result) {
-            res.json({ message: result.message });
-        } else {
-            res.status(400).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error updating comment" });
-    }
-});
+//         // console.log("Updating comment: ", { commentId, updatedData });
+//         const result = await mongo.updateComment(commentId, updatedData);
+//         // console.log("Update result: ", result);
 
-server.post("/api/add-comment", async (req, res) => {
-    try {
-        const commentData = req.body;
+//         if (result) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(400).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error updating comment" });
+//     }
+// });
 
-        // console.log("Adding comment: ", commentData);
-        const result = await mongo.addComment(commentData);
-        // console.log("Add forum result: ", result);
+// server.post("/api/add-comment", async (req, res) => {
+//     try {
+//         const commentData = req.body;
 
-        if (result) {
-            res.json({ message: "Comment added successfully" });
-        } else {
-            res.status(500).json({ message: "Error adding comment" });
-        }
-    } catch (error) {
-        console.error("Error adding comment: ", error);
-        res.status(500).json({ message: "Error adding comment" });
-    }
-});
+//         // console.log("Adding comment: ", commentData);
+//         const result = await mongo.addComment(commentData);
+//         // console.log("Add forum result: ", result);
 
-server.patch("/api/toggle-comment-vote", async (req, res) => {
-    try {
-        const { userId, commentId, voteValue } = req.body;
+//         if (result) {
+//             res.json({ message: "Comment added successfully" });
+//         } else {
+//             res.status(500).json({ message: "Error adding comment" });
+//         }
+//     } catch (error) {
+//         console.error("Error adding comment: ", error);
+//         res.status(500).json({ message: "Error adding comment" });
+//     }
+// });
 
-        // console.log("Toggling vote:", userId, commentId, voteValue);
+// server.patch("/api/toggle-comment-vote", async (req, res) => {
+//     try {
+//         const { userId, commentId, voteValue } = req.body;
 
-        const result = await mongo.toggleCommentVote(userId, commentId, voteValue);
+//         // console.log("Toggling vote:", userId, commentId, voteValue);
 
-        if (result.success) {
-            res.json(result);
-        } else {
-            res.status(400).json(result);
-        }
-    } catch (error) {
-        console.error("Error toggling vote: ", error);
-        res.status(500).json({ success: false, message: "Toggling vote error" });
-    }
-});
+//         const result = await mongo.toggleCommentVote(userId, commentId, voteValue);
 
-server.delete("/api/delete-comment/:commentId", async (req, res) => {
-    try {
-        // console.log("Deleting comment: ", req.params.commentId);
-        const result = await mongo.deleteComment(req.params.commentId);
-        // console.log("Delete comment result: ", result);
+//         if (result.success) {
+//             res.json(result);
+//         } else {
+//             res.status(400).json(result);
+//         }
+//     } catch (error) {
+//         console.error("Error toggling vote: ", error);
+//         res.status(500).json({ success: false, message: "Toggling vote error" });
+//     }
+// });
 
-        if (result.success) {
-            res.json({ message: result.message });
-        } else {
-            res.status(500).json({ message: result.error });
-        }
-    } catch (error) {
-        res.status(500).json({ message: "Error deleting comment" });
-    }
-});
+// server.delete("/api/delete-comment/:commentId", async (req, res) => {
+//     try {
+//         // console.log("Deleting comment: ", req.params.commentId);
+//         const result = await mongo.deleteComment(req.params.commentId);
+//         // console.log("Delete comment result: ", result);
+
+//         if (result.success) {
+//             res.json({ message: result.message });
+//         } else {
+//             res.status(500).json({ message: result.error });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ message: "Error deleting comment" });
+//     }
+// });

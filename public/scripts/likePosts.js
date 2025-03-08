@@ -41,3 +41,22 @@ function dislikePost(element) {
 function postSettings(element) {
     element.parentNode.getElementsByClassName("floatingSettings")[0].classList.toggle("hidden");
 }
+
+$(document).ready(async function() {
+    const infoResponse = await fetch(`/api/get-users`)
+    const info = await infoResponse.json();
+
+    $(".post").each(function (_, element) {
+        let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
+        console.log(poster.profileImage);
+
+        $(element).find(".profilePic").attr("src", poster.profileImage);
+        $(element).find(".posterName").text(poster.username);
+        $(element).find(".postHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
+        $(element).find(".posterName").removeAttr("id");
+
+        if ($("#originalReply")) {
+            $("#originalReply").attr("placeholder", "Reply to @" + poster.username);
+        }
+    })
+});

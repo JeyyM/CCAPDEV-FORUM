@@ -1,15 +1,19 @@
 <div class="main">
     <div class="bodyContainer">
         <div class="communityInfo">
-            <img src="{{community.bannerPic}}" class="bannerPic">
+            <img src="{{community.bannerImage}}" class="bannerPic">
             <div class="communityFloatingContainer">
                 <div class="community">
-                    <img src="{{community.communityIcon}}" class="communityPic profilePic">
-                    <span class="communityName">{{community.communityName}}</span>
+                    <img src="{{community.forumImage}}" class="communityPic profilePic">
+                    <span class="communityName">{{community.name}}</span>
                 </div>
                 <div class="communityOptionsContainer">
-                    <div class="communityOptions createPost" onclick="window.location.href='/createPost/{{community.communityName}}'"><i class='bx bx-plus'></i>Create Post</div>
-                    <div class="communityOptions join joined" onclick="joinCommunity(this)"><i class='bx bxs-bookmark'></i>Joined</div>
+                    <div class="communityOptions createPost" onclick="window.location.href='/createPost/{{community.name}}'"><i class='bx bx-plus'></i>Create Post</div>
+                    {{#if joinedCommunity}}
+                    <div class="communityOptions join joined" id="joinCommunity"><i class='bx bxs-bookmark'></i>Joined</div>
+                    {{else}}
+                    <div class="communityOptions join" id="joinCommunity"><i class='bx bx-bookmark'></i>Join</div>
+                    {{/if}}
                 </div>
             </div>
             <div class="communityDescription">
@@ -17,15 +21,15 @@
                     {{community.description}}
                 </div>
                 <div class="communityStats">
-                    <span class="followers"><i class='bx bxs-group'></i>{{community.members}} Members</span>
-                    <span class="posts"><i class='bx bx-note'></i>{{community.posts}} Posts</span>
+                    <span class="followers"><i class='bx bxs-group'></i>{{community.membersCount}} Members</span>
+                    <span class="posts"><i class='bx bx-note'></i>{{community.postsCount}} Posts</span>
                 </div>
             </div>
         </div>
         {{> sort}}
         <div id="postContainer">
             {{#each posts}}
-                {{> post post=this user=../user}}
+                {{> post post=this user=../user }}
             {{/each}}
         </div>
     </div>

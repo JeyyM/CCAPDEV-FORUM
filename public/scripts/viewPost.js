@@ -30,7 +30,7 @@ function addComment(element) {
 
     let commentReply = document.createElement("textarea");
     commentReply.classList.add("replyContent");
-    commentReply.placeholder = "Reply to @" + comment.childNodes[1].childNodes[3].childNodes[1].innerHTML;
+    commentReply.placeholder = "Reply to @" + comment.children[0].children[0].children[1].children[0].innerHTML;
 
     let cancelReply = document.createElement("button");
     cancelReply.classList.add("cancelReply");
@@ -78,3 +78,22 @@ function editComment(element) {
 
     }
 }
+
+$(document).ready(async function() {
+    const infoResponse = await fetch(`/api/get-users`)
+    const info = await infoResponse.json();
+
+    $(".comment").each(function (_, element) {
+        let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
+        console.log(poster.profileImage);
+
+        $(element).find(".profilePic").attr("src", poster.profileImage);
+        $(element).find(".posterName").text(poster.username);
+        $(element).find(".postHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
+        $(element).find(".posterName").removeAttr("id");
+
+        if ($("#originalReply")) {
+            $("#originalReply").attr("placeholder", "Reply to @" + poster.username);
+        }
+    })
+})
