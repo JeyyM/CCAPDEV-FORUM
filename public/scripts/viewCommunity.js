@@ -45,10 +45,16 @@ $(document).ready(async function() {
                     $("#joinCommunity").toggleClass("joined");
 
                     if (result.presentStatus == true) {
-                        $("#joinCommunity").html("<i class='bx bxs-bookmark'></i>Joined")
+                        $("#joinCommunity").html("<i class='bx bxs-bookmark'></i>Joined");
+                        let followers = $(".followers").text().split(" ");
+                        let followerCount = Number(followers[0]) + 1;
+                        $(".followers").html("<i class='bx bxs-group'></i>" + followerCount + " Members");
                     }
                     else {
                         $("#joinCommunity").html("<i class='bx bx-bookmark'></i>Join")
+                        let followers = $(".followers").text().split(" ");
+                        let followerCount = Number(followers[0]) - 1;
+                        $(".followers").html("<i class='bx bxs-group'></i>" + followerCount + " Members");
                     }
                 }
                 else {

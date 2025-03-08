@@ -12,7 +12,6 @@ function likePost(element) {
         console.log($(element).parent().find(".voteValue"));
 
         $(element).parent().find(".voteValue").text(function(_, currentText) {
-            console.log("+1");
             return Number(currentText) + 1;
         });
     }
