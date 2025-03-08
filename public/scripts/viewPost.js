@@ -55,22 +55,9 @@ function cancelComment(element) {
 function editComment(element) {
     let commentContainer = element.closest(".comment");
 
-    if (!commentContainer) {
-        console.error("Comment container not found.");
-        return;
-    }
-
-    if (document.getElementById("tempEdit")) {
-        document.getElementById("tempEdit").remove();
-    }
-
     let commentText = commentContainer.querySelector(".commentContent");
 
-    if (!commentText) {
-        console.error("Comment content not found inside the container.");
-        console.log("commentContainer content:", commentContainer.innerHTML);
-        return;
-    }
+
 
     //edit
     let editContainer = document.createElement("div");
@@ -80,6 +67,7 @@ function editComment(element) {
     //textarea 
     let editTextarea = document.createElement("textarea");
     editTextarea.classList.add("replyContent");
+    editTextarea.classList.add("replyContent");
     editTextarea.value = commentText.textContent;
 
     editTextarea.addEventListener("input", function () {
@@ -87,7 +75,6 @@ function editComment(element) {
         this.style.height = this.scrollHeight + "px";
     });
 
-    //cancel 
     let cancelEdit = document.createElement("button");
     cancelEdit.classList.add("cancelReply");
     cancelEdit.innerHTML = "Cancel";
@@ -96,7 +83,6 @@ function editComment(element) {
         commentText.style.display = "block";
     };
 
-    //save 
     let saveEdit = document.createElement("button");
     saveEdit.classList.add("postReply");
     saveEdit.innerHTML = "Save";
