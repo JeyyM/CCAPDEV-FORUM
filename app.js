@@ -13,6 +13,7 @@ const userController = require('./controller/userController');
 const forumController = require('./controller/forumController');
 const postController = require('./controller/postController');
 const commentController = require('./controller/commentController');
+const searchController = require('./controller/searchController');
 
 server.use(session({
     secret: "fuckingpassword",
@@ -59,6 +60,7 @@ server.use("/api", userController);
 server.use("/api", forumController);
 server.use("/api", postController);
 server.use("/api", commentController);
+server.use("/api", searchController);
 
 //////////////////////////////// Placeholders ///////////////////////////////////////////////
 const user = {

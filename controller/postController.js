@@ -12,7 +12,27 @@ router.get("/get-posts-by-forum/:forumId", async (req, res) => {
         const forumId = req.params.forumId;
         const posts = await mongo.getPostsByForumId(forumId, sortBy, order, limit, skip);
 
-        console.log(posts);
+        // console.log(posts);
+
+        res.json(posts);
+    } catch (error) {
+        console.error("Error fetching posts: ", error);
+        res.status(500).json({ message: "Error fetching posts" });
+    }
+});
+
+
+router.get("/get-posts-by-forums/:forumIds", async (req, res) => {
+    try {
+        const sortBy = req.query.sortBy;
+        const order = parseInt(req.query.order);
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+
+        const forumIds = req.params.forumIds;
+        const posts = await mongo.getPostsByForumIds(forumIds, sortBy, order, limit, skip);
+
+        console.log("API Received:", forumIds, "Sort By:", sortBy, "Order:", order, "Limit:", limit, "Skip:", skip);
 
         res.json(posts);
     } catch (error) {
