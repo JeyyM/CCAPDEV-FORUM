@@ -4,8 +4,15 @@ const mongo = require('../model/dbFunctions');
 
 router.get("/get-posts-by-forum/:forumId", async (req, res) => {
     try {
+        const sortBy = req.query.sortBy;
+        const order = parseInt(req.query.order);
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+
         const forumId = req.params.forumId;
-        const posts = await mongo.getPostsByForumId(forumId);
+        const posts = await mongo.getPostsByForumId(forumId, sortBy, order, limit, skip);
+
+        console.log(posts);
 
         res.json(posts);
     } catch (error) {

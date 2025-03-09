@@ -273,7 +273,7 @@ mongo.insertSampleForum();
 mongo.insertSampleUser();
 mongo.insertSamplePosts();
 
-server.get("/", async function(req, resp){
+server.get("/", async function(req, resp) {
     resp.render("home",{
         layout: "index",
         title: "Home Page",
@@ -286,7 +286,7 @@ server.get("/", async function(req, resp){
     });
 });
 
-server.get("/tester", async function(req, resp){
+server.get("/tester", async function(req, resp) {
     resp.render("tester",{
         layout: "tester",
         title: "Tester",
@@ -298,12 +298,12 @@ server.get("/forum/:forumName", async (req, resp) => {
     try {
         const decodedForumName = decodeURIComponent(req.params.forumName);
 
-        const forum = await mongo.getForumByName(decodedForumName);
+        const forum = await mongo.getForumByName(decodedForumName); 
         const posts = await mongo.getPostsByForumId(forum._id);
 
         const postUsers = [];
 
-        for (const post of posts){
+        for (const post of posts) {
             const user = await mongo.getUserById(post.authorId);
             postUsers.push(user);
         }
@@ -322,7 +322,7 @@ server.get("/forum/:forumName", async (req, resp) => {
     }
 });
 
-server.get("/viewPost/:postId", function(req, resp){
+server.get("/viewPost/:postId", function(req, resp) {
     const postId = parseInt(req.params.postId);
     const post = posts.find(p => p.postId === postId);
 
@@ -339,7 +339,7 @@ server.get("/viewPost/:postId", function(req, resp){
     });
 });
 
-server.get("/viewCommunity/:communityName", function(req, resp){
+server.get("/viewCommunity/:communityName", function(req, resp) {
     const communityName = req.params.communityName;
     const community = communities.find(c => c.communityName === communityName);
 
@@ -356,7 +356,7 @@ server.get("/viewCommunity/:communityName", function(req, resp){
     });
 });
 
-server.get("/viewProfile/:profileName", function(req, resp){
+server.get("/viewProfile/:profileName", function(req, resp) {
     const profileName = req.params.profileName;
     const profile = profiles.find(p => p.profileName === profileName);
 
@@ -374,7 +374,7 @@ server.get("/viewProfile/:profileName", function(req, resp){
     });
 });
 
-server.get("/editPost/:postId", function(req, resp){
+server.get("/editPost/:postId", function(req, resp) {
     const postId = parseInt(req.params.postId);
     const post = posts.find(p => p.postId === postId);
 
@@ -391,7 +391,7 @@ server.get("/editPost/:postId", function(req, resp){
     });
 });
 
-server.get("/editProfile/:profileName", function(req, resp){
+server.get("/editProfile/:profileName", function(req, resp) {
     const profileName = req.params.profileName;
     const profile = profiles.find(p => p.profileName === profileName);
 
@@ -407,7 +407,7 @@ server.get("/editProfile/:profileName", function(req, resp){
     });
 });
 
-server.get("/createPost/:communityName?", function(req, resp){
+server.get("/createPost/:communityName?", function(req, resp) {
     const communityName = req.params.communityName;
     const community = communities.find(c => c.communityName === communityName);
 
@@ -424,7 +424,7 @@ server.get("/createPost/:communityName?", function(req, resp){
 });
 
 const port = process.env.PORT | 3000;
-server.listen(port, function(){
+server.listen(port, function() {
     console.log("Listening at port "+port);
 });
 
@@ -733,12 +733,12 @@ server.listen(port, function(){
 
 //         const result = await mongo.toggleForumJoin(userId, forumId);
     
-//         if (result.success){
+//         if (result.success) {
 //             res.json(result);
 //         } else {
 //             res.status(400).json(result);
 //         }
-//     } catch (error){
+//     } catch (error) {
 //         console.error("Error toggling: ", error);
 //         res.status(500).json({ success: false, message: "Toggling error" });
 //     }
@@ -753,12 +753,12 @@ server.listen(port, function(){
 
 //         const result = await mongo.toggleUserFollow(userId, targetId);
     
-//         if (result.success){
+//         if (result.success) {
 //             res.json(result);
 //         } else {
 //             res.status(400).json(result);
 //         }
-//     } catch (error){
+//     } catch (error) {
 //         console.error("Error toggling: ", error);
 //         res.status(500).json({ success: false, message: "Toggling error" });
 //     }

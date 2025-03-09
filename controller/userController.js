@@ -5,7 +5,7 @@ const mongo = require('../model/dbFunctions');
 router.post("/login", async (req, res) => {
     try {
         const { email, password, rememberMe } = req.body;
-    
+
         const user = await mongo.getUserByEmail(email);
 
         if (!user) {
@@ -54,8 +54,14 @@ router.post("/logout", (req, res) => {
 
 router.get("/get-users", async (req, res) => {
     try {
-        const users = await mongo.getUsers();
+        const sortBy = req.query.sortBy;
+        const order = parseInt(req.query.order);
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+
+        const users = await mongo.getUsers(sortBy, order, limit, skip);
         res.json(users);
+
         // console.log("Users fetched: ", users);
 
     } catch (error) {
@@ -174,18 +180,18 @@ router.delete("/delete-user/:userId", async (req, res) => {
 
 router.patch("/toggle-user-follow", async (req, res) => {
     try {
-        const {userId, targetId} = req.body;
+        const { userId, targetId } = req.body;
 
         // console.log("toggling follower", userId, targetId);
 
         const result = await mongo.toggleUserFollow(userId, targetId);
-    
-        if (result.success){
+
+        if (result.success) {
             res.json(result);
         } else {
             res.status(400).json(result);
         }
-    } catch (error){
+    } catch (error) {
         console.error("Error toggling: ", error);
         res.status(500).json({ success: false, message: "Toggling error" });
     }
