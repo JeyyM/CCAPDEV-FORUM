@@ -381,6 +381,8 @@ const mongo = {
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
+
             const result = await forumsCollection.updateOne(
                 { _id: new ObjectId(forumId) },
                 { $set: updatedData }
@@ -400,6 +402,8 @@ const mongo = {
 
             for (let forum of forums) {
                 const { _id, ...updatedData } = forum;
+                updatedData.updatedAt = new Date(updatedData.updatedAt);
+
                 await forumsCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
@@ -517,6 +521,8 @@ const mongo = {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
+
             const result = await usersCollection.updateOne(
                 { _id: new ObjectId(userId) },
                 { $set: updatedData }
@@ -536,6 +542,7 @@ const mongo = {
 
             for (let user of users) {
                 const { _id, ...updatedData } = user;
+                updatedData.updatedAt = new Date(updatedData.updatedAt);
 
                 const result = await usersCollection.updateOne(
                     { _id: new ObjectId(_id) },
@@ -742,6 +749,7 @@ const mongo = {
 
             for (let post of posts) {
                 const { _id, ...updatedData } = post;
+                updatedData.updatedAt = new Date(updatedData.updatedAt);
 
                 const result = await postsCollection.updateOne(
                     { _id: new ObjectId(_id) },
@@ -760,6 +768,8 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
+
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
 
             const result = await postsCollection.updateOne(
                 { _id: new ObjectId(postId) },
@@ -919,6 +929,8 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const commentsCollection = db.collection(commentsVar);
+
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
 
             const result = await commentsCollection.updateOne(
                 { _id: new ObjectId(commentId) },
