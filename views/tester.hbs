@@ -168,8 +168,72 @@
     <form id="postSection" style="display: flex; flex-direction: column; width: 60%;">
     </form>
 
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br>
 
+     <h2>Posts By ID Group</h2>
+
+    <div style="display: flex;">
+        <h3>Sort Posts By: </h3>
+        <select id="groupSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="title">Alphabetical</option>
+            <option value="hot">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="groupOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="groupLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <button id="getPostByJoined" type="button">Get Posts</button>
+    <button id="groupBatchButton" type="button">Get Next Batch</button>
+
+    <form id="groupSection" style="display: flex; flex-direction: column; width: 60%;">
+    </form>
+
+    <br><br><br>
+
+    <div style="display: flex;">
+        <h3>See user activities Limit:</h3>
+        <input id="activitiesLimitInput" value="3" placeholder="Limit" readonly>
+
+            <div style="display: flex;">
+        <h3>Sort Posts By: </h3>
+        <select id="activitiesSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="title">Alphabetical</option>
+            <option value="hot">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="activitiesOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+    </div>
+    </div>
+
+        <br><br><br>
+
+    <div style="display: flex;">
+        <h3>Search (See console.log) Limit:</h3>
+        <input id="searchLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <div style="display: flex;">
+        <input id="searchInput" placeholder="Limit" readonly>
+        <button id="searchEnter" type="button">Search</button>
+    </div>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <script>
         ///// LOGIN CHECKER /////
         // LOOK AT tester.hbs in layouts for currentSession data
@@ -947,7 +1011,6 @@
         document.getElementById("logoutButton").addEventListener("click", logout);
 
         /////////////////// POSTS ///////////////////////////////////////
-
         async function fetchPostsByForum(forumId, skip = 0, appending = false, updating = false) {
             try {
                 const sortBy = document.getElementById("postSortByDropdown").value;
@@ -996,223 +1059,13 @@
                         }
                     });
 
-                    userSkip = 0;
+                    postSkip = 0;
                 }
 
                 for (const post of posts) {
                     if (!updating) { 
-                        const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
-                        const user = await userResponse.json();
-
-                        const commentsResponse = await fetch(`/api/get-comments-by-post/${post._id}`);
-                        const comments = await commentsResponse.json();
-
-                        {{!-- console.log("Fetched user: ", user); --}}
-
-                        const overallContainer = document.createElement("div");
-                        overallContainer.style.display = "flex";
-                        overallContainer.style.gap = "10px";
-                        overallContainer.style.width = "100%";
-                        overallContainer.style.height = "700px";
-
-                        const postContainer = document.createElement("div");
-                        postContainer.style.display = "flex";
-                        postContainer.style.flexDirection = "column";
-                        postContainer.style.width = "100%";
-                        postContainer.style.border = "2px solid black";
-                        postContainer.style.padding = "10px";
-                        postContainer.style.margin = "10px 0";
-
-                        const forumDiv = document.createElement("div");
-                        forumDiv.style.display = "flex";
-                        forumDiv.style.alignItems = "center";
-
-                        const forumImg = document.createElement("img");
-                        forumImg.src = forum.forumImage;
-                        forumImg.style.height = "20px";
-                        forumImg.style.width = "20px";
-                        forumImg.style.marginRight = "5px";
-
-                        const forumTitle = document.createElement("h3");
-                        forumTitle.textContent = forum.name;
-
-                        forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
-
-                        const editButton = document.createElement("button");
-                        editButton.textContent = "Update Post";
-                        editButton.type = "button";
-                        editButton.onclick = () => { updatePost(
-                            post._id,
-                            postTitle.value,
-                            postContent.value,
-                            forumId
-                        )};
-
-                        const deleteButton = document.createElement("button");
-                        deleteButton.textContent = "Delete";
-                        deleteButton.type = "button";
-                        deleteButton.onclick = () => {deletePost(post._id, forumId)};
-                        
-                        forumDiv.appendChild(forumImg);
-                        forumDiv.appendChild(forumTitle);
-                        forumDiv.appendChild(editButton);
-                        forumDiv.appendChild(deleteButton);
-
-                        const userDiv = document.createElement("div");
-                        userDiv.style.display = "flex";
-                        userDiv.style.alignItems = "center";
-
-                        const userImg = document.createElement("img");
-                        userImg.src = user.profileImage;
-                        userImg.style.height = "20px";
-                        userImg.style.width = "20px";
-                        userImg.style.marginRight = "5px";
-
-                        if (user && user.username) {
-                            const userImg = document.createElement("img");
-                            userImg.src = user.profileImage;
-                            userImg.style.height = "20px";
-                            userImg.style.width = "20px";
-                            userImg.style.marginRight = "5px";
-
-                            const userName = document.createElement("h3");
-                            userName.textContent = user.username;
-
-                            userDiv.appendChild(userImg);
-                            userDiv.appendChild(userName);
-                        } else {
-                            const deletedUser = document.createElement("h3");
-                            deletedUser.textContent = "[DELETED]";
-                            userDiv.appendChild(deletedUser);
-                        }
-
-                        const userName = document.createElement("h3");
-                        userName.textContent = user.username;
-
-                        const contentDiv = document.createElement("div");
-
-                        const postTitle = document.createElement("input");
-                        postTitle.type = "text";
-                        postTitle.name = `title_${post._id}`;
-                        postTitle.value = post.title;
-                        postTitle.required = true;
-
-                        const lineBreak = document.createElement("br")
-
-                        const postContent = document.createElement("input");
-                        postContent.type = "text";
-                        postContent.name = `content_${post._id}`;
-                        postContent.value = post.content;
-                        postContent.required = true;
-
-                        const postDate = document.createElement("h4");
-                        postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
-
-                        const editedDate = document.createElement("h4");
-                        editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
-
-                        contentDiv.appendChild(postTitle);
-                        contentDiv.appendChild(lineBreak);
-                        contentDiv.appendChild(postContent);
-                        contentDiv.appendChild(postDate);
-                        contentDiv.appendChild(editedDate);
-
-                        const voteDiv = document.createElement("div");
-                        voteDiv.style.display = "flex";
-                        voteDiv.style.alignItems = "center";
-
-                        const currentVote = currentUser && currentUser.votes.find(vote => {
-                                {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
-                                return vote.postId == post._id; 
-                            });
-
-                        const voteValue = currentVote ? currentVote.vote : 0;
-
-                        {{!-- console.log(voteValue); --}}
-
-                        const upvoteButton = document.createElement("button");
-                        upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
-                        upvoteButton.type = "button";
-                        upvoteButton.onclick = () => { toggleVote(post._id, 1, sessionData) };
-
-                        const voteCount = document.createElement("h4");
-                        voteCount.textContent = post.voteValue;
-                        voteCount.style.margin = "0 10px";
-
-                        const downvoteButton = document.createElement("button");
-                        downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
-                        downvoteButton.type = "button";
-                        downvoteButton.onclick = () => { toggleVote(post._id, -1, sessionData) };
-
-                        const commentCount = document.createElement("h4");
-                        commentCount.textContent = `Comments: ${post.commentsCount}`;
-                        commentCount.style.margin = "0 10px";
-
-                        voteDiv.appendChild(upvoteButton);
-                        voteDiv.appendChild(voteCount);
-                        voteDiv.appendChild(downvoteButton);
-                        voteDiv.appendChild(commentCount);
-
-                        postContainer.appendChild(forumDiv);
-                        postContainer.appendChild(userDiv);
-                        postContainer.appendChild(contentDiv);
-                        postContainer.appendChild(voteDiv);
-
-                        overallContainer.appendChild(postContainer);
-
-                        const commentsContainer = document.createElement("div");
-                        commentsContainer.style.display = "flex";
-                        commentsContainer.style.flexDirection = "column";
-                        commentsContainer.style.width = "100%";
-                        commentsContainer.style.border = "2px solid black";
-                        commentsContainer.style.padding = "10px";
-                        commentsContainer.style.margin = "10px 0";
-                        commentsContainer.style.overflowY = "scroll";
-
-                        const newCommentContainer = document.createElement("div");
-                        newCommentContainer.style.display = "flex";
-                        newCommentContainer.style.marginBottom = "10px";
-
-                        const newCommentLabel = document.createElement("h3");
-                        newCommentLabel.textContent = "Add Comment";
-
-                        const newCommentInput = document.createElement("input");
-                        newCommentInput.type = "text";
-                        newCommentInput.placeholder = "Write comment";
-                        newCommentInput.style.marginBottom = "5px";
-                        newCommentInput.style.width = "100%";
-
-                        const newCommentButton = document.createElement("button");
-                        newCommentButton.type = "button";
-                        newCommentButton.textContent = "Post Comment";
-
-                        newCommentContainer.appendChild(newCommentLabel);
-                        newCommentContainer.appendChild(newCommentInput);
-                        newCommentContainer.appendChild(newCommentButton);
-
-                        newCommentButton.onclick = () => { 
-                            if (!currentSession) {
-                                alert("Can't make comment if not logged in");
-                                return;
-                            } else {
-                                addComment(post._id,
-                                        currentUser._id,
-                                        newCommentInput.value.trim(),
-                                        null)    
-                                }
-                            };
-
-                        commentsContainer.appendChild(newCommentContainer);
-                        overallContainer.appendChild(commentsContainer);
-
-                        const parentComments = comments.filter(comment => comment.parentId === null);
-                        const childComments = comments.filter(comment => comment.parentId !== null);
-
-                        for (const comment of parentComments) {
-                            createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
-                        }
-
-                        postSection.appendChild(overallContainer);
+                        const postElement = await createPostElement(post, forum, currentUser, sessionData);
+                        postSection.appendChild(postElement);
                     }
                 };
 
@@ -1220,13 +1073,309 @@
                 console.error("Error fetching posts: ", error);
             }
         }
+        
+        async function fetchPostsByForumIds(forumIds, skip = 0, appending = false, updating = false) { 
+            try {
+                console.log("fetchPostsByForumIds");
+
+
+                const sortBy = document.getElementById("groupSortByDropdown").value;
+                const order = parseInt(document.getElementById("groupOrderDropdown").value);
+                const limit = parseInt(document.getElementById("groupLimitInput").value);
+                skip = parseInt(skip) || 0;  
+
+                console.log("updating: ", sortBy, order, limit, skip, "WTF");
+
+                const forumParam = forumIds.length > 0 ? forumIds.join(",") : "all";
+                const postsResponse = await fetch(`/api/get-posts-by-forums/${forumParam}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+
+                const posts = await postsResponse.json();
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+                let currentUser = null;
+
+                if (hasSession) { 
+                    try {
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+                        currentUser = await userResponse.json();
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
+
+                const groupSection = document.getElementById("groupSection");
+
+                if (!appending && !updating) {
+                    Array.from(groupSection.children).forEach(child => {
+                        if (!child.matches("button")) {
+                            child.remove();
+                        }
+                    });
+
+                    groupSkip = 0;
+                }
+
+                console.log("HERE");
+
+                console.log(updating);
+
+                for (const post of posts) {
+                    if (!updating) { 
+                        
+                        const forumResponse = await fetch(`/api/get-forum-by-id/${post.forumId}`);
+                        const forum = await forumResponse.json();
+
+                        const postElement = await createPostElement(post, forum, currentUser, sessionData);
+                        groupSection.appendChild(postElement);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error fetching posts: ", error);
+            }
+        }
+
+        async function byForumsTrigger() {
+            try {
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let forumIds = [];
+
+                if (!sessionData.success) {
+                    alert("Not logged in, will use all forums");
+                } else {
+                    const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+                    const currentUser = await userResponse.json();
+                    forumIds = currentUser.joinedForums || [];
+                }
+
+                console.log("FORUM IDS: ", forumIds);
+
+                // Get Sorting Parameters
+                const sortBy = document.getElementById("groupSortByDropdown").value;
+                const order = parseInt(document.getElementById("groupOrderDropdown").value);
+                const limit = parseInt(document.getElementById("groupLimitInput").value);
+
+                console.log("byForumsTrigger", sortBy, order, limit, groupSkip);
+
+                fetchPostsByForumIds(forumIds, groupSkip, false, false);
+            } catch (error) {
+                console.error("Error in getting from multiple forums:", error);
+            }
+        }
+
+    document.getElementById("groupSortByDropdown").addEventListener("change", () => {
+        groupSkip = 0;
+        console.log("Sort By Changed: ", document.getElementById("groupSortByDropdown").value);
+        byForumsTrigger();
+    });
+
+    document.getElementById("groupOrderDropdown").addEventListener("change", () => {
+        groupSkip = 0;
+        console.log("Order Changed: ", document.getElementById("groupOrderDropdown").value);
+        byForumsTrigger();
+    });
+
+    document.getElementById("getPostByJoined").addEventListener("click", byForumsTrigger);
+
+        async function createPostElement(post, forum, currentUser, sessionData) {
+            const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
+            const user = await userResponse.json();
+
+            const commentsResponse = await fetch(`/api/get-comments-by-post/${post._id}`);
+            const comments = await commentsResponse.json();
+
+            const overallContainer = document.createElement("div");
+            overallContainer.style.display = "flex";
+            overallContainer.style.gap = "10px";
+            overallContainer.style.width = "100%";
+            overallContainer.style.height = "700px";
+
+            const postContainer = document.createElement("div");
+            postContainer.style.display = "flex";
+            postContainer.style.flexDirection = "column";
+            postContainer.style.width = "100%";
+            postContainer.style.border = "2px solid black";
+            postContainer.style.padding = "10px";
+            postContainer.style.margin = "10px 0";
+
+            const forumDiv = document.createElement("div");
+            forumDiv.style.display = "flex";
+            forumDiv.style.alignItems = "center";
+
+            const forumImg = document.createElement("img");
+            forumImg.src = forum.forumImage;
+            forumImg.style.height = "20px";
+            forumImg.style.width = "20px";
+            forumImg.style.marginRight = "5px";
+
+            const forumTitle = document.createElement("h3");
+            forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`;
+
+            const editButton = document.createElement("button");
+            editButton.textContent = "Update Post";
+            editButton.type = "button";
+            editButton.onclick = () => updatePost(post._id, postTitle.value, postContent.value, forum._id);
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.type = "button";
+            deleteButton.onclick = () => deletePost(post._id, forum._id);
+
+            forumDiv.appendChild(forumImg);
+            forumDiv.appendChild(forumTitle);
+            forumDiv.appendChild(editButton);
+            forumDiv.appendChild(deleteButton);
+
+            const userDiv = document.createElement("div");
+            userDiv.style.display = "flex";
+            userDiv.style.alignItems = "center";
+
+            const userImg = document.createElement("img");
+            userImg.src = user.profileImage;
+            userImg.style.height = "20px";
+            userImg.style.width = "20px";
+            userImg.style.marginRight = "5px";
+
+            if (user && user.username) {
+                const userName = document.createElement("h3");
+                userName.textContent = user.username;
+
+                userDiv.appendChild(userImg);
+                userDiv.appendChild(userName);
+            } else {
+                const deletedUser = document.createElement("h3");
+                deletedUser.textContent = "[DELETED]";
+                userDiv.appendChild(deletedUser);
+            }
+
+            const contentDiv = document.createElement("div");
+
+            const postTitle = document.createElement("input");
+            postTitle.type = "text";
+            postTitle.name = `title_${post._id}`;
+            postTitle.value = post.title;
+            postTitle.required = true;
+
+            const postContent = document.createElement("input");
+            postContent.type = "text";
+            postContent.name = `content_${post._id}`;
+            postContent.value = post.content;
+            postContent.required = true;
+
+            const postDate = document.createElement("h4");
+            postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
+
+            const editedDate = document.createElement("h4");
+            editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
+
+            contentDiv.appendChild(postTitle);
+            contentDiv.appendChild(document.createElement("br"));
+            contentDiv.appendChild(postContent);
+            contentDiv.appendChild(postDate);
+            contentDiv.appendChild(editedDate);
+
+            const voteDiv = document.createElement("div");
+            voteDiv.style.display = "flex";
+            voteDiv.style.alignItems = "center";
+
+            const currentVote = currentUser && currentUser.votes.find(vote => vote.postId == post._id);
+            const voteValue = currentVote ? currentVote.vote : 0;
+
+            const upvoteButton = document.createElement("button");
+            upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
+            upvoteButton.type = "button";
+            upvoteButton.onclick = () => toggleVote(post._id, 1, sessionData);
+
+            const voteCount = document.createElement("h4");
+            voteCount.textContent = post.voteValue;
+            voteCount.style.margin = "0 10px";
+
+            const downvoteButton = document.createElement("button");
+            downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
+            downvoteButton.type = "button";
+            downvoteButton.onclick = () => toggleVote(post._id, -1, sessionData);
+
+            const commentCount = document.createElement("h4");
+            commentCount.textContent = `Comments: ${post.commentsCount}`;
+            commentCount.style.margin = "0 10px";
+
+            voteDiv.appendChild(upvoteButton);
+            voteDiv.appendChild(voteCount);
+            voteDiv.appendChild(downvoteButton);
+            voteDiv.appendChild(commentCount);
+
+            postContainer.appendChild(forumDiv);
+            postContainer.appendChild(userDiv);
+            postContainer.appendChild(contentDiv);
+            postContainer.appendChild(voteDiv);
+
+            overallContainer.appendChild(postContainer);
+
+            const commentsContainer = document.createElement("div");
+            commentsContainer.style.display = "flex";
+            commentsContainer.style.flexDirection = "column";
+            commentsContainer.style.width = "100%";
+            commentsContainer.style.border = "2px solid black";
+            commentsContainer.style.padding = "10px";
+            commentsContainer.style.margin = "10px 0";
+            commentsContainer.style.overflowY = "scroll";
+
+            const newCommentContainer = document.createElement("div");
+            newCommentContainer.style.display = "flex";
+            newCommentContainer.style.marginBottom = "10px";
+
+            const newCommentLabel = document.createElement("h3");
+            newCommentLabel.textContent = "Add Comment";
+
+            const newCommentInput = document.createElement("input");
+            newCommentInput.type = "text";
+            newCommentInput.placeholder = "Write comment";
+            newCommentInput.style.marginBottom = "5px";
+            newCommentInput.style.width = "100%";
+
+            const newCommentButton = document.createElement("button");
+            newCommentButton.type = "button";
+            newCommentButton.textContent = "Post Comment";
+
+            newCommentContainer.appendChild(newCommentLabel);
+            newCommentContainer.appendChild(newCommentInput);
+            newCommentContainer.appendChild(newCommentButton);
+
+            newCommentButton.onclick = () => { 
+                if (!sessionData) {
+                    alert("Can't make comment if not logged in");
+                    return;
+                } else {
+                    addComment(post._id, currentUser._id, newCommentInput.value.trim(), null);
+                }
+            };
+
+            commentsContainer.appendChild(newCommentContainer);
+            overallContainer.appendChild(commentsContainer);
+
+            const parentComments = comments.filter(comment => comment.parentId === null);
+            const childComments = comments.filter(comment => comment.parentId !== null);
+
+            for (const comment of parentComments) {
+                createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
+            }
+
+            return overallContainer;
+        }
 
         document.getElementById("forumDropdown").addEventListener("change", function () {
             const selectedForumId = this.value;
             postSkip = 0;
             
             if (selectedForumId) {
-                fetchPostsByForum(selectedForumId, 0, false, false);
+                fetchPostsByForumIds(selectedForumId, 0, false, false);
             }
         });
 
@@ -1280,6 +1429,28 @@
             postSkip = 0;
             fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, false, false);
         })
+
+        document.getElementById("groupBatchButton").addEventListener("click", async () => {
+            const sessionResponse = await fetch("/api/session");
+            const sessionData = await sessionResponse.json();
+
+            let forumIds = [];
+
+            if (!sessionData.success) {
+                alert("Not logged in, will use all forums");
+            } else {
+                const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+                const currentUser = await userResponse.json();
+                forumIds = currentUser.joinedForums || [];
+            }
+
+            console.log("FORUM IDS: ", forumIds);
+
+            const limit =  parseInt(document.getElementById("groupLimitInput").value);
+            groupSkip += limit;
+            console.log("GROUP SKIP", groupSkip);
+            fetchPostsByForumIds(forumIds, groupSkip, true, false);
+        });
 
         async function updateAllPosts(event) {
             event.preventDefault();

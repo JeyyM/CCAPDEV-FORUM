@@ -88,7 +88,6 @@ $(document).ready(function() {
     });
 
     async function logout() {
-
         if (currentSession === null){
             alert("Not logged in the first place");
             return;
@@ -115,4 +114,62 @@ $(document).ready(function() {
     }
 
     document.getElementById("logout").addEventListener("click", logout);
+
+    async function addUser() {
+        const username = document.getElementById("usernameFormInput").value.trim();
+        const email = document.getElementById("emailFormInput").value.trim();
+        const password = document.getElementById("passwordFormInput").value.trim();
+        const confirmPassword = document.getElementById("passwordFormConfirm").value.trim();
+        const userBanner = document.getElementById("bannerFormPic").value.trim();
+        const userImage = document.getElementById("profileFormPic").value.trim();
+        const bio = "";
+
+        if (!username || !email || !password || !confirmPassword || !userBanner || !userImage ) {
+            alert("Missing fields");
+            return;
+        }
+
+        if (password != confirmPassword) {
+            alert("Password does not match");
+            return;
+        }
+
+        const newProfile = {
+            username,
+            email,
+            bio,
+            password,
+            bannerImage: userBanner,
+            profileImage: userImage,
+            joinedForums: [],
+            followers: 0,
+            following: []
+        };
+
+        try {
+            const response = await fetch("/api/add-user", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newProfile)
+            });
+
+            const result = await response.json();
+
+            alert(result.message);
+            fetchUsers();
+
+            document.getElementById("userName").value = "";
+            document.getElementById("userEmail").value = "";
+            document.getElementById("userBio").value = "";
+            document.getElementById("userPassword").value = "";
+            document.getElementById("userBanner").value = "";
+            document.getElementById("userImage").value = "";
+        } catch (error) {
+            console.error("Error adding user: ", error);
+        }
+    }
+
+    $("#signupButton").click(async function() {
+        await addUser();
+    })
 });

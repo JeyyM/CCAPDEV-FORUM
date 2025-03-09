@@ -18,7 +18,23 @@ function hidePostButtons(element) {
     });
 }
 
-function addComment(element) {
+function postButtons(event, element) {
+    const $replyButton = $(element).find(".replyButton");
+    
+    console.log($replyButton);
+    $($replyButton[0]).removeClass("hidden");
+    $($replyButton[1]).removeClass("hidden");
+
+    event.stopPropagation();
+
+    $(document).one("click", function(event) {
+        if (!$(element).is(event.target) && !$(element).find(".replyButton").is(event.target) && !$(element).parent().find(".replyButton").has(event.target).length) {
+            $replyButton.addClass("hidden");
+        }
+    });
+}
+
+function newComment(element) {
     let comment = element.parentNode.parentNode;
     if (document.getElementById("tempReply")) {
         document.getElementById("tempReply").remove();
@@ -48,11 +64,49 @@ function addComment(element) {
     comment.insertBefore(replyContainer, comment.childNodes[7]);
 }
 
+async function addComment(postId, authorId, commentContent, parentId) {
+    if (!currentSession) {
+        alert("Can't make comment if not logged in");
+        return;
+    }
+
+    if (!commentContent) {
+        alert("Missing fields");
+        return;
+    }
+
+    const newComment = {
+        postId: postId,
+        authorId: authorId,
+        parentId: parentId,
+        content: commentContent,
+        voteValue: 0,
+    };
+
+
+    try {
+        const response = await fetch("/api/add-comment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newComment)
+        });
+
+        const result = await response.json();
+
+        alert(result.message);
+    } catch (error) {
+        console.error("Error adding comment: ", error);
+    }
+}
+
 function cancelComment(element) {
     element.parentNode.remove();
 }
 
 function editComment(element) {
+    $("#tempEdit").remove();
+    $(".commentContent").removeAttr("style")
+    
     $(element).parent().addClass("hidden");
 
     let commentContainer = element.closest(".comment");
@@ -84,13 +138,16 @@ function editComment(element) {
     };
 
     let saveEdit = document.createElement("button");
-    saveEdit.classList.add("postReply");
+    saveEdit.classList.add("editReply");
     saveEdit.innerHTML = "Save";
+    saveEdit.id = "editReply";
 
-    saveEdit.onclick = function () {
+    saveEdit.onclick = async function () {
         cancelComment(cancelEdit);
         commentText.innerHTML = editTextarea.value;
         commentText.style.display = "block";
+
+        await updateComment($(commentContainer).attr("id"), editTextarea.value);
     };
     
     editContainer.appendChild(editTextarea);
@@ -100,6 +157,38 @@ function editComment(element) {
     //hide og comment text and insert edit container
     commentText.style.display = "none";
     commentContainer.insertBefore(editContainer, commentText.nextSibling);
+}
+
+async function updateComment(commentId, postContent) {
+    try {
+        const response = await fetch(`/api/update-comment/${commentId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                content: postContent,
+                updatedAt: new Date()
+            })
+        });
+
+        const result = await response.json();
+
+        alert(result.message);
+    } catch (error) {
+        console.error("Error updating post: ", error);
+    }
+}
+
+async function deleteComment(commentId) {
+    if (confirm("Are you sure you want to delete this comment?")) {
+        try {
+            const response = await fetch(`/api/delete-comment/${commentId}`, { method: "DELETE" });
+            const result = await response.json();
+
+            alert(result.message);
+        } catch (error) {
+            console.error("Error deleting comment: ", error);
+        }
+    }
 }
 
 $(document).ready(async function() {
@@ -118,5 +207,51 @@ $(document).ready(async function() {
         if ($("#originalReply")) {
             $("#originalReply").attr("placeholder", "Reply to @" + poster.username);
         }
+    })
+
+    $(".cancelReply").click(function(event) {
+        $(".replyButton").addClass("hidden");
+        event.stopPropagation();
+    })
+
+    let currentSession = null;
+
+    async function getSession() {
+        try {
+            const response = await fetch("/api/session");
+            const result = await response.json();
+    
+            if (result.success) {
+                console.log("Current session:", result);
+    
+                currentSession = result.user;
+                return currentSession;
+            }
+            else {
+                console.log("No current session");
+                return null;
+            }
+        }
+        catch (error) {
+            console.error("Error checking session:", error);
+        }
+    }
+
+    let sessionData = await getSession();
+
+    $(".postReply").click(function() {
+        if (sessionData == null) {
+            alert("Can't make comment if not logged in");
+            return;
+        } 
+        else {
+            addComment(window.location.href.split("viewPost/")[1], sessionData.id, $("#originalReply").val().trim(), null);
+        }
+
+        location.reload();
+    })
+
+    $(".deleteComment").click(async function() {
+        await deleteComment($(this).closest(".comment").attr("id"));
     })
 })

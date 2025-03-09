@@ -7,10 +7,14 @@
                     <img src="{{profile.profileImage}}" class="profilePic">
                     <span class="profileName">{{profile.username}}</span>
                 </div>
-                {{#if (isEqual profile.profileName user.userName)}}
+                {{#if (isEqual profile.username user.username)}}
                     <div class="profileOptions editProfile" onclick="window.location.href='/editProfile/{{profile.username}}'"><i class='bx bx-edit-alt'></i>Edit</div>
                 {{else}}
-                    <div class="profileOptions following" onclick="followProfile(this)"><i class='bx bx-bookmark'></i>Follow</div>
+                    {{#if followedUser}}
+                    <div class="profileOptions following followed" id="followUser"><i class='bx bxs-bookmark'></i>Followed</div>
+                    {{else}}
+                    <div class="profileOptions following" id="followUser"><i class='bx bx-bookmark'></i>Follow</div>
+                    {{/if}}
                 {{/if}}
             </div>
             <div class="profileDescription">

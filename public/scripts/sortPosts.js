@@ -25,3 +25,7 @@ function sortSelected(choice) {
         element.style.display = "none";
     });
 }
+
+$(document).ready(function() {
+    
+})

@@ -10,15 +10,17 @@
         <input type="checkbox" id="rememberMe">
     </div>
 </form>
-<div id="signupForm">
+<form id="signupForm">
     <div class="signup">Sign Up</div>
-    <input type="text" placeholder="Username" required>
-    <input type="text" placeholder="Email" required>
-    <input type="password" placeholder="Password" required>
-    <input type="password" placeholder="Confirm Password" required>
+    <input id="usernameFormInput" type="username" placeholder="Username" required>
+    <input id="emailFormInput" type="email" placeholder="Email" required>
+    <input id="passwordFormInput" type="password" placeholder="Password" required>
+    <input id="passwordFormConfirm" type="password" placeholder="Confirm Password" required>
+    <input id="profileFormPic" type="text" placeholder="Profile Image Link" required>
+    <input id="bannerFormPic" type="text" placeholder="Banner Image Link" required>
     <span class="loginButton" onclick="login()">Log In?</span>
-    <button id="signupButton">Sign Up</button>
-</div>
+    <button id="signupButton" typle="submit">Sign Up</button>
+</form>
 <div class="header">
     <div class="title" onclick="window.location.href='/'">
         <i class='bx bx-conversation titleIcon'></i>

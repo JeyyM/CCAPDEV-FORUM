@@ -1,18 +1,71 @@
-function followProfile(element) {
-    element.classList.toggle("followed");
+$(document).ready(async function() {
+    const sessionResponse = await fetch("/api/session");
+    const sessionData = await sessionResponse.json();
+    let hasSession = sessionData.success;
+    
+    const userResponse = await fetch(`/api/get-user-by-name/${window.location.pathname.split('/')[2]}`);
+    const user = await userResponse.json();
+    console.log(user);
+    
+    console.log("ready");
 
-    if (element.classList.contains("followed")) {
-        element.getElementsByClassName("bx")[0].classList.remove("bx-bookmark");
-        element.getElementsByClassName("bx")[0].classList.add("bxs-bookmark");
-        element.childNodes[1].textContent = "Following";
+    $("#followUser").click(async function () {
+        console.log("clicked");
+        if (hasSession){
+            try {
+                const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
 
-        document.getElementsByClassName("followers")[0].childNodes[1].innerHTML = Number(document.getElementsByClassName("followers")[0].childNodes[1].innerHTML) + 1;
-    }
-    else {
-        element.getElementsByClassName("bx")[0].classList.remove("bxs-bookmark");
-        element.getElementsByClassName("bx")[0].classList.add("bx-bookmark");
-        element.childNodes[1].textContent = "Follow";
+                currentUser = await userResponse.json();
+            }
+            
+            catch (error) {
+                console.error("Error fetching user: ", error);
+            }
 
-        document.getElementsByClassName("followers")[0].childNodes[1].innerHTML = Number(document.getElementsByClassName("followers")[0].childNodes[1].innerHTML) - 1;
-    }
-}
+            try {
+                const response = await fetch("/api/toggle-user-follow", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: currentUser._id, targetId: user._id })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log("Follow status changed: " + result.presentStatus);
+
+                    const updatedUser = await (await fetch(`/api/get-user-by-id/${sessionData.user.id}`)).json();
+
+                    const userStatus = await fetch("/update/userGeneral", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ user: updatedUser })
+                    });
+
+                    $("#followUser").toggleClass("followed");
+
+                    if (result.presentStatus == true) {
+                        $("#followUser").html("<i class='bx bxs-bookmark'></i>Followed");
+                        let followers = $(".followers").text().split(" ");
+                        let followerCount = Number(followers[0]) + 1;
+                        $(".followers").html("<i class='bx bxs-group'></i>" + followerCount + " Followers");
+                    }
+                    else {
+                        $("#followUser").html("<i class='bx bx-bookmark'></i>Follow")
+                        let followers = $(".followers").text().split(" ");
+                        let followerCount = Number(followers[0]) - 1;
+                        $(".followers").html("<i class='bx bxs-group'></i>" + followerCount + " Followers");
+                    }
+                }
+                else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error("Error toggling user follow: ", error);
+            }
+
+        } else {
+            alert("Not logged in");
+        }
+    });
+});

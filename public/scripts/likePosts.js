@@ -70,6 +70,19 @@ function postSettings(event, element) {
     });
 }
 
+async function deletePost(postId) {
+    if (confirm("Are you sure you want to delete this post?")) {
+        try {
+            const response = await fetch(`/api/delete-post/${postId}`, { method: "DELETE" });
+            const result = await response.json();
+
+            alert(result.message);
+        } catch (error) {
+            console.error("Error deleting post: ", error);
+        }
+    }
+}
+
 $(document).ready(async function() {
     const infoResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`);
     const info = await infoResponse.json();
@@ -83,7 +96,7 @@ $(document).ready(async function() {
 
     $(".post").each(function (_, element) {
         let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
-        console.log(poster);
+        // console.log(poster);
 
         $(element).find(".profilePic").attr("src", poster.profileImage);
         $(element).find(".posterName").text(poster.username);
@@ -134,6 +147,10 @@ $(document).ready(async function() {
         if (sessionData != null) {
             dislikePost(this);
         }
+    })
+
+    $(".deletePost").click(async function() {
+        await deletePost($(this).closest(".post").attr("id"));
     })
 });
 

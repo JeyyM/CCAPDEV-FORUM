@@ -36,7 +36,7 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
-    
+
             const existingForums = await forumsCollection.countDocuments();
             if (existingForums === 0) {
                 const sampleForums = [
@@ -106,7 +106,7 @@ const mongo = {
                         bannedUsers: []
                     }
                 ];
-    
+
                 await forumsCollection.insertMany(sampleForums);
                 console.log("5 sample forums inserted.");
             } else {
@@ -121,7 +121,7 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
-    
+
             const existingUsers = await usersCollection.countDocuments();
             if (existingUsers === 0) {
                 const sampleUsers = [
@@ -216,7 +216,7 @@ const mongo = {
                         commentVotes: []
                     }
                 ];
-    
+
                 await usersCollection.insertMany(sampleUsers);
                 console.log("5 sample users inserted.");
             } else {
@@ -225,14 +225,14 @@ const mongo = {
         } catch (error) {
             console.error("Error inserting sample users: ", error);
         }
-    },  
+    },
 
     async insertSamplePosts() {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
             const commentsCollection = db.collection(commentsVar);
-    
+
             const existingPosts = await postsCollection.countDocuments();
             if (existingPosts === 0) {
                 const forums = {
@@ -242,7 +242,7 @@ const mongo = {
                     "Anime": "67c7b80a8f936822ab9178a2",
                     "CSGO": "67c7b80a8f936822ab9178a3"
                 };
-    
+
                 const users = {
                     "apple": "67c792cfb3ba6d9c76f699d5",
                     "banana": "67c792cfb3ba6d9c76f699d6",
@@ -250,7 +250,7 @@ const mongo = {
                     "melon": "67c792cfb3ba6d9c76f699d8",
                     "kiwi": "67c792cfb3ba6d9c76f699d9"
                 };
-    
+
                 const ids = [
                     "67c94be9b7d17daa0a4df1a3", "67c94be9b7d17daa0a4df1a4", "67c94be9b7d17daa0a4df1a5",
                     "67c94be9b7d17daa0a4df1a6", "67c94be9b7d17daa0a4df1a7", "67c94be9b7d17daa0a4df1a8",
@@ -261,11 +261,11 @@ const mongo = {
                     "67c94be9b7d17daa0a4df1b5", "67c94be9b7d17daa0a4df1b6", "67c94be9b7d17daa0a4df1b7",
                     "67c94be9b7d17daa0a4df1b8", "67c94be9b7d17daa0a4df1b9", "67c94be9b7d17daa0a4df1ba",
                     "67c94be9b7d17daa0a4df1bb"].map(id => new ObjectId(id));
-    
+
                 let index = 0;
                 let samplePosts = [];
                 let sampleComments = [];
-    
+
                 for (const [forumName, forumId] of Object.entries(forums)) {
                     for (const [username, userId] of Object.entries(users)) {
                         const postId = ids[index];
@@ -299,10 +299,10 @@ const mongo = {
                         index++;
                     }
                 }
-    
+
                 await postsCollection.insertMany(samplePosts);
                 await commentsCollection.insertMany(sampleComments);
-    
+
                 console.log(`${samplePosts.length} Sample posts inserted successfully.`);
                 console.log(`${sampleComments.length} Sample comments inserted successfully.`);
             } else {
@@ -314,7 +314,7 @@ const mongo = {
     },
 
     ////////////////////// FORUM INTERACTIONS ////////////////////////
-    
+
     async getForums(sortBy, order, limit, skip) {
         try {
             const db = client.db(dbName);
@@ -403,7 +403,7 @@ const mongo = {
             for (let forum of forums) {
                 const { _id, ...updatedData } = forum;
                 updatedData.updatedAt = new Date(updatedData.updatedAt);
-                
+
                 await forumsCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
@@ -522,7 +522,7 @@ const mongo = {
             const usersCollection = db.collection(usersVar);
 
             updatedData.updatedAt = new Date(updatedData.updatedAt);
-            
+
             const result = await usersCollection.updateOne(
                 { _id: new ObjectId(userId) },
                 { $set: updatedData }
@@ -570,6 +570,51 @@ const mongo = {
         }
     },
 
+    // async getUserActivities(userId, sortBy, order, limit, skip) {
+    //     try {
+    //         const db = client.db(dbName);
+    //         const postsCollection = db.collection(usersVar);
+    //         const commentsCollection = db.collection(usersVar);
+
+    //         return await usersCollection.find().sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();
+
+    //     } catch (error) {
+    //         console.error("Error fetching users: ", error);
+    //         return [];
+    //     }
+    // },
+
+    async getUserActions(userId, sortBy = "createdAt", order = -1, limit = 10, skip = 0) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection("posts");
+            const commentsCollection = db.collection("comments");
+    
+            const [posts, comments] = await Promise.all([
+                postsCollection.find({ authorId: userId }).toArray(),
+                commentsCollection.find({ authorId: userId }).toArray()
+            ]);
+    
+            let activities = [
+                ...posts.map(p => ({ ...p, type: "post" })),
+                ...comments.map(c => ({ ...c, type: "comment" })),
+            ];
+    
+            activities.sort((a, b) => {
+                if (order === 1) return new Date(a[sortBy]) - new Date(b[sortBy]);
+                else return new Date(b[sortBy]) - new Date(a[sortBy]);
+            });
+    
+            // Apply pagination (skip & limit)
+            activities = activities.slice(skip, skip + limit);
+    
+            return activities;
+        } catch (error) {
+            console.error("Error fetching user actions: ", error);
+            return [];
+        }
+    },
+    
     //////////////////////// ACCOUNT INTERACTIONS /////////////////////
     async toggleForumJoin(userId, forumId) {
         try {
@@ -677,37 +722,15 @@ const mongo = {
         }
     },
 
-    // async getPostsByForumId(forumId, sortBy, order, limit, skip) {
-    //     try {
-    //         const db = client.db(dbName);
-    //         const postsCollection = db.collection(postsVar);
-
-    //         // NOTE FOLLOWING REDDIT'S HOT RATING
-    //         // Log(abs(Upvotes-Downvotes)) + (age/45000)
-    //         const now = new Date();
-    //         const age = 0; // Just created    
-    //         const hotRating = Math.log10(Math.abs(postData.voteValue));
-
-    //         return await postsCollection.find({ forumId: new ObjectId(forumId) }).sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();;
-    //     } catch (error) {
-    //         console.error("Error fetching posts by forum ID: ", error);
-    //         return [];
-    //     }
-    // },
-
     async getPostsByForumId(forumId, sortBy, order, limit, skip) {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
     
             const now = new Date();
-
-            console.log("HERE:", forumId, sortBy, order, limit, skip)
     
             if (sortBy === "hot") {
                 // Perform a forum-wide search since hotRating needs to be computed manually
-                // NOTE FOLLOWING REDDIT'S HOT RATING
-                // Log(abs(Upvotes-Downvotes)) - (age/45000)
 
                 let posts = await postsCollection.find({ forumId: new ObjectId(forumId) }).toArray();
     
@@ -730,6 +753,65 @@ const mongo = {
         }
     },    
 
+    async getPostsByForumIds(forumIds, sortBy, order, limit, skip) {
+        try {
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+            const now = new Date();
+
+            console.log("POST BY IDS: ", forumIds, "Sort By:", sortBy, "Order:", order, "Limit:", limit, "Skip:", skip);
+            console.log(forumIds);
+    
+            let idArray = [];
+    
+            if (typeof forumIds === "string") {
+                console.log("string");
+
+                if (forumIds === "all") {
+                    idArray = [];
+                }
+                else {
+                    idArray = forumIds.split(",").map(id => {
+                        return new ObjectId(id.trim());
+                    });
+                }
+            }
+
+            else {
+                idArray = forumIds.map(id => new ObjectId(id.trim()));
+            }
+        
+            let posts;
+    
+            if (sortBy === "hot") {
+                if (idArray.length > 0) {
+                    posts = await postsCollection.find({ forumId: { $in: idArray } }).toArray();
+                } else {
+                    posts = await postsCollection.find().toArray();
+                }
+    
+                const exponent = 1.5;
+                posts.forEach(post => {
+                    const ageInHours = (now - new Date(post.createdAt)) / (1000 * 60 * 60);
+                    post.hotRating = post.voteValue / Math.pow(1 + ageInHours, exponent);
+                });
+    
+                posts.sort((a, b) => (order === 1 ? a.hotRating - b.hotRating : b.hotRating - a.hotRating));
+    
+                return posts.slice(skip, skip + limit);
+            } else {
+                let query = idArray.length > 0 ? { forumId: { $in: idArray } }: {};
+        
+                posts = await postsCollection.find(query).sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();
+                return posts;
+            }
+        } catch (error) {
+            console.error("Error fetching posts by forum ID:", error);
+            return [];
+        }
+    },    
+    
+
     async getPostsByUserId(userId) {
         try {
             const db = client.db(dbName);
@@ -750,7 +832,7 @@ const mongo = {
             for (let post of posts) {
                 const { _id, ...updatedData } = post;
                 updatedData.updatedAt = new Date(updatedData.updatedAt);
-                
+
                 const result = await postsCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
@@ -931,7 +1013,7 @@ const mongo = {
             const commentsCollection = db.collection(commentsVar);
 
             updatedData.updatedAt = new Date(updatedData.updatedAt);
-            
+
             const result = await commentsCollection.updateOne(
                 { _id: new ObjectId(commentId) },
                 { $set: updatedData }
