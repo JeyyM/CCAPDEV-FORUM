@@ -185,6 +185,7 @@ async function deleteComment(commentId) {
             const result = await response.json();
 
             alert(result.message);
+            location.reload();
         } catch (error) {
             console.error("Error deleting comment: ", error);
         }

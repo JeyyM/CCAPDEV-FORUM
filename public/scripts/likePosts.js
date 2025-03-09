@@ -148,10 +148,10 @@ $(document).ready(async function() {
             dislikePost(this);
         }
     })
+});
 
-    $(".deletePost").click(async function() {
-        await deletePost($(this).closest(".post").attr("id"));
-    })
+$(document).on('click', '.deletePost', async function() {
+    await deletePost($(this).closest(".post").attr("id"));
 });
 
 async function getSession() {

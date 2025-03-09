@@ -79,8 +79,12 @@ mongo.insertSamplePosts();
 
 server.get("/", async function(req, resp) {
     let posts;
+
+    await fetchCommunities();
+    console.log(communities);
+
     if (localUser == null) {
-        posts = await mongo.getPosts();
+        posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
     }
 
     else {
@@ -98,42 +102,6 @@ server.get("/", async function(req, resp) {
         communities: communities,
         posts: posts
     });
-});
-
-server.get("/tester", async function(req, resp) {
-    resp.render("tester",{
-        layout: "tester",
-        title: "Tester",
-    });
-});
-
-
-server.get("/forum/:forumName", async (req, resp) => {
-    try {
-        const decodedForumName = decodeURIComponent(req.params.forumName);
-
-        const forum = await mongo.getForumByName(decodedForumName); 
-        const posts = await mongo.getPostsByForumId(forum._id);
-
-        const postUsers = [];
-
-        for (const post of posts) {
-            const user = await mongo.getUserById(post.authorId);
-            postUsers.push(user);
-        }
-
-        console.log("USERS", postUsers);
-
-        resp.render("forum", {
-            layout: "forumLayout",
-            forumData: forum,
-            postData: posts,
-            userData: postUsers
-        });
-
-    } catch (error) {
-        console.error("Error fetching forum: ", error);
-    }
 });
 
 server.get("/viewPost/:postId", async function(req, resp){

@@ -758,9 +758,6 @@ const mongo = {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
             const now = new Date();
-
-            console.log("POST BY IDS: ", forumIds, "Sort By:", sortBy, "Order:", order, "Limit:", limit, "Skip:", skip);
-            console.log(forumIds);
     
             let idArray = [];
     

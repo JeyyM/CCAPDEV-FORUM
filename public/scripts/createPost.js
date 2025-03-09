@@ -34,12 +34,9 @@ $(document).ready(async function() {
             const result = await response.json();
     
             alert(result.message);
-            fetchForums();
-            fetchUsers();
-            fetchPostsByForum(document.getElementById("forumSelect").value);
     
-            document.getElementById("titleInput").value = "";
-            document.getElementById("contentInput").value = "";
+            $("#postTitle").val("");
+            $("#postBody").val("");
         } catch (error) {
             console.error("Error adding post: ", error);
         }

@@ -292,6 +292,7 @@ body {
     background-color: var(--bg);
     flex-direction: column;
     border-radius: 1rem;
+    position: fixed;
 }
 
 #signupForm .signup {
