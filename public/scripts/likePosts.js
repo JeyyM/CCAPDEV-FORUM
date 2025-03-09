@@ -9,8 +9,6 @@ function likePost(element) {
             dislikePost(element.parentNode.getElementsByClassName("dislikeButton")[0]);
         }
 
-        console.log($(element).parent().find(".voteValue"));
-
         $(element).parent().find(".voteValue").text(function(_, currentText) {
             return Number(currentText) + 1;
         });
@@ -91,13 +89,10 @@ $(document).ready(async function() {
 
     if (sessionData != null) {
         profile = await (await fetch("/api/get-user-by-id/" + sessionData.id)).json()
-        console.log(profile);
     }
 
     $(".post").each(function (_, element) {
         let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
-        // console.log(poster);
-
         $(element).find(".profilePic").attr("src", poster.profileImage);
         $(element).find(".posterName").text(poster.username);
         $(element).find(".postHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
@@ -130,8 +125,6 @@ $(document).ready(async function() {
     })
 
     $(".likeButton").click(function() {
-        console.log(sessionData);
-        
         toggleVote($(this.parentNode.parentNode).attr("id"), 1, sessionData);
 
         if (sessionData != null) {
@@ -140,8 +133,6 @@ $(document).ready(async function() {
     });
 
     $(".dislikeButton").click(function() {
-        console.log(sessionData);
-        
         toggleVote($(this.parentNode.parentNode).attr("id"), -1, sessionData);
 
         if (sessionData != null) {
@@ -160,13 +151,10 @@ async function getSession() {
         const result = await response.json();
 
         if (result.success) {
-            console.log("Current session:", result);
-
             currentSession = result.user;
             return currentSession;
         }
         else {
-            console.log("No current session");
             return null;
         }
     }

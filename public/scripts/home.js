@@ -20,8 +20,6 @@ $(document).ready(async function() {
             console.error("Error fetching user: ", error);
         }
 
-        console.log(currentUser.joinedForums);
-
         let isFetching = false;
 
         $(window).on('scroll', async function () {
@@ -41,10 +39,6 @@ $(document).ready(async function() {
                     posts.forEach(function(post, _) {
                         let poster = info.find(user => user._id.toString() === post.authorId.toString());
 
-                        if (post.authorId.toString() == sessionData.user.id.toString()) {
-                            console.log("SAME ID");
-                            console.log(post);
-                        }
                         let postContent = postBuilder(post, poster, sessionData.user);
                         $(".postContainer").append(postContent);
                     });
@@ -111,7 +105,6 @@ function postBuilder(param, poster, user) {
 
     if (user != null) {
         if (user.id.toString() == param.authorId.toString()) {
-            console.log("SAME IN POSTBUILDER");
             let postSettings = $(`<div class="postSettings">
                                     <i class="bx bx-dots-horizontal-rounded" onclick="postSettings(event, this)"></i>
                                     <div class="floatingSettings hidden">

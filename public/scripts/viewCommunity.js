@@ -5,12 +5,8 @@ $(document).ready(async function() {
     
     const forumResponse = await fetch(`/api/get-forum-by-name/${window.location.pathname.split('/')[2]}`);
     const forum = await forumResponse.json();
-    console.log(forum);
-    
-    console.log("ready");
 
     $("#joinCommunity").click(async function () {
-        console.log("clicked");
         if (hasSession){
             try {
                 const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
@@ -32,8 +28,6 @@ $(document).ready(async function() {
                 const result = await response.json();
 
                 if (result.success) {
-                    console.log("Join status changed: " + result.presentStatus);
-
                     const updatedUser = await (await fetch(`/api/get-user-by-id/${sessionData.user.id}`)).json();
 
                     const userStatus = await fetch("/update/userGeneral", {

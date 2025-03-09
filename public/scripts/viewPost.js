@@ -20,8 +20,6 @@ function hidePostButtons(element) {
 
 function postButtons(event, element) {
     const $replyButton = $(element).find(".replyButton");
-    
-    console.log($replyButton);
     $($replyButton[0]).removeClass("hidden");
     $($replyButton[1]).removeClass("hidden");
 
@@ -198,8 +196,7 @@ $(document).ready(async function() {
 
     $(".comment").each(function (_, element) {
         let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
-        console.log(poster.profileImage);
-
+        $(element).find(".commentHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
         $(element).find(".profilePic").attr("src", poster.profileImage);
         $(element).find(".posterName").text(poster.username);
         $(element).find(".postHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
@@ -223,13 +220,10 @@ $(document).ready(async function() {
             const result = await response.json();
     
             if (result.success) {
-                console.log("Current session:", result);
-    
                 currentSession = result.user;
                 return currentSession;
             }
             else {
-                console.log("No current session");
                 return null;
             }
         }

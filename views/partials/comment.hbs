@@ -1,9 +1,9 @@
 <div class="comment" id="{{toString comment._id}}">
     <div class="commentHeaderContainer">
-        <div class="commentHeader" onclick="window.location.href='/viewProfile/{{comment.posterName}}'">
+        <div class="commentHeader" onclick="window.location.href='/viewProfile/'">
             <img src="{{comment.profilePic}}" class="profilePic">
             <div>
-                <span class="posterName" id="{{comment.authorId}}">{{comment.posterName}}</span>
+                <span class="posterName" id="{{comment.authorId}}"></span>
                 <span class="dot">•</span>
                 <span class="timePosted">{{comment.updatedAt}}</span>
             </div>

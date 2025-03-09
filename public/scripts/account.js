@@ -29,13 +29,10 @@ $(document).ready(function() {
             const result = await response.json();
 
             if (result.success) {
-                console.log("Current session:", result);
-
                 currentSession = result.user;
                 return true
             }
             else {
-                console.log("No current session");
                 return false
             }
         }
