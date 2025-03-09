@@ -124,98 +124,124 @@ const mongo = {
 
             const existingUsers = await usersCollection.countDocuments();
             if (existingUsers === 0) {
-                const sampleUsers = [
-                    {
-                        _id: new ObjectId("67c792cfb3ba6d9c76f699d5"),
-                        username: "apple",
-                        email: "apple@email.com",
-                        profileImage: "https://hips.hearstapps.com/hmg-prod/images/ripe-apple-royalty-free-image-1659454396.jpg?crop=0.924xw:0.679xh;0.0197xw,0.212xh&resize=980:*",
-                        bannerImage: "https://images.everydayhealth.com/images/diet-nutrition/apples-101-about-1440x810.jpg",
-                        password: "123",
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        bio: "I love apples",
-                        joinedForums: [],
-                        following: [],
-                        followersCount: 0,
-                        postsCount: 5,
-                        commentsCount: 25,
-                        votes: [],
-                        commentVotes: []
+                const sampleUsers = [{
+                    "_id": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
                     },
-                    {
-                        _id: new ObjectId("67c792cfb3ba6d9c76f699d6"),
-                        username: "banana",
-                        email: "banana@email.com",
-                        profileImage: "https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg",
-                        bannerImage: "https://images-prod.healthline.com/hlcmsresource/images/AN_images/bananas-1296x728-feature.jpg",
-                        password: "123",
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        bio: "I love bananas",
-                        joinedForums: [],
-                        following: [],
-                        followersCount: 0,
-                        postsCount: 5,
-                        commentsCount: 25,
-                        votes: [],
-                        commentVotes: []
+                    "username": "WanderlustNomad",
+                    "email": "apple@email.com",
+                    "profileImage": "https://cdn.gigwise.com/wp-content/uploads/2024/12/Balancing-Work-and-Wanderlust%E2%80%94Lessons-from-a-Digital-Nomad-1024x574.png",
+                    "bannerImage": "https://assets.entrepreneur.com/content/3x2/2000/20180405210852-GettyImages-639808346.jpeg",
+                    "password": "123",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
                     },
-                    {
-                        _id: new ObjectId("67c792cfb3ba6d9c76f699d7"),
-                        username: "orange",
-                        email: "orange@email.com",
-                        profileImage: "https://www.quanta.org/orange/orange.jpg",
-                        bannerImage: "https://cdn.britannica.com/24/174524-050-A851D3F2/Oranges.jpg",
-                        password: "123",
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        bio: "I love oranges",
-                        joinedForums: [],
-                        following: [],
-                        followersCount: 0,
-                        postsCount: 5,
-                        commentsCount: 25,
-                        votes: [],
-                        commentVotes: []
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
                     },
-                    {
-                        _id: new ObjectId("67c792cfb3ba6d9c76f699d8"),
-                        username: "melon",
-                        email: "melon@email.com",
-                        profileImage: "https://cdn.britannica.com/99/143599-050-C3289491/Watermelon.jpg",
-                        bannerImage: "https://veritablevegetable.com/wp-content/uploads/2021/06/Melon-Assorted-scaled.jpg",
-                        password: "123",
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        bio: "I love melons",
-                        joinedForums: [],
-                        following: [],
-                        followersCount: 0,
-                        postsCount: 5,
-                        commentsCount: 25,
-                        votes: [],
-                        commentVotes: []
+                    "bio": "Exploring the world one country at a time. Currently obsessed with trying street food everywhere. I'm also an amateur photographer capturing landscapes & cultures",
+                    "joinedForums": [
+                      "67c7b80a8f936822ab91789f"
+                    ],
+                    "following": [],
+                    "followersCount": 0,
+                    "postsCount": 6,
+                    "commentsCount": 25,
+                    "votes": [],
+                    "commentVotes": []
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c792cfb3ba6d9c76f699d6"
                     },
-                    {
-                        _id: new ObjectId("67c792cfb3ba6d9c76f699d9"),
-                        username: "kiwi",
-                        email: "kiwi@email.com",
-                        profileImage: "https://nationalzoo.si.edu/sites/default/files/animals/northislandbrownkiwi-001.jpg",
-                        bannerImage: "https://assets3.thrillist.com/v1/image/2624055/792x456/scale;webp=auto;jpeg_quality=60;progressive.jpg",
-                        password: "123",
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                        bio: "I love kiwis",
-                        joinedForums: [],
-                        following: [],
-                        followersCount: 0,
-                        postsCount: 5,
-                        commentsCount: 25,
-                        votes: [],
-                        commentVotes: []
-                    }
-                ];
+                    "username": "MidnightPhilosopher",
+                    "email": "banana@email.com",
+                    "profileImage": "https://img.freepik.com/free-photo/front-view-epiphany-day-candles-with-copy-space-gift-box_23-2148746758.jpg",
+                    "bannerImage": "https://images.unsplash.com/photo-1485498128961-422168ba5f87?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d3JpdGluZyUyMGFlc3RoZXRpY3xlbnwwfHwwfHx8MA%3D%3D",
+                    "password": "123",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "bio": "\"Yes bio.\"",
+                    "joinedForums": [],
+                    "following": [],
+                    "followersCount": 0,
+                    "postsCount": 5,
+                    "commentsCount": 25,
+                    "votes": []
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c792cfb3ba6d9c76f699d7"
+                    },
+                    "username": "GeekOverlord",
+                    "email": "orange@email.com",
+                    "profileImage": "https://i.pinimg.com/236x/8e/31/21/8e31210724a36c9da5ac4705074e1015.jpg",
+                    "bannerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFlLCkE8cxJzkCT4R3Y03Fj4waL3HIwt1ULg&s",
+                    "password": "123",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "bio": "Hardcore gamer, from retro to next-gen.\nI like building custom PCs & testing new gadgets\nBooks I read: Sci-fi & fantasy bookworm (Dune, LOTR, The Expanse)",
+                    "joinedForums": [],
+                    "following": [],
+                    "followersCount": 0,
+                    "postsCount": 5,
+                    "commentsCount": 25,
+                    "votes": []
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c792cfb3ba6d9c76f699d8"
+                    },
+                    "username": "CreativeChaos",
+                    "email": "melon@email.com",
+                    "profileImage": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ca4244a3-4ba1-4186-809b-31a4358d3605/desdu2p-4a865ea7-3507-438e-9d95-ad71d33cb88b.png/v1/fill/w_894,h_894,q_70,strp/new_pfp_by_pokerfacedartist_desdu2p-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA4MCIsInBhdGgiOiJcL2ZcL2NhNDI0NGEzLTRiYTEtNDE4Ni04MDliLTMxYTQzNThkMzYwNVwvZGVzZHUycC00YTg2NWVhNy0zNTA3LTQzOGUtOWQ5NS1hZDcxZDMzY2I4OGIucG5nIiwid2lkdGgiOiI8PTEwODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.T6M9PbfBN0Fg7q4Ig7539mElSLu5DdVFdX-ffnuv4jk",
+                    "bannerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2NOgi9e8n-cllUR8gZdMYMqK0kNEckeCViA&s",
+                    "password": "123",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "bio": "🎨 Artist | DIY Enthusiast | Vintage Collector\n🖌 Sketching & painting when inspiration hits\n📺 Fixing up old tech & restoring vintage finds\n✂️ Always working on a new DIY or craft project",
+                    "joinedForums": [],
+                    "following": [],
+                    "followersCount": 0,
+                    "postsCount": 5,
+                    "commentsCount": 25,
+                    "votes": []
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c792cfb3ba6d9c76f699d9"
+                    },
+                    "username": "FitnessJunkie42",
+                    "email": "kiwi@email.com",
+                    "profileImage": "https://archive.org/download/twitter-default-pfp/e.png",
+                    "bannerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfHafTgWDYkDRsGd7eM07ZA-WaADtunM88ig&s",
+                    "password": "123",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.950Z"
+                    },
+                    "bio": "when life gets hard, I get harder",
+                    "joinedForums": [],
+                    "following": [],
+                    "followersCount": 0,
+                    "postsCount": 5,
+                    "commentsCount": 25,
+                    "votes": []
+                  }];
 
                 await usersCollection.insertMany(sampleUsers);
                 console.log("5 sample users inserted.");
@@ -266,6 +292,579 @@ const mongo = {
                 let samplePosts = [];
                 let sampleComments = [];
 
+                samplePosts = [{
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a3"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab91789f"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                    },
+                    "title": "Best Redstone Builds",
+                    "content": "Share your craziest redstone contraptions!",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a4"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab91789f"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d6"
+                    },
+                    "title": "Hardcore Mode Tips",
+                    "content": "What's the best way to survive in Hardcore?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a5"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab91789f"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d7"
+                    },
+                    "title": "Nether Base Ideas",
+                    "content": "Need cool design inspirations for my nether base.",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a6"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab91789f"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d8"
+                    },
+                    "title": "Speedrun Strategies",
+                    "content": "What’s the fastest way to beat the Ender Dragon?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a7"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab91789f"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d9"
+                    },
+                    "title": "Favorite Texture Packs",
+                    "content": "Which packs do you guys recommend?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.958Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a8"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a0"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                    },
+                    "title": "Best Agents for Ranked",
+                    "content": "Who should I main for climbing in Ranked?",
+                    "createdAt": {
+                      "$date": "2023-02-05T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2023-03-05T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1a9"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a0"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d6"
+                    },
+                    "title": "Aim Training Drills",
+                    "content": "What’s the best way to improve crosshair placement?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1aa"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a0"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d7"
+                    },
+                    "title": "Vandal vs Phantom",
+                    "content": "Which gun do you prefer and why?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1ab"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a0"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d8"
+                    },
+                    "title": "Toxic Teammates",
+                    "content": "How do you deal with toxic teammates in comp?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1ac"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a0"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d9"
+                    },
+                    "title": "Best Valorant Skins",
+                    "content": "Which skin bundle is worth buying?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1ad"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a1"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                    },
+                    "title": "Best Landing Spots",
+                    "content": "Where do you drop for easy wins?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1ae"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a1"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d6"
+                    },
+                    "title": "Fortnite OG is Back!",
+                    "content": "What are your thoughts on the OG map returning?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1af"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a1"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d7"
+                    },
+                    "title": "Best Fortnite Skins",
+                    "content": "Which skins are a must-have?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b0"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a1"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d8"
+                    },
+                    "title": "Building vs Zero Build",
+                    "content": "Do you prefer the classic building mode or Zero Build?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b1"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a1"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d9"
+                    },
+                    "title": "Tips for New Players",
+                    "content": "What’s the best way for new players to improve?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b2"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a2"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                    },
+                    "title": "Top 10 Anime of All Time",
+                    "content": "Let’s rank our top 10 anime!",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b3"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a2"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d6"
+                    },
+                    "title": "Best New Anime 2024",
+                    "content": "What are the best anime from this year?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b4"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a2"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d7"
+                    },
+                    "title": "Underrated Anime Gems",
+                    "content": "Share anime that deserve more recognition.",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b5"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a2"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d8"
+                    },
+                    "title": "Manga vs Anime",
+                    "content": "Do you prefer reading manga or watching anime?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b6"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a2"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d9"
+                    },
+                    "title": "Best Shonen Protagonist",
+                    "content": "Who’s the best protagonist in shonen anime?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b7"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a3"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                    },
+                    "title": "Best Pistol for Eco Rounds?",
+                    "content": "Do you prefer P250, Five-Seven, or Deagle?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b8"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a3"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d6"
+                    },
+                    "title": "AWP vs Scout",
+                    "content": "Which one is better for aggressive playstyle?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1b9"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a3"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d7"
+                    },
+                    "title": "CS:GO vs CS2",
+                    "content": "Which version do you prefer?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1ba"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a3"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d8"
+                    },
+                    "title": "Clutch Situations",
+                    "content": "What’s the best way to stay calm in 1vX?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67c94be9b7d17daa0a4df1bb"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a3"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d9"
+                    },
+                    "title": "Best Map for Beginners",
+                    "content": "Which map should new players learn first?",
+                    "createdAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-07T04:25:45.959Z"
+                    },
+                    "comments": [],
+                    "voteValue": 0,
+                    "commentsCount": 5
+                  },
+                  {
+                    "_id": {
+                      "$oid": "67cd7021b8b17b78e305942c"
+                    },
+                    "forumId": {
+                      "$oid": "67c7b80a8f936822ab9178a3"
+                    },
+                    "authorId": {
+                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                    },
+                    "title": "zx",
+                    "content": "zx",
+                    "voteValue": 0,
+                    "comments": [],
+                    "createdAt": {
+                      "$date": "2025-03-09T10:40:33.430Z"
+                    },
+                    "updatedAt": {
+                      "$date": "2025-03-09T10:40:33.430Z"
+                    },
+                    "commentsCount": 0
+                  }];
+/*
                 for (const [forumName, forumId] of Object.entries(forums)) {
                     for (const [username, userId] of Object.entries(users)) {
                         const postId = ids[index];
@@ -298,7 +897,7 @@ const mongo = {
 
                         index++;
                     }
-                }
+                }*/
 
                 await postsCollection.insertMany(samplePosts);
                 await commentsCollection.insertMany(sampleComments);
