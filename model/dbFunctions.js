@@ -124,124 +124,98 @@ const mongo = {
 
             const existingUsers = await usersCollection.countDocuments();
             if (existingUsers === 0) {
-                const sampleUsers = [{
-                    "_id": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
+                const sampleUsers = [
+                    {
+                        _id: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        username: "WanderlustNomad",
+                        email: "apple@email.com",
+                        profileImage: "https://hips.hearstapps.com/hmg-prod/images/ripe-apple-royalty-free-image-1659454396.jpg?crop=0.924xw:0.679xh;0.0197xw,0.212xh&resize=980:*",
+                        bannerImage: "https://images.everydayhealth.com/images/diet-nutrition/apples-101-about-1440x810.jpg",
+                        password: "123",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        bio: "I love apples",
+                        joinedForums: [],
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
+                        votes: [],
+                        commentVotes: []
                     },
-                    "username": "WanderlustNomad",
-                    "email": "apple@email.com",
-                    "profileImage": "https://cdn.gigwise.com/wp-content/uploads/2024/12/Balancing-Work-and-Wanderlust%E2%80%94Lessons-from-a-Digital-Nomad-1024x574.png",
-                    "bannerImage": "https://assets.entrepreneur.com/content/3x2/2000/20180405210852-GettyImages-639808346.jpeg",
-                    "password": "123",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
+                    {
+                        _id: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        username: "MidnightPhilosopher",
+                        email: "banana@email.com",
+                        profileImage: "https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bunch-of-bananas-67e91d5.jpg",
+                        bannerImage: "https://images-prod.healthline.com/hlcmsresource/images/AN_images/bananas-1296x728-feature.jpg",
+                        password: "123",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        bio: "I love bananas",
+                        joinedForums: [],
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
+                        votes: [],
+                        commentVotes: []
                     },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
+                    {
+                        _id: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        username: "GeekOverlord",
+                        email: "orange@email.com",
+                        profileImage: "https://www.quanta.org/orange/orange.jpg",
+                        bannerImage: "https://cdn.britannica.com/24/174524-050-A851D3F2/Oranges.jpg",
+                        password: "123",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        bio: "I love oranges",
+                        joinedForums: [],
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
+                        votes: [],
+                        commentVotes: []
                     },
-                    "bio": "Exploring the world one country at a time. Currently obsessed with trying street food everywhere. I'm also an amateur photographer capturing landscapes & cultures",
-                    "joinedForums": [
-                      "67c7b80a8f936822ab91789f"
-                    ],
-                    "following": [],
-                    "followersCount": 0,
-                    "postsCount": 6,
-                    "commentsCount": 25,
-                    "votes": [],
-                    "commentVotes": []
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c792cfb3ba6d9c76f699d6"
+                    {
+                        _id: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        username: "CreativeChaos",
+                        email: "melon@email.com",
+                        profileImage: "https://cdn.britannica.com/99/143599-050-C3289491/Watermelon.jpg",
+                        bannerImage: "https://veritablevegetable.com/wp-content/uploads/2021/06/Melon-Assorted-scaled.jpg",
+                        password: "123",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        bio: "I love melons",
+                        joinedForums: [],
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
+                        votes: [],
+                        commentVotes: []
                     },
-                    "username": "MidnightPhilosopher",
-                    "email": "banana@email.com",
-                    "profileImage": "https://img.freepik.com/free-photo/front-view-epiphany-day-candles-with-copy-space-gift-box_23-2148746758.jpg",
-                    "bannerImage": "https://images.unsplash.com/photo-1485498128961-422168ba5f87?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d3JpdGluZyUyMGFlc3RoZXRpY3xlbnwwfHwwfHx8MA%3D%3D",
-                    "password": "123",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "bio": "\"Yes bio.\"",
-                    "joinedForums": [],
-                    "following": [],
-                    "followersCount": 0,
-                    "postsCount": 5,
-                    "commentsCount": 25,
-                    "votes": []
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c792cfb3ba6d9c76f699d7"
-                    },
-                    "username": "GeekOverlord",
-                    "email": "orange@email.com",
-                    "profileImage": "https://i.pinimg.com/236x/8e/31/21/8e31210724a36c9da5ac4705074e1015.jpg",
-                    "bannerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFlLCkE8cxJzkCT4R3Y03Fj4waL3HIwt1ULg&s",
-                    "password": "123",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "bio": "Hardcore gamer, from retro to next-gen.\nI like building custom PCs & testing new gadgets\nBooks I read: Sci-fi & fantasy bookworm (Dune, LOTR, The Expanse)",
-                    "joinedForums": [],
-                    "following": [],
-                    "followersCount": 0,
-                    "postsCount": 5,
-                    "commentsCount": 25,
-                    "votes": []
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c792cfb3ba6d9c76f699d8"
-                    },
-                    "username": "CreativeChaos",
-                    "email": "melon@email.com",
-                    "profileImage": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/ca4244a3-4ba1-4186-809b-31a4358d3605/desdu2p-4a865ea7-3507-438e-9d95-ad71d33cb88b.png/v1/fill/w_894,h_894,q_70,strp/new_pfp_by_pokerfacedartist_desdu2p-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTA4MCIsInBhdGgiOiJcL2ZcL2NhNDI0NGEzLTRiYTEtNDE4Ni04MDliLTMxYTQzNThkMzYwNVwvZGVzZHUycC00YTg2NWVhNy0zNTA3LTQzOGUtOWQ5NS1hZDcxZDMzY2I4OGIucG5nIiwid2lkdGgiOiI8PTEwODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.T6M9PbfBN0Fg7q4Ig7539mElSLu5DdVFdX-ffnuv4jk",
-                    "bannerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2NOgi9e8n-cllUR8gZdMYMqK0kNEckeCViA&s",
-                    "password": "123",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "bio": "🎨 Artist | DIY Enthusiast | Vintage Collector\n🖌 Sketching & painting when inspiration hits\n📺 Fixing up old tech & restoring vintage finds\n✂️ Always working on a new DIY or craft project",
-                    "joinedForums": [],
-                    "following": [],
-                    "followersCount": 0,
-                    "postsCount": 5,
-                    "commentsCount": 25,
-                    "votes": []
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c792cfb3ba6d9c76f699d9"
-                    },
-                    "username": "FitnessJunkie42",
-                    "email": "kiwi@email.com",
-                    "profileImage": "https://archive.org/download/twitter-default-pfp/e.png",
-                    "bannerImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfHafTgWDYkDRsGd7eM07ZA-WaADtunM88ig&s",
-                    "password": "123",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.950Z"
-                    },
-                    "bio": "when life gets hard, I get harder",
-                    "joinedForums": [],
-                    "following": [],
-                    "followersCount": 0,
-                    "postsCount": 5,
-                    "commentsCount": 25,
-                    "votes": []
-                  }];
+                    {
+                        _id: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        username: "FitnessJunkie42",
+                        email: "kiwi@email.com",
+                        profileImage: "https://nationalzoo.si.edu/sites/default/files/animals/northislandbrownkiwi-001.jpg",
+                        bannerImage: "https://assets3.thrillist.com/v1/image/2624055/792x456/scale;webp=auto;jpeg_quality=60;progressive.jpg",
+                        password: "123",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        bio: "I love kiwis",
+                        joinedForums: [],
+                        following: [],
+                        followersCount: 0,
+                        postsCount: 5,
+                        commentsCount: 25,
+                        votes: [],
+                        commentVotes: []
+                    }
+                ];
 
                 await usersCollection.insertMany(sampleUsers);
                 console.log("5 sample users inserted.");
@@ -292,578 +266,1322 @@ const mongo = {
                 let samplePosts = [];
                 let sampleComments = [];
 
-                samplePosts = [{
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a3"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab91789f"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
-                    },
-                    "title": "Best Redstone Builds",
-                    "content": "Share your craziest redstone contraptions!",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a4"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab91789f"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d6"
-                    },
-                    "title": "Hardcore Mode Tips",
-                    "content": "What's the best way to survive in Hardcore?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a5"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab91789f"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d7"
-                    },
-                    "title": "Nether Base Ideas",
-                    "content": "Need cool design inspirations for my nether base.",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a6"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab91789f"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d8"
-                    },
-                    "title": "Speedrun Strategies",
-                    "content": "What’s the fastest way to beat the Ender Dragon?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a7"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab91789f"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d9"
-                    },
-                    "title": "Favorite Texture Packs",
-                    "content": "Which packs do you guys recommend?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.958Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a8"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a0"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
-                    },
-                    "title": "Best Agents for Ranked",
-                    "content": "Who should I main for climbing in Ranked?",
-                    "createdAt": {
-                      "$date": "2023-02-05T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2023-03-05T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1a9"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a0"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d6"
-                    },
-                    "title": "Aim Training Drills",
-                    "content": "What’s the best way to improve crosshair placement?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1aa"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a0"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d7"
-                    },
-                    "title": "Vandal vs Phantom",
-                    "content": "Which gun do you prefer and why?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1ab"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a0"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d8"
-                    },
-                    "title": "Toxic Teammates",
-                    "content": "How do you deal with toxic teammates in comp?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1ac"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a0"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d9"
-                    },
-                    "title": "Best Valorant Skins",
-                    "content": "Which skin bundle is worth buying?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1ad"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a1"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
-                    },
-                    "title": "Best Landing Spots",
-                    "content": "Where do you drop for easy wins?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1ae"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a1"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d6"
-                    },
-                    "title": "Fortnite OG is Back!",
-                    "content": "What are your thoughts on the OG map returning?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1af"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a1"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d7"
-                    },
-                    "title": "Best Fortnite Skins",
-                    "content": "Which skins are a must-have?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b0"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a1"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d8"
-                    },
-                    "title": "Building vs Zero Build",
-                    "content": "Do you prefer the classic building mode or Zero Build?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b1"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a1"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d9"
-                    },
-                    "title": "Tips for New Players",
-                    "content": "What’s the best way for new players to improve?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b2"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a2"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
-                    },
-                    "title": "Top 10 Anime of All Time",
-                    "content": "Let’s rank our top 10 anime!",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b3"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a2"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d6"
-                    },
-                    "title": "Best New Anime 2024",
-                    "content": "What are the best anime from this year?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b4"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a2"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d7"
-                    },
-                    "title": "Underrated Anime Gems",
-                    "content": "Share anime that deserve more recognition.",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b5"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a2"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d8"
-                    },
-                    "title": "Manga vs Anime",
-                    "content": "Do you prefer reading manga or watching anime?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b6"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a2"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d9"
-                    },
-                    "title": "Best Shonen Protagonist",
-                    "content": "Who’s the best protagonist in shonen anime?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b7"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a3"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
-                    },
-                    "title": "Best Pistol for Eco Rounds?",
-                    "content": "Do you prefer P250, Five-Seven, or Deagle?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b8"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a3"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d6"
-                    },
-                    "title": "AWP vs Scout",
-                    "content": "Which one is better for aggressive playstyle?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1b9"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a3"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d7"
-                    },
-                    "title": "CS:GO vs CS2",
-                    "content": "Which version do you prefer?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1ba"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a3"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d8"
-                    },
-                    "title": "Clutch Situations",
-                    "content": "What’s the best way to stay calm in 1vX?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67c94be9b7d17daa0a4df1bb"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a3"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d9"
-                    },
-                    "title": "Best Map for Beginners",
-                    "content": "Which map should new players learn first?",
-                    "createdAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-07T04:25:45.959Z"
-                    },
-                    "comments": [],
-                    "voteValue": 0,
-                    "commentsCount": 5
-                  },
-                  {
-                    "_id": {
-                      "$oid": "67cd7021b8b17b78e305942c"
-                    },
-                    "forumId": {
-                      "$oid": "67c7b80a8f936822ab9178a3"
-                    },
-                    "authorId": {
-                      "$oid": "67c792cfb3ba6d9c76f699d5"
-                    },
-                    "title": "zx",
-                    "content": "zx",
-                    "voteValue": 0,
-                    "comments": [],
-                    "createdAt": {
-                      "$date": "2025-03-09T10:40:33.430Z"
-                    },
-                    "updatedAt": {
-                      "$date": "2025-03-09T10:40:33.430Z"
-                    },
-                    "commentsCount": 0
-                  }];
+                samplePosts = [
+                    {
+                        _id: new ObjectId("67c94be9b7d17daa0a4df1a3"),
+                        forumId: new ObjectId("67c7b80a8f936822ab91789f"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        title: "Best Redstone Builds",
+                        content: "Share your craziest redstone contraptions!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        comments: [],
+                        voteValue: 0,
+                        commentsCount: 5
+                    },
+                    {
+                        _id: new ObjectId("67c94be9b7d17daa0a4df1a4"),
+                        forumId: new ObjectId("67c7b80a8f936822ab91789f"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        title: "Hardcore Mode Tips",
+                        content: "What's the best way to survive in Hardcore?",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        comments: [],
+                        voteValue: 0,
+                        commentsCount: 5
+                    },
+                    {
+                        _id: new ObjectId("67c94be9b7d17daa0a4df1a5"),
+                        forumId: new ObjectId("67c7b80a8f936822ab91789f"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        title: "Nether Base Ideas",
+                        content: "Need cool design inspirations for my nether base.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        comments: [],
+                        voteValue: 0,
+                        commentsCount: 5
+                    },
+                    {
+                        _id: new ObjectId("67c94be9b7d17daa0a4df1a6"),
+                        forumId: new ObjectId("67c7b80a8f936822ab91789f"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        title: "Speedrun Strategies",
+                        content: "What’s the fastest way to beat the Ender Dragon?",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        comments: [],
+                        voteValue: 0,
+                        commentsCount: 5
+                    },
+                    {
+                        _id: new ObjectId("67c94be9b7d17daa0a4df1a7"),
+                        forumId: new ObjectId("67c7b80a8f936822ab91789f"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        title: "Favorite Texture Packs",
+                        content: "Which packs do you guys recommend?",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        comments: [],
+                        voteValue: 0,
+                        commentsCount: 5
+                    }
+                ];
+
+                sampleComments = [
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2a5"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "I built an automatic farm while waiting at the airport once!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2a6"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Redstone logic is oddly meditative. Like solving philosophy riddles with blocks",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2a7"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Redstone is basically coding with blocks! I made a fully automated XP farm using observers and pistons",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2a8"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I prefer aesthetic builds, but I respect redstone engineers!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2a9"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Efficiency is key. Hidden piston doors save time!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2aa"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "First rule of survival: never dig straight down. Second rule: always carry a water bucket!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ab"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Hardcore is a metaphor for life: No second chances, so make every block count",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ac"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "AFK fish farms = infinite enchanted gear. Just saying",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ad"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I spend more time decorating than surviving... maybe that’s why I always die?",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ae"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Max out food efficiency. Golden carrots for the win!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2af"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "I love lava-themed bases! They remind me of volcanic islands.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b0"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "A base in the Nether is a statement: ‘I have embraced chaos.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b1"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "I once made a full piglin trading hall inside a basalt delta. It’s efficient but dangerous.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b2"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Nether bases NEED crimson and warped wood for contrast. Trust me.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b3"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Don’t forget blast resistance. Ghasts will ruin your day",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b4"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Speedrunning Minecraft is like planning the shortest airport layover. No wasted steps!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b5"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Speedrunning is a reflection of discipline. Every move must be intentional",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b6"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "The best method? Ruined portal -> Bastion loot -> Nether fortress. RNG-dependent but fast!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b7"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I’d speedrun, but I keep stopping to build random things.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b8"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Treat it like a workout. Optimize movement, reduce waste, and execute perfectly",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2b9"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "I use a realistic pack because I want my world to feel like a vacation.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ba"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Faithful for nostalgia, but a minimalist pack makes the experience feel meditative.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2bb"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "I stick to default, but with shaders. The vanilla experience is already perfect!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2bc"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Pixel perfection is key. I love painterly-styled packs that make everything feel magical",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2bd"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "High FPS packs only. Performance > aesthetics.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2be"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Duelists are the backpackers of Valorant. Solo queue life!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2bf"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "The best agent is the one you master. That’s your philosophy lesson for today.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c0"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Killjoy turret + Viper’s Pit = free site control!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c1"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Cypher setups are like painting a masterpiece. But instead of paint, it’s tripwires.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c2"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Want to rank up? Play a controller. Smokes win games.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c3"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Travel tip: Bring your laptop. Play aim labs between flights!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c4"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Aim is like mindfulness. Be present, steady your breath, and click heads.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c5"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Adjust your crosshair placement. Half the fight is won before you even fire a bullet",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c6"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I suck at aiming, so I just play Sage and make healing my art",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c7"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1a9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "100 Kovaak’s shots before bed. That’s the grind",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c8"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1aa"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Vandal = high risk, high reward. Phantom = stability",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2c9"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1aa"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Both are just tools. The user determines the outcome",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ca"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1aa"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "ntom is better for spraying, Vandal is better for raw aim",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2cb"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1aa"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I choose my gun based on the best skin design. Function follows aesthetics",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2cc"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1aa"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "One-tap potential? Vandal all the way",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2cd"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ab"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Toxicity exists everywhere. Just mute and focus on your game!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ce"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ab"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "You cannot control others, only your response to them. Inner peace > arguing",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2cf"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ab"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Toxicity disappears when you top frag. Win = silence",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d0"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ab"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Block, report, and move on. Some people aren’t worth the energy",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d1"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ab"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "If you let them tilt you, they win. Mental strength is a skill too",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d2"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ac"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Skins are like souvenirs. I collect one from each bundle!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d3"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ac"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "A good skin doesn’t improve skill, but it can improve confidence.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d4"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ac"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "RGX Phantom is the closest thing to an aim-bot look.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d5"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ac"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Spectrum skins feel like playing in a nightclub. Best visuals ever!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d6"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ac"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "I pick skins based on reload speed animations. Smooth is better!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d7"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ad"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Dropping in new locations is like exploring new countries. Gotta experience it all",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d8"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ad"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "It’s not about where you land, but how you adapt.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2d9"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ad"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Land near a gas station. More loot, fewer fights, easy rotation.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2da"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ad"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Landing spots are great, but have you seen some of these map designs? Pure creativity.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2db"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ad"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Hot drops = high risk, high reward. Tilted Towers or bust!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2dc"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ae"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Nostalgia hits hard. This takes me back to Chapter 1, and I love it!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2dd"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ae"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Everything old is new again. We chase the past while living in the present",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2de"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ae"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "OG map is back, but mechanics have changed. Adapt or lose.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2df"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ae"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "The original map had the best aesthetic. The colors, the vibe—it’s all coming back!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e0"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ae"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Peak Fortnite nostalgia. Nothing beats the thrill of Tilted Towers again!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e1"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1af"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "ins are like souvenirs from different seasons. My go-to is Drift—it reminds me of my first Battle Pass!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e2"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1af"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "A skin is an extension of the player. If it makes you play better, then it’s the best one for you",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e3"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1af"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Omega with full armor will always be legendary. If you know, you know",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e4"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1af"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "The Celestial skins are peak design. Glowing effects + smooth animations = perfection",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e5"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1af"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Superhero skins are OP. Custom colors + tight hitbox = best competitive choice",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e6"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b0"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Zero Build rewards movement, Building rewards strategy. Both are fun!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e7"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b0"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "It’s a mindset shift. Strategy in one, reflexes in the other.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e8"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b0"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Zero Build makes aim training way more important. I like the change!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2e9"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b0"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Building fights are beautiful when done right. It’s like an aerial dance!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ea"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b0"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Zero Build is where it’s at. Makes positioning and aim the true skill test",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2eb"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b1"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Take it slow. Explore the map, learn rotations, and have fun!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ec"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b1"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "It’s not about where you land, but how you adapt.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ed"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b1"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: " on the edge of the circle early. Positioning > loot.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ee"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b1"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Experiment with different loadouts. Find a playstyle that suits you",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ef"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b1"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: " UP before playing. Creative mode is your best friend!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f0"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b2"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "One Piece isn’t just a story, it’s an adventure!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f1"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b2"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Ranking anime is like ranking philosophies. Subjective, ever-changing, and highly debated.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f2"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b2"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Steins;Gate rewired my brain. Science and anime in one? Yes, please",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f3"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b2"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Violet Evergarden is pure art. Every frame is a painting.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f4"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b2"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Haikyuu made me want to start volleyball. That’s impact",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f5"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Checking out international anime festivals to see what’s trending!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f6"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Every new anime adds another thread to the vast tapestry of storytelling",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f7"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "The new cyberpunk anime looks insane. High hopes for the animation quality",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f8"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I’m all about unique art styles. Anything that stands out visually, I’ll watch",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2f9"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b3"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "I’m hoping for more solid sports anime. The last few years have been great for them!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2fa"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "March Comes in Like a Lion is so underrated. Emotional journey",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2fb"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "A hidden gem is only hidden until someone shares it. Pass on the knowledge!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2fc"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Kaiba is underrated. Sci-fi, but with such a unique and deep story",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2fd"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "The Tatami Galaxy. A surrealist masterpiece. More people should watch it!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2fe"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b4"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Megalo Box. Classic boxing anime vibes, but with a modern twist!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa2ff"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Manga is the director’s cut. No filler, just the raw story!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa300"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Reading manga lets you pace the story yourself. Anime dictates your experience",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa301"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Some anime adaptations butcher pacing. Manga keeps it pure",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa302"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Anime gives us OSTs and fluid motion. Some stories are better in motion",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa303"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b5"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Manga lets me binge faster. I can read 100 chapters in one day",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa304"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Luffy embodies adventure. He makes you want to explore the world!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa305"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Guts from Berserk. The ultimate test of resilience and willpower",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa306"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Light Yagami is technically a protagonist… until he isn’t",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa307"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Asta from Black Clover. Watching him grow is pure motivation!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa308"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b6"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Naruto. Started from nothing, became the best. Simple but inspiringkiwi's comment on post 67c94be9b7d17daa0a4df1b6",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa309"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Eco rounds are like budget traveling. You make the most with what you have!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa30a"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "A wise man once said, ‘You miss 100% of the shots you don’t take.’ Take that Glock burst shot",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa30b"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "P250 is king. Cheap, accurate, and punches through armor.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa30c"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Dualies. Not because they’re good, but because they look cool",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa30d"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b7"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "I just deagle one-tap. No eco round needed",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa30e"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "AWP feels like traveling first class. Scout is economy with an unexpected upgrade!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa30f"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "The difference is mindset: AWP dominates, Scout outplays",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa310"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "AWP for power, Scout for speed. If you have cracked aim, go Scout!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa311"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "AWP skins are way cooler. That’s the real decision-maker.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa312"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b8"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "I move too much for AWP. Scout quick-switching feels smoother",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa313"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "CS:GO had that raw, gritty feel. CS2 is polished, but I miss the classic vibe",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa314"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "One represents nostalgia, the other innovation. Both have their place",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa315"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "CS2 fixes tick rate issues. It’s an upgrade, hands down.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa316"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "CS2’s new lighting makes every map feel fresh. It’s beautiful!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa317"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1b9"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "CS2 movement feels weird at first, but once you adapt, it’s cleaner",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa318"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ba"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Breathe. Play for info. Think like a traveler—expect the unexpected!",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa319"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ba"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: " clutch is won in the mind before the game. Visualize success",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa31a"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ba"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Crosshair placement + pre-aim = 80% of clutch wins.",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa31b"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ba"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "Clutches are art. Movement, angles, and timing—beautiful",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa31c"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1ba"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Stay unpredictable. Reposition constantly and take duels on your terms",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa31d"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1bb"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d5"),
+                        parentId: null,
+                        content: "Mirage is a classic, but I’d say Dust2 for pure aim training",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa31e"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1bb"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d6"),
+                        parentId: null,
+                        content: "Beginners should master one map first before expanding",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa31f"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1bb"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d7"),
+                        parentId: null,
+                        content: "Inferno is great for learning nades. Utility is key in CS",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa320"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1bb"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d8"),
+                        parentId: null,
+                        content: "I play Ancient just for the aesthetics. Looks like a lost temple",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    },
+                    {
+                        _id: new ObjectId("67ca75498ac961e54eafa321"),
+                        postId: new ObjectId("67c94be9b7d17daa0a4df1bb"),
+                        authorId: new ObjectId("67c792cfb3ba6d9c76f699d9"),
+                        parentId: null,
+                        content: "Train your muscle memory on Cache. Simple angles, good fights",
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                        voteValue: 0
+                    }
+                ];
+                
 /*
                 for (const [forumName, forumId] of Object.entries(forums)) {
                     for (const [username, userId] of Object.entries(users)) {
