@@ -315,12 +315,12 @@ const mongo = {
 
     ////////////////////// FORUM INTERACTIONS ////////////////////////
     
-    async getForums() {
+    async getForums(sortBy, order, limit, skip) {
         try {
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
 
-            return await forumsCollection.find().toArray();
+            return await forumsCollection.find().sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();
         } catch (error) {
             console.error("Error fetching forums: ", error);
             return [];
@@ -343,12 +343,12 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
-    
+
             // Regex to remove case sensitivity
             const forum = await forumsCollection.findOne({
                 name: { $regex: `^${forumName}$`, $options: "i" }
             });
-    
+
             return forum;
         } catch (error) {
             console.error("Error fetching forum by name: ", error);
@@ -365,6 +365,7 @@ const mongo = {
                 _id: new ObjectId(),
                 ...forumData,
                 createdAt: new Date(),
+                updatedAt: new Date(),
             };
 
             const result = await forumsCollection.insertOne(newForum);
@@ -379,6 +380,8 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const forumsCollection = db.collection(forumsVar);
+
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
 
             const result = await forumsCollection.updateOne(
                 { _id: new ObjectId(forumId) },
@@ -399,6 +402,8 @@ const mongo = {
 
             for (let forum of forums) {
                 const { _id, ...updatedData } = forum;
+                updatedData.updatedAt = new Date(updatedData.updatedAt);
+                
                 await forumsCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
@@ -427,12 +432,13 @@ const mongo = {
 
     /////////////////////// USER INTERACTIONS ///////////////////////////////
 
-    async getUsers() {
+    async getUsers(sortBy, order, limit, skip) {
         try {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
-            return await usersCollection.find().toArray();
+            return await usersCollection.find().sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();
+
         } catch (error) {
             console.error("Error fetching users: ", error);
             return [];
@@ -455,12 +461,12 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const userCollection = db.collection(usersVar);
-    
+
             // Regex to remove case sensitivity
             const user = await userCollection.findOne({
                 username: { $regex: `^${username}$`, $options: "i" }
             });
-    
+
             return user;
         } catch (error) {
             console.error("Error fetching user by name: ", error);
@@ -472,12 +478,12 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const userCollection = db.collection(usersVar);
-    
+
             // Regex to remove case sensitivity
             const user = await userCollection.findOne({
                 email: { $regex: `^${email}$`, $options: "i" }
             });
-    
+
             return user;
         } catch (error) {
             console.error("Error fetching user by name: ", error);
@@ -515,6 +521,8 @@ const mongo = {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
 
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
+            
             const result = await usersCollection.updateOne(
                 { _id: new ObjectId(userId) },
                 { $set: updatedData }
@@ -534,11 +542,12 @@ const mongo = {
 
             for (let user of users) {
                 const { _id, ...updatedData } = user;
+                updatedData.updatedAt = new Date(updatedData.updatedAt);
 
                 const result = await usersCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
-                );    
+                );
             }
 
             return { success: true, message: "Users updated successfully!" };
@@ -575,33 +584,34 @@ const mongo = {
             }
 
             const isJoined = user.joinedForums.includes(forumId);
-                        
+
             if (isJoined) {
                 await usersCollection.updateOne(
                     { _id: new ObjectId(userId) },
-                    {$pull: { joinedForums: forumId }}
+                    { $pull: { joinedForums: forumId } }
                 );
-    
+
                 await forumsCollection.updateOne(
                     { _id: new ObjectId(forumId) },
-                    { $inc: { membersCount: -1 }}
+                    { $inc: { membersCount: -1 } }
                 );
             } else {
                 await usersCollection.updateOne(
                     { _id: new ObjectId(userId) },
-                    {$push: { joinedForums: forumId }}
+                    { $push: { joinedForums: forumId } }
                 );
-    
+
                 await forumsCollection.updateOne(
                     { _id: new ObjectId(forumId) },
-                    { $inc: { membersCount: 1 }}
+                    { $inc: { membersCount: 1 } }
                 );
             }
 
-            return { success: true, 
-                     message: isJoined ? "Successfully left forum" : "Successfully joined joined",
-                     presentStatus: isJoined ? false : true 
-                    };
+            return {
+                success: true,
+                message: isJoined ? "Successfully left forum" : "Successfully joined joined",
+                presentStatus: isJoined ? false : true
+            };
         } catch (error) {
             console.error("Error toggling forum join: ", error);
             return { success: false, message: "Error toggling forum join" };
@@ -615,38 +625,39 @@ const mongo = {
 
             const user = await usersCollection.findOne({ _id: new ObjectId(currentUserId) });
 
-            if (currentUserId === targetUserId){
+            if (currentUserId === targetUserId) {
                 return { success: false, message: "Cannot follow self" };
             }
 
             const isFollowed = user.following.includes(targetUserId);
-                        
+
             if (isFollowed) {
                 await usersCollection.updateOne(
                     { _id: new ObjectId(currentUserId) },
-                    {$pull: { following: targetUserId }}
+                    { $pull: { following: targetUserId } }
                 );
-    
+
                 await usersCollection.updateOne(
                     { _id: new ObjectId(targetUserId) },
-                    { $inc: { followersCount: -1 }}
+                    { $inc: { followersCount: -1 } }
                 );
             } else {
                 await usersCollection.updateOne(
                     { _id: new ObjectId(currentUserId) },
-                    {$push: { following: targetUserId }}
+                    { $push: { following: targetUserId } }
                 );
-    
+
                 await usersCollection.updateOne(
                     { _id: new ObjectId(targetUserId) },
-                    { $inc: { followersCount: 1 }}
+                    { $inc: { followersCount: 1 } }
                 );
             }
 
-            return { success: true, 
-                     message: isFollowed ? "Successfully unfollowed" : "Successfully followed",
-                     presentStatus: isFollowed ? false : true 
-                    };
+            return {
+                success: true,
+                message: isFollowed ? "Successfully unfollowed" : "Successfully followed",
+                presentStatus: isFollowed ? false : true
+            };
         } catch (error) {
             console.error("Error toggling follow: ", error);
             return { success: false, message: "Error toggling follow" };
@@ -666,17 +677,58 @@ const mongo = {
         }
     },
 
-    async getPostsByForumId(forumId) {
+    // async getPostsByForumId(forumId, sortBy, order, limit, skip) {
+    //     try {
+    //         const db = client.db(dbName);
+    //         const postsCollection = db.collection(postsVar);
+
+    //         // NOTE FOLLOWING REDDIT'S HOT RATING
+    //         // Log(abs(Upvotes-Downvotes)) + (age/45000)
+    //         const now = new Date();
+    //         const age = 0; // Just created    
+    //         const hotRating = Math.log10(Math.abs(postData.voteValue));
+
+    //         return await postsCollection.find({ forumId: new ObjectId(forumId) }).sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();;
+    //     } catch (error) {
+    //         console.error("Error fetching posts by forum ID: ", error);
+    //         return [];
+    //     }
+    // },
+
+    async getPostsByForumId(forumId, sortBy, order, limit, skip) {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
+    
+            const now = new Date();
 
-            return await postsCollection.find({ forumId: new ObjectId(forumId) }).toArray();
+            console.log("HERE:", forumId, sortBy, order, limit, skip)
+    
+            if (sortBy === "hot") {
+                // Perform a forum-wide search since hotRating needs to be computed manually
+                // NOTE FOLLOWING REDDIT'S HOT RATING
+                // Log(abs(Upvotes-Downvotes)) - (age/45000)
+
+                let posts = await postsCollection.find({ forumId: new ObjectId(forumId) }).toArray();
+    
+                const exponent = 1.5; 
+
+                posts.forEach(post => {
+                    const ageInHours = (now - new Date(post.createdAt)) / (1000 * 60 * 60);
+                    post.hotRating = post.voteValue / Math.pow(1 + ageInHours, exponent);
+                });
+
+                posts.sort((a, b) => (order === 1 ? a.hotRating - b.hotRating : b.hotRating - a.hotRating));
+    
+                return posts.slice(skip, skip + limit);
+            } else {
+                return await postsCollection.find({ forumId: new ObjectId(forumId) }).sort({ [sortBy]: order, _id: order }).skip(skip).limit(limit).toArray();
+            }
         } catch (error) {
             console.error("Error fetching posts by forum ID: ", error);
             return [];
         }
-    },
+    },    
 
     async getPostsByUserId(userId) {
         try {
@@ -697,14 +749,15 @@ const mongo = {
 
             for (let post of posts) {
                 const { _id, ...updatedData } = post;
-
+                updatedData.updatedAt = new Date(updatedData.updatedAt);
+                
                 const result = await postsCollection.updateOne(
                     { _id: new ObjectId(_id) },
                     { $set: updatedData }
-                );    
+                );
             }
 
-            return { success: true, message: "Posts updated successfully!" };
+            return { success: true, message: "Posts updated successfully" };
         } catch (error) {
             console.error("Error updating posts: ", error);
             return { success: false, message: "Error updating posts" };
@@ -715,6 +768,8 @@ const mongo = {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
+
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
 
             const result = await postsCollection.updateOne(
                 { _id: new ObjectId(postId) },
@@ -734,36 +789,40 @@ const mongo = {
             const postsCollection = db.collection(postsVar);
             const usersCollection = db.collection(usersVar);
             const forumsCollection = db.collection(forumsVar);
-    
+
             const forumId = new ObjectId(postData.forumId);
             const authorId = new ObjectId(postData.authorId);
-    
+
             const newPost = {
                 _id: new ObjectId(),
                 ...postData,
                 forumId: forumId,
                 authorId: authorId,
                 createdAt: new Date(),
+                updatedAt: new Date(),
+                comments: [],
+                voteValue: 0,
+                commentsCount: 0
             };
-    
+
             const result = await postsCollection.insertOne(newPost);
-    
+
             await usersCollection.updateOne(
                 { _id: authorId },
                 { $inc: { postsCount: 1 } }
             );
-    
+
             await forumsCollection.updateOne(
                 { _id: forumId },
                 { $inc: { postsCount: 1 } }
             );
-    
+
             return result.insertedId;
         } catch (error) {
             console.error("Error adding post: ", error);
             return null;
         }
-    },    
+    },
 
     async deletePost(postId) {
         try {
@@ -780,7 +839,7 @@ const mongo = {
                 { _id: post.authorId },
                 { $inc: { postsCount: -1 } }
             );
-    
+
             await forumsCollection.updateOne(
                 { _id: post.forumId },
                 { $inc: { postsCount: -1 } }
@@ -799,29 +858,29 @@ const mongo = {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
             const postsCollection = db.collection(postsVar);
-    
+
             const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
             if (!user) {
                 return { success: false, message: "User not found" };
             }
-    
+
             const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
             if (!post) {
                 return { success: false, message: "Post not found" };
             }
-    
+
             let voteChange = 0;
-    
+
             const existingVote = user.votes.find(entry => String(entry.postId) === String(post._id));
-    
+
             if (existingVote) {
                 // console.log("Existing Vote: ", existingVote);
-    
+
                 await usersCollection.updateOne(
                     { _id: new ObjectId(userId) },
                     { $pull: { votes: { postId: post._id } } }
                 );
-    
+
                 if (existingVote.vote === voteValue) {
                     voteChange = -voteValue;
                 } else {
@@ -838,14 +897,14 @@ const mongo = {
                 );
                 voteChange = voteValue;
             }
-    
+
             await postsCollection.updateOne(
                 { _id: new ObjectId(postId) },
                 { $inc: { voteValue: voteChange } }
             );
-    
+
             const updatedPost = await postsCollection.findOne({ _id: new ObjectId(postId) });
-    
+
             return { success: true, message: "Vote updated successfully", voteValue: updatedPost.voteValue };
         } catch (error) {
             console.error("Error toggling vote: ", error);
@@ -871,6 +930,8 @@ const mongo = {
             const db = client.db(dbName);
             const commentsCollection = db.collection(commentsVar);
 
+            updatedData.updatedAt = new Date(updatedData.updatedAt);
+            
             const result = await commentsCollection.updateOne(
                 { _id: new ObjectId(commentId) },
                 { $set: updatedData }
@@ -889,10 +950,10 @@ const mongo = {
             const postsCollection = db.collection(postsVar);
             const usersCollection = db.collection(usersVar);
             const commentsCollection = db.collection(commentsVar);
-    
+
             const postId = new ObjectId(commentData.postId);
             const authorId = new ObjectId(commentData.authorId);
-    
+
             const newComment = {
                 _id: new ObjectId(),
                 ...commentData,
@@ -901,19 +962,19 @@ const mongo = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
-    
+
             const result = await commentsCollection.insertOne(newComment);
-    
+
             await usersCollection.updateOne(
                 { _id: authorId },
                 { $inc: { commentsCount: 1 } }
             );
-    
+
             await postsCollection.updateOne(
                 { _id: postId },
                 { $inc: { commentsCount: 1 } }
             );
-    
+
             return result.insertedId;
         } catch (error) {
             console.error("Error adding comment: ", error);
@@ -947,35 +1008,35 @@ const mongo = {
             return { success: false, message: "Error deleting comment" };;
         }
     },
-    
+
     async toggleCommentVote(userId, commentId, voteValue) {
         try {
             const db = client.db(dbName);
             const usersCollection = db.collection(usersVar);
             const commentsCollection = db.collection(commentsVar);
-    
+
             const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
             if (!user) {
                 return { success: false, message: "User not found" };
             }
-    
+
             const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
             if (!comment) {
                 return { success: false, message: "Comment not found" };
             }
-    
+
             let voteChange = 0;
-    
+
             const existingVote = user.commentVotes.find(entry => String(entry.commentId) === String(comment._id));
-    
+
             if (existingVote) {
                 // console.log("Existing Vote: ", existingVote);
-    
+
                 await usersCollection.updateOne(
                     { _id: new ObjectId(userId) },
                     { $pull: { commentVotes: { commentId: comment._id } } }
                 );
-    
+
                 if (existingVote.vote === voteValue) {
                     voteChange = -voteValue;
                 } else {
@@ -992,14 +1053,14 @@ const mongo = {
                 );
                 voteChange = voteValue;
             }
-    
+
             await commentsCollection.updateOne(
                 { _id: new ObjectId(commentId) },
                 { $inc: { voteValue: voteChange } }
             );
-    
+
             const updatedComment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
-    
+
             return { success: true, message: "Vote updated successfully", voteValue: updatedComment.voteValue };
         } catch (error) {
             console.error("Error toggling comment vote: ", error);

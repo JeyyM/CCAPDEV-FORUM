@@ -3,28 +3,16 @@
         <div class="editorTitle"><i class='bx bx-edit'></i>Edit Post</div>
         <div class="communitySelection">
             <div id="communityList">
-                <div class="communitySelected">
-                    <img src="{{community.communityIcon}}" class="communityPic">{{community.communityName}}<i></i>
+                <div class="communitySelected" id="{{toString community._id}}">
+                    <img src="{{community.forumImage}}" class="communityPic">{{community.name}}<i></i>
                 </div>
             </div>
         </div>
-        <input id="postTitle" placeholder="Post Title">
-        <textarea id="postBody" placeholder="Post Body" rows="10"></textarea>
+        <input id="postTitle" placeholder="Post Title" value="{{post.title}}">
+        <textarea id="postBody" placeholder="Post Body" rows="10">{{post.content}}</textarea>
         <div class="buttonHolder">
             <button class="cancelPost" onclick="window.history.back()">Cancel</button>
-            <button class="confirmPost">Edit</button>
+            <button class="confirmPost" id="editPost">Edit</button>
         </div>
     </div>
 </div>
-
-<script>
-    document.querySelectorAll("textarea").forEach(function(textarea) {
-        textarea.style.height = textarea.scrollHeight + "px";
-        textarea.style.overflowY = "hidden";
-
-        textarea.addEventListener("input", function() {
-            this.style.height = "auto";
-            this.style.height = this.scrollHeight + "px";
-        });
-    });
-</script>

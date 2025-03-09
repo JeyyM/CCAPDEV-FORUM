@@ -4,8 +4,14 @@ const mongo = require('../model/dbFunctions');
 
 router.get("/get-forums", async (req, res) => {
     try {
-        const forums = await mongo.getForums();
+        const sortBy = req.query.sortBy;
+        const order = parseInt(req.query.order);
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+
+        const forums = await mongo.getForums(sortBy, order, limit, skip);
         res.json(forums);
+
         // console.log("Forums fetched: ", forums);
 
     } catch (error) {
@@ -124,11 +130,11 @@ router.delete("/delete-forum/:forumId", async (req, res) => {
 
 router.patch("/toggle-forum-join", async (req, res) => {
     try {
-        const {userId, forumId} = req.body;
+        const { userId, forumId } = req.body;
 
         const result = await mongo.toggleForumJoin(userId, forumId);
-    
-        if (result.success){
+
+        if (result.success) {
             res.json(result);
         }
         else {

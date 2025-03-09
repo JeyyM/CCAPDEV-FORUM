@@ -53,57 +53,34 @@ function cancelComment(element) {
 }
 
 function editComment(element) {
-    $(element).parent().addClass("hidden");
-
     let commentContainer = element.closest(".comment");
+
+    if (!commentContainer) {
+        console.error("Comment container not found.");
+        return;
+    }
 
     let commentText = commentContainer.querySelector(".commentContent");
 
-    //edit
-    let editContainer = document.createElement("div");
-    editContainer.classList.add("replyContainer");
-    editContainer.id = "tempEdit";
+    if (!commentText) {
+        console.error("Comment content not found inside the container.");
+        console.log("commentContainer content:", commentContainer.innerHTML);
+        return;
+    }
 
-    //textarea 
-    let editTextarea = document.createElement("textarea");
-    editTextarea.classList.add("replyContent");
-    editTextarea.classList.add("replyContent");
-    editTextarea.value = commentText.textContent;
+    if (!commentText.getAttribute("contenteditable")) {
+        commentText.setAttribute("contenteditable", "true");
+        commentText.focus();
+        element.innerHTML = "<i class='bx bx-save'></i>Save";
+    } else {
+        commentText.removeAttribute("contenteditable");
+        element.innerHTML = "<i class='bx bx-edit-alt'></i>Edit";
 
-    editTextarea.addEventListener("input", function () {
-        this.style.height = "auto";
-        this.style.height = this.scrollHeight + "px";
-    });
-
-    let cancelEdit = document.createElement("button");
-    cancelEdit.classList.add("cancelReply");
-    cancelEdit.innerHTML = "Cancel";
-    cancelEdit.onclick = function () { 
-        cancelComment(cancelEdit);
-        commentText.style.display = "block";
-    };
-
-    let saveEdit = document.createElement("button");
-    saveEdit.classList.add("postReply");
-    saveEdit.innerHTML = "Save";
-
-    saveEdit.onclick = function () {
-        cancelComment(cancelEdit);
-        commentText.innerHTML = editTextarea.value;
-        commentText.style.display = "block";
-    };
-    
-    editContainer.appendChild(editTextarea);
-    editContainer.appendChild(cancelEdit);
-    editContainer.appendChild(saveEdit);
-
-    //hide og comment text and insert edit container
-    commentText.style.display = "none";
-    commentContainer.insertBefore(editContainer, commentText.nextSibling);
+    }
 }
 
 $(document).ready(async function() {
-    const infoResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`)
+    const infoResponse = await fetch(`/api/get-users`)
     const info = await infoResponse.json();
 
     $(".comment").each(function (_, element) {

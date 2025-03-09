@@ -54,8 +54,14 @@ router.post("/logout", (req, res) => {
 
 router.get("/get-users", async (req, res) => {
     try {
-        const users = await mongo.getUsers();
+        const sortBy = req.query.sortBy;
+        const order = parseInt(req.query.order);
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+
+        const users = await mongo.getUsers(sortBy, order, limit, skip);
         res.json(users);
+
         // console.log("Users fetched: ", users);
 
     } catch (error) {
@@ -174,13 +180,13 @@ router.delete("/delete-user/:userId", async (req, res) => {
 
 router.patch("/toggle-user-follow", async (req, res) => {
     try {
-        const {userId, targetId} = req.body;
+        const { userId, targetId } = req.body;
 
         // console.log("toggling follower", userId, targetId);
 
         const result = await mongo.toggleUserFollow(userId, targetId);
-    
-        if (result.success){
+
+        if (result.success) {
             res.json(result);
         } else {
             res.status(400).json(result);

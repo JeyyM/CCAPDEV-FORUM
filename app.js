@@ -32,11 +32,14 @@ server.set('view engine', 'hbs');
 server.engine('hbs', handlebars.engine({
     extname: 'hbs',
     helpers: {
-        isEqual: (x, y) => x === y,
-        isNull: (x) => x === null,
-        json: function (body) {
-            return JSON.stringify(body);
-        }
+      isEqual: (x, y) => x === y,
+      isNull: (x) => x === null,
+      json: function (body) {
+        return JSON.stringify(body);
+      },
+      toString: function (value) {
+        return String(value);
+      }
     }
 }));
 
@@ -293,7 +296,7 @@ server.get("/", async function(req, resp){
     });
 });
 
-server.get("/tester", async function(req, resp){
+server.get("/tester", async function(req, resp) {
     resp.render("tester",{
         layout: "tester",
         title: "Tester",
@@ -305,12 +308,12 @@ server.get("/forum/:forumName", async (req, resp) => {
     try {
         const decodedForumName = decodeURIComponent(req.params.forumName);
 
-        const forum = await mongo.getForumByName(decodedForumName);
+        const forum = await mongo.getForumByName(decodedForumName); 
         const posts = await mongo.getPostsByForumId(forum._id);
 
         const postUsers = [];
 
-        for (const post of posts){
+        for (const post of posts) {
             const user = await mongo.getUserById(post.authorId);
             postUsers.push(user);
         }
@@ -335,8 +338,11 @@ server.get("/viewPost/:postId", async function(req, resp){
     const post = posts.find(p => p._id.toString() === postId.toString());
 
     const comments = await mongo.getCommentsByPostId(post._id);
-    // const comments = await commentsResponse.json();
     console.log(comments);
+
+    if (localUser != null) {
+        console.log(localUser);
+    }
 
     resp.render("viewPost",{
         layout: "index",
@@ -354,7 +360,7 @@ server.get("/viewPost/:postId", async function(req, resp){
 server.get("/viewCommunity/:communityName", async function(req, resp){
     const communityName = req.params.communityName;
 
-    const communityList = await mongo.getForums();
+    const communityList = await mongo.getForums("createdAt", -1, 99, 0);
     const community = communityList.find(c => c.name === communityName);
 
     const communityDB = await mongo.getForumByName(communityName);
@@ -369,6 +375,8 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
             postList.push(post);
         }
     })
+
+    console.log(postList);
 
     let joinedCommunity = null;
 
@@ -396,11 +404,11 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
 server.get("/viewProfile/:profileName", async function(req, resp){
     const profileName = req.params.profileName;
 
-    const users = await mongo.getUsers();
+    const users = await mongo.getUsers("createdAt", -1, 99, 0);
     const profile = users.find(u => u.username === profileName);
     console.log(profile._id);
 
-    const posts = await mongo.getPosts();
+    const posts = await mongo.getPosts("createdAt", -1, 99, 0);
     const postList = [];
     // console.log(posts);
     
@@ -424,32 +432,38 @@ server.get("/viewProfile/:profileName", async function(req, resp){
     });
 });
 
-server.get("/editPost/:postId", function(req, resp){
-    const postId = parseInt(req.params.postId);
-    const post = posts.find(p => p.postId === postId);
+server.get("/editPost/:postId", async function(req, resp){
+    const postId = req.params.postId;
+    const posts = await mongo.getPosts();
+    const post = posts.find(p => p._id.toString() === postId.toString());
+
+    const communityList = await mongo.getForums("name", 1, 99, 0);
+    const community = communityList.find(c => c._id.toString() === post.forumId.toString());
 
     resp.render("editPost",{
         layout: "index",
         title: "Edit Post Page",
         pageStyle: "createpost",
-        pageScripts: ["account", "likePosts", "sortPosts"],
+        pageScripts: ["account", "likePosts", "sortPosts", "editPost", "textarea"],
         myCommunities: myCommunities,
         communities: communities,
         user: localUser,
         post: post,
-        community: communities.find(c => c.communityId === post.communityId)
+        community: community
     });
 });
 
-server.get("/editProfile/:profileName", function(req, resp){
+server.get("/editProfile/:profileName", async function(req, resp){
     const profileName = req.params.profileName;
-    const profile = profiles.find(p => p.profileName === profileName);
+    const profile = await mongo.getUserByName(profileName);
+
+    console.log(profile);
 
     resp.render("editProfile",{
         layout: "index",
         title: "Edit Profile Page",
         pageStyle: "editprofile",
-        pageScripts: ["account", "likePosts", "sortPosts"],
+        pageScripts: ["account", "likePosts", "sortPosts", "editProfile", "textarea"],
         myCommunities: myCommunities,
         communities: communities,
         user: localUser,
@@ -457,17 +471,19 @@ server.get("/editProfile/:profileName", function(req, resp){
     });
 });
 
-server.get("/createPost/:communityName?", function(req, resp){
+server.get("/createPost/:communityName?", async function(req, resp){
     const communityName = req.params.communityName;
-    const community = communities.find(c => c.communityName === communityName);
+
+    const communityList = await mongo.getForums("name", 1, 99, 0);
+    const community = communityList.find(c => c.name === communityName);
 
     resp.render("createPost",{
         layout: "index",
         title: "Create Post Page",
         pageStyle: "createpost",
-        pageScripts: ["account", "sortPosts", "likePosts"],
+        pageScripts: ["account", "sortPosts", "likePosts", "createPost", "textarea"],
         myCommunities: myCommunities,
-        communities: communities,
+        communities: communityList,
         user: localUser,
         community: community
     });
@@ -821,12 +837,12 @@ server.get("/info/get-forum-info-by-name/:forumName", async function(req, resp) 
 
 //         const result = await mongo.toggleForumJoin(userId, forumId);
     
-//         if (result.success){
+//         if (result.success) {
 //             res.json(result);
 //         } else {
 //             res.status(400).json(result);
 //         }
-//     } catch (error){
+//     } catch (error) {
 //         console.error("Error toggling: ", error);
 //         res.status(500).json({ success: false, message: "Toggling error" });
 //     }
@@ -841,12 +857,12 @@ server.get("/info/get-forum-info-by-name/:forumName", async function(req, resp) 
 
 //         const result = await mongo.toggleUserFollow(userId, targetId);
     
-//         if (result.success){
+//         if (result.success) {
 //             res.json(result);
 //         } else {
 //             res.status(400).json(result);
 //         }
-//     } catch (error){
+//     } catch (error) {
 //         console.error("Error toggling: ", error);
 //         res.status(500).json({ success: false, message: "Toggling error" });
 //     }

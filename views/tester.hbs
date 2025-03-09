@@ -1,5 +1,8 @@
 <body>
-    <h1>Tester</h1>
+    <h1>Tester NOTE ALL FETCHES HAVE BEEN UPDATED</h1>
+    <h1>When upvotes, following, and joining still works but the UI just doesn't update</h1>
+    <h1>So just update it on your implementation, like modify the css, don't reload</h1>
+
     <div style="display: flex;">
         <h2>Accounts</h2>
         <button id="logoutButton">Log Out</button>
@@ -16,6 +19,26 @@
             <h3 id="userDisplay">Not logged</h3>
         </div>
     </form>
+
+    <div style="display: flex;">
+        <h3>Sort Forums By: </h3>
+        <select id="forumSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="hot">Hot</option>
+            <option value="membersCount">Members</option>
+            <option value="postsCount">Posts</option>
+            <option value="name">Alphabetical</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="forumOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="forumLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
 
     <h2>Forums</h2>
     <div style="display: flex;">
@@ -44,9 +67,29 @@
             <tbody id="forumsList">
 
             </tbody>
+            <button id="forumBatchButton" type="button">Get Next Batch</button>
         </table>
         <button type="submit">Update All</button>
     </form>
+
+    <div style="display: flex;">
+        <h3>Sort Users By: </h3>
+        <select id="userSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="followersCount">Followers</option>
+            <option value="commentsCount">Comments</option>
+            <option value="username">Alphabetical</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="userOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="userLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
 
     <h2>Users</h2>
     <div style="display: flex;">
@@ -83,10 +126,11 @@
 
             </tbody>
         </table>
+        <button id="userBatchButton" type="button">Get Next Batch</button>
         <button type="submit">Update All</button>
     </form>
 
-    <h2>Posts</h2>
+    <h2>Posts (Keep Getting Next Batch to Get More)</h2>
 
     <form id="postForm">
         <label for="titleInput">Create Post: </label>
@@ -94,6 +138,27 @@
         <input type="text" id="contentInput" placeholder="Post Content">
         <button type="button" onclick="addPost()">Add Post</button>
     </form>
+
+    <div style="display: flex;">
+        <h3>Sort Posts By: </h3>
+        <select id="postSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="title">Alphabetical</option>
+            <option value="hot">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="postOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="postLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <button id="postBatchButton" type="button">Get Next Batch</button>
 
     <label for="forumDropdown">Select a Forum:</label>
     <select id="forumDropdown" name="forumDropdown">
@@ -115,28 +180,22 @@
             isLoggedIn = await checkSession();
             console.log("Session active: ", isLoggedIn);
 
-            if (isLoggedIn){
+            if (isLoggedIn) {
                 sessionDisplay.textContent = `Logged-in as: ${currentSession.username}`;
             }
         });
 
         ///////////////////// FORUMS ///////////////////////
-        async function fetchForums() {
+        async function fetchForums(skip = 0, appending = false, updating = false) {
             try {
-                const response = await fetch("/api/get-forums");
+                const sortBy = document.getElementById("forumSortByDropdown").value;
+                const order = parseInt(document.getElementById("forumOrderDropdown").value);
+                const limit = parseInt(document.getElementById("forumLimitInput").value);
+
+                const response = await fetch(`/api/get-forums?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
                 const forums = await response.json();
                 const tbody = document.getElementById("forumsList");
                 const dropdown = document.getElementById("forumDropdown");
-
-                while (dropdown.hasChildNodes()) {
-                    dropdown.removeChild(dropdown.firstChild);
-                }
-
-                const baseOption = document.createElement("option");
-                baseOption.value = ""
-                baseOption.textContent = "Select a Forum"
-
-                dropdown.appendChild(baseOption);
 
                 const sessionResponse = await fetch("/api/session");
                 const sessionData = await sessionResponse.json();
@@ -162,157 +221,179 @@
                     console.log("No session");
                 }
 
-                while (tbody.firstChild) {
-                    tbody.removeChild(tbody.firstChild);
+                const baseOption = document.createElement("option");
+                baseOption.value = ""
+                baseOption.textContent = "Select a Forum"
+
+                dropdown.appendChild(baseOption);
+
+
+                if (!appending && !updating) {
+                    while (tbody.firstChild) {
+                        tbody.removeChild(tbody.firstChild);
+                    }
+
+                    while (dropdown.hasChildNodes()) {
+                        dropdown.removeChild(dropdown.firstChild);
+                    }
+
+                    forumSkip = 0;
                 }
 
                 forums.forEach(forum => {
-                    const row = document.createElement("tr");
-
-                    const nameCell = document.createElement("td");
-                    const nameInput = document.createElement("input");
-                    nameInput.type = "text";
-                    nameInput.name = `name_${forum._id}`;
-                    nameInput.value = forum.name;
-                    nameInput.required = true;
-                    nameCell.appendChild(nameInput);
-
-                    const descCell = document.createElement("td");
-                    const descInput = document.createElement("input");
-                    descInput.type = "text";
-                    descInput.name = `description_${forum._id}`;
-                    descInput.value = forum.description;
-                    descInput.required = true;
-                    descCell.appendChild(descInput);
-
-                    const bannerCell = document.createElement("td");
-                    const bannerInput = document.createElement("input");
-                    bannerInput.type = "text";
-                    bannerInput.name = `bannerImage_${forum._id}`;
-                    bannerInput.value = forum.bannerImage;
-                    bannerInput.required = true;
-                    bannerCell.appendChild(bannerInput);
-
-                    const forumImageCell = document.createElement("td");
-                    const forumImageInput = document.createElement("input");
-                    forumImageInput.type = "text";
-                    forumImageInput.name = `forumImage_${forum._id}`;
-                    forumImageInput.value = forum.forumImage;
-                    forumImageInput.required = true;
-                    forumImageCell.appendChild(forumImageInput);
-
-                    const membersCell = document.createElement("td");
-                    membersCell.textContent = forum.membersCount;
-
-                    const postsCell = document.createElement("td");
-                    postsCell.textContent = forum.postsCount;
-
-                    const dateCell = document.createElement("td");
-                    dateCell.textContent = `Created: ${new Date(forum.createdAt).toLocaleString('en-US', {
-                        month: 'short',
-                        day: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    })} | Updated: ${new Date(forum.updatedAt).toLocaleString('en-US', {
-                        month: 'short',
-                        day: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    })}`;
-
-
-                    const actionsCell = document.createElement("td");
-
-                    const deleteButton = document.createElement("button");
-                    deleteButton.type = "button";
-                    deleteButton.textContent = "Delete";
-                    deleteButton.onclick = () => {deleteForum(forum._id)};
-
-                    const editButton = document.createElement("button");
-                    editButton.type = "button";
-                    editButton.textContent = "Update One";
-                    editButton.onclick = () => { updateForum(
-                        forum._id,
-                        nameInput.value,
-                        descInput.value,
-                        bannerInput.value,
-                        forumImageInput.value
-                    )};
-
-                    const joinButton = document.createElement("button");
-                    joinButton.type = "button";
-                    joinButton.textContent = "Join Forum";
-
-                    const adminText = document.createElement("p");
-                    adminText.textContent = "ADMIN"
-
-                    if (hasSession){
-                        if (currentUser.joinedForums.includes(forum._id)){
-                            joinButton.textContent = "Leave Forum";
-                        }
+                    if (!updating) {
+                        const row = createForumRow(forum, hasSession, currentUser, dropdown);
+                        tbody.appendChild(row);
                     }
-
-                    joinButton.onclick = async () => {
-                        if (hasSession){
-                            try {
-                                const response = await fetch("/api/toggle-forum-join", {
-                                    method: "PATCH",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ userId: currentUser._id, forumId: forum._id })
-                                });
-
-                                const result = await response.json();
-
-                                if (result.success) {
-                                    console.log("Join status changed: ", result.presentStatus);
-
-                                    fetchForums();
-                                    fetchUsers();
-
-                                } else {
-                                    alert(result.message);
-                                }
-                            } catch (error) {
-                                console.error("Error toggling forum join: ", error);
-                            }
-    
-                        } else {
-                            alert("Not logged in");
-                        }
-                    };
-
-                    actionsCell.appendChild(deleteButton);
-                    actionsCell.appendChild(editButton);
-                    actionsCell.appendChild(joinButton);
-
-                    if (currentUser && forum.admins.includes(currentUser._id)){
-                        actionsCell.appendChild(adminText);
-                    }
-
-                    row.appendChild(nameCell);
-                    row.appendChild(descCell);
-                    row.appendChild(bannerCell);
-                    row.appendChild(forumImageCell);
-                    row.appendChild(membersCell);
-                    row.appendChild(postsCell);
-                    row.appendChild(dateCell);
-                    row.appendChild(actionsCell);
-
-                    tbody.appendChild(row);
-
-                    /////// Dropdown Options /////
-                    const option = document.createElement("option");
-                    option.value = forum._id;
-                    option.textContent = forum.name;
-                    dropdown.appendChild(option);
                 });
+
             } catch (error) {
-                console.error("Error fetching forums: ", error);
+                console.error("Error fetching forums:", error);
             }
+        }
+
+        function createForumRow(forum, hasSession, currentUser, dropdown) {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = `name_${forum._id}`;
+            nameInput.value = forum.name;
+            nameInput.required = true;
+            nameCell.appendChild(nameInput);
+
+            const descCell = document.createElement("td");
+            const descInput = document.createElement("input");
+            descInput.type = "text";
+            descInput.name = `description_${forum._id}`;
+            descInput.value = forum.description;
+            descInput.required = true;
+            descCell.appendChild(descInput);
+
+            const bannerCell = document.createElement("td");
+            const bannerInput = document.createElement("input");
+            bannerInput.type = "text";
+            bannerInput.name = `bannerImage_${forum._id}`;
+            bannerInput.value = forum.bannerImage;
+            bannerInput.required = true;
+            bannerCell.appendChild(bannerInput);
+
+            const forumImageCell = document.createElement("td");
+            const forumImageInput = document.createElement("input");
+            forumImageInput.type = "text";
+            forumImageInput.name = `forumImage_${forum._id}`;
+            forumImageInput.value = forum.forumImage;
+            forumImageInput.required = true;
+            forumImageCell.appendChild(forumImageInput);
+
+            const membersCell = document.createElement("td");
+            membersCell.textContent = forum.membersCount;
+
+            const postsCell = document.createElement("td");
+            postsCell.textContent = forum.postsCount;
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = `Created: ${new Date(forum.createdAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })} | Updated: ${new Date(forum.updatedAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })}`;
+
+            const actionsCell = document.createElement("td");
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => deleteForum(forum._id);
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.textContent = "Update One";
+            editButton.onclick = () => updateForum(forum._id, nameInput.value, descInput.value, bannerInput.value, forumImageInput.value);
+            
+            const joinButton = document.createElement("button");
+            joinButton.type = "button";
+            joinButton.textContent = "Join Forum";
+
+            const adminText = document.createElement("p");
+            adminText.textContent = "ADMIN"
+
+            if (hasSession){
+                if (currentUser.joinedForums.includes(forum._id)){
+                    joinButton.textContent = "Leave Forum";
+                }
+            }
+
+            joinButton.onclick = async () => {
+                if (hasSession){
+                    try {
+                        const response = await fetch("/api/toggle-forum-join", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId: currentUser._id, forumId: forum._id })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            console.log("Join status changed: ", result.presentStatus);
+
+                            fetchForums();
+                            fetchUsers();
+
+                        } else {
+                            alert(result.message);
+                        }
+                    } catch (error) {
+                        console.error("Error toggling forum join: ", error);
+                    }
+
+                } else {
+                    alert("Not logged in");
+                }
+            };
+
+            actionsCell.appendChild(deleteButton);
+            actionsCell.appendChild(editButton);
+            actionsCell.appendChild(joinButton);
+
+            if (currentUser && forum.admins.includes(currentUser._id)){
+                actionsCell.appendChild(adminText);
+            }
+
+            if (hasSession) {
+                if (forum.admins.includes(currentUser._id)) {
+                    actionsCell.appendChild(adminText);       
+                }
+            }
+            
+            row.appendChild(nameCell);
+            row.appendChild(descCell);
+            row.appendChild(bannerCell);
+            row.appendChild(forumImageCell);
+            row.appendChild(membersCell);
+            row.appendChild(postsCell);
+            row.appendChild(dateCell);
+            row.appendChild(actionsCell);
+
+
+            /////// Dropdown Options /////
+            const option = document.createElement("option");
+            option.value = forum._id;
+            option.textContent = forum.name;
+            dropdown.appendChild(option);
+            
+            return row;
         }
 
         async function updateAllForums(event) {
@@ -343,7 +424,7 @@
                 const result = await response.json();
 
                 alert(result.message);
-                fetchForums();
+                fetchForums(0, false, true);
             } catch (error) {
                 console.error("Error updating forums: ", error);
             }
@@ -368,7 +449,7 @@
                 const result = await response.json();
 
                 alert(result.message);
-                fetchForums();
+                fetchForums(0, false, true); 
             } catch (error) {
                 console.error("Error updating forum: ", error);
             }
@@ -380,7 +461,7 @@
             const bannerImage = document.getElementById("bannerImage").value.trim();
             const forumImage = document.getElementById("forumImage").value.trim();
 
-            if (!currentSession){
+            if (!currentSession) {
                 alert("Can't make forum if not logged in");
                 return;
             }
@@ -439,10 +520,15 @@
 
         //////////////////// USERS //////////////////
 
-        async function fetchUsers() {
+        async function fetchUsers(skip = 0, appending = false, updating = false) {
             try {
-                const response = await fetch("/api/get-users");
+                const sortBy = document.getElementById("userSortByDropdown").value;
+                const order = parseInt(document.getElementById("userOrderDropdown").value);
+                const limit = parseInt(document.getElementById("userLimitInput").value);
+
+                const response = await fetch(`/api/get-users?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
                 const users = await response.json();
+
                 const tbody = document.getElementById("usersList");
 
                 const sessionResponse = await fetch("/api/session");
@@ -469,203 +555,214 @@
                     console.log("No session");
                 }
 
-                while (tbody.firstChild) {
-                    tbody.removeChild(tbody.firstChild);
+                if (!appending && !updating) {
+                    while (tbody.firstChild) {
+                        tbody.removeChild(tbody.firstChild);
+                    }
+
+                    userSkip = 0;
                 }
 
                 users.forEach(user => {
-                    const row = document.createElement("tr");
-
-                    const nameCell = document.createElement("td");
-                    const nameInput = document.createElement("input");
-                    nameInput.type = "text";
-                    nameInput.name = `username_${user._id}`;
-                    nameInput.value = user.username;
-                    nameInput.required = true;
-                    nameCell.appendChild(nameInput);
-
-                    const emailCell = document.createElement("td");
-                    const emailInput = document.createElement("input");
-                    emailInput.type = "email";
-                    emailInput.name = `email_${user._id}`;
-                    emailInput.value = user.email;
-                    emailInput.required = true;
-                    emailCell.appendChild(emailInput);
-
-                    const passCell = document.createElement("td");
-                    const passInput = document.createElement("input");
-                    passInput.type = "text";
-                    passInput.name = `password_${user._id}`;
-                    passInput.value = user.password;
-                    passInput.required = true;
-                    passCell.appendChild(passInput);
-
-                    const bioCell = document.createElement("td");
-                    const bioInput = document.createElement("input");
-                    bioInput.type = "text";
-                    bioInput.name = `bio_${user._id}`;
-                    bioInput.value = user.bio;
-                    bioInput.required = true;
-                    bioCell.appendChild(bioInput);
-
-                    const bannerCell = document.createElement("td");
-                    const bannerInput = document.createElement("input");
-                    bannerInput.type = "text";
-                    bannerInput.name = `bannerImage_${user._id}`;
-                    bannerInput.value = user.bannerImage;
-                    bannerInput.required = true;
-                    bannerCell.appendChild(bannerInput);
-
-                    const userImageCell = document.createElement("td");
-                    const userImageInput = document.createElement("input");
-                    userImageInput.type = "text";
-                    userImageInput.name = `profileImage_${user._id}`;
-                    userImageInput.value = user.profileImage;
-                    userImageInput.required = true;
-                    userImageCell.appendChild(userImageInput);
-
-                    const joinedCell = document.createElement("td");
-                    if (user.joinedForums.length > 0) {
-                        const list = document.createElement("ul");
-                        user.joinedForums.forEach(forum => {
-                            const listItem = document.createElement("li");
-                            listItem.textContent = forum;
-                            list.appendChild(listItem);
-                        });
-                        joinedCell.appendChild(list);
-                    } else {
-                        joinedCell.textContent = "None";
+                    if (!updating) {
+                        const row = createUserRow(user, hasSession, currentUser);
+                        tbody.appendChild(row);
                     }
-
-                    const followersCell = document.createElement("td");
-                    followersCell.textContent = user.followersCount;
-
-                    const followingCell = document.createElement("td");
-                    if (user.following.length > 0) {
-                        const list = document.createElement("ul");
-                        user.following.forEach(followed => {
-                            const listItem = document.createElement("li");
-                            listItem.textContent = followed;
-                            list.appendChild(listItem);
-                        });
-                        followingCell.appendChild(list);
-                    } else {
-                        followingCell.textContent = "None";
-                    }
-
-                    const postsCell = document.createElement("td");
-                    postsCell.textContent = user.postsCount;
-
-                    const commentsCell = document.createElement("td");
-                    commentsCell.textContent = user.commentsCount;
-
-                    const dateCell = document.createElement("td");
-                    dateCell.textContent = `Created: ${new Date(user.createdAt).toLocaleString('en-US', {
-                        month: 'short',
-                        day: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    })} | Updated: ${new Date(user.updatedAt).toLocaleString('en-US', {
-                        month: 'short',
-                        day: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    })}`;
-
-                    const actionsCell = document.createElement("td");
-
-                    const deleteButton = document.createElement("button");
-                    deleteButton.type = "button";
-                    deleteButton.textContent = "Delete";
-                    deleteButton.onclick = () => {deleteUser(user._id)};
-
-                    const editButton = document.createElement("button");
-                    editButton.type = "button";
-                    editButton.textContent = "Update User";
-                    editButton.onclick = () => { updateUser(
-                        user._id,
-                        nameInput.value,
-                        emailInput.value,
-                        passInput.value,
-                        bioInput.value,
-                        bannerInput.value,
-                        userImageInput.value
-                    )};
-
-                    const followButton = document.createElement("button");
-                    followButton.type = "button";
-                    followButton.textContent = "Follow";
-
-                    const selfText = document.createElement("p");
-                    selfText.textContent = "SELF"
-
-                    if (hasSession){
-                        if (currentUser.following.includes(user._id)){
-                            followButton.textContent = "Unfollow";
-                        }
-                    }
-
-                    followButton.onclick = async () => {
-                        if (hasSession){
-                            try {
-                                const response = await fetch("/api/toggle-user-follow", {
-                                    method: "PATCH",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({ userId: currentUser._id, targetId: user._id })
-                                });
-
-                                const result = await response.json();
-
-                                if (result.success) {
-                                    console.log("Join status changed: ", result.presentStatus);
-
-                                    fetchForums();
-                                    fetchUsers();
-
-                                } else {
-                                    alert(result.message);
-                                }
-                            } catch (error) {
-                                console.error("Error toggling user follow: ", error);
-                            }
-    
-                        } else {
-                            alert("Not logged in");
-                        }
-                    };
-
-                    actionsCell.appendChild(deleteButton);
-                    actionsCell.appendChild(editButton);
-                    actionsCell.appendChild(followButton);
-
-                    if (currentSession !== null && currentSession.id === user._id ){
-                        actionsCell.appendChild(selfText);
-                    }
-
-                    row.appendChild(nameCell);
-                    row.appendChild(emailCell);
-                    row.appendChild(passCell);
-                    row.appendChild(bioCell);
-                    row.appendChild(bannerCell);
-                    row.appendChild(userImageCell);
-                    row.appendChild(dateCell);
-                    row.appendChild(joinedCell);
-                    row.appendChild(followersCell);
-                    row.appendChild(followingCell);
-                    row.appendChild(postsCell);
-                    row.appendChild(commentsCell);
-                    row.appendChild(actionsCell);
-
-                    tbody.appendChild(row);
                 });
 
             } catch (error) {
                 console.error("Error fetching users: ", error);
             }
+        }
+
+        function createUserRow(user, hasSession, currentUser) {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = `username_${user._id}`;
+            nameInput.value = user.username;
+            nameInput.required = true;
+            nameCell.appendChild(nameInput);
+
+            const emailCell = document.createElement("td");
+            const emailInput = document.createElement("input");
+            emailInput.type = "email";
+            emailInput.name = `email_${user._id}`;
+            emailInput.value = user.email;
+            emailInput.required = true;
+            emailCell.appendChild(emailInput);
+
+            const passCell = document.createElement("td");
+            const passInput = document.createElement("input");
+            passInput.type = "text";
+            passInput.name = `password_${user._id}`;
+            passInput.value = user.password;
+            passInput.required = true;
+            passCell.appendChild(passInput);
+
+            const bioCell = document.createElement("td");
+            const bioInput = document.createElement("input");
+            bioInput.type = "text";
+            bioInput.name = `bio_${user._id}`;
+            bioInput.value = user.bio;
+            bioInput.required = true;
+            bioCell.appendChild(bioInput);
+
+            const bannerCell = document.createElement("td");
+            const bannerInput = document.createElement("input");
+            bannerInput.type = "text";
+            bannerInput.name = `bannerImage_${user._id}`;
+            bannerInput.value = user.bannerImage;
+            bannerInput.required = true;
+            bannerCell.appendChild(bannerInput);
+
+            const userImageCell = document.createElement("td");
+            const userImageInput = document.createElement("input");
+            userImageInput.type = "text";
+            userImageInput.name = `profileImage_${user._id}`;
+            userImageInput.value = user.profileImage;
+            userImageInput.required = true;
+            userImageCell.appendChild(userImageInput);
+
+            const joinedCell = document.createElement("td");
+            if (user.joinedForums.length > 0) {
+                const list = document.createElement("ul");
+                user.joinedForums.forEach(forum => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = forum;
+                    list.appendChild(listItem);
+                });
+                joinedCell.appendChild(list);
+            } else {
+                joinedCell.textContent = "None";
+            }
+
+            const followersCell = document.createElement("td");
+            followersCell.textContent = user.followersCount;
+
+            const followingCell = document.createElement("td");
+            if (user.following.length > 0) {
+                const list = document.createElement("ul");
+                user.following.forEach(followed => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = followed;
+                    list.appendChild(listItem);
+                });
+                followingCell.appendChild(list);
+            } else {
+                followingCell.textContent = "None";
+            }
+
+            const postsCell = document.createElement("td");
+            postsCell.textContent = user.postsCount;
+
+            const commentsCell = document.createElement("td");
+            commentsCell.textContent = user.commentsCount;
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = `Created: ${new Date(user.createdAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })} | Updated: ${new Date(user.updatedAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })}`;
+
+            const actionsCell = document.createElement("td");
+
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => {deleteUser(user._id)};
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.textContent = "Update User";
+            editButton.onclick = () => { updateUser(
+                user._id,
+                nameInput.value,
+                emailInput.value,
+                passInput.value,
+                bioInput.value,
+                bannerInput.value,
+                userImageInput.value
+            )};
+
+            const followButton = document.createElement("button");
+            followButton.type = "button";
+            followButton.textContent = "Follow";
+
+            const selfText = document.createElement("p");
+            selfText.textContent = "SELF"
+
+            if (hasSession) {
+                if (currentUser.following.includes(user._id)) {
+                    followButton.textContent = "Unfollow";
+                }
+            }
+
+            followButton.onclick = async () => {
+                if (hasSession) {
+                    try {
+                        const response = await fetch("/api/toggle-user-follow", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId: currentUser._id, targetId: user._id })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            console.log("Join status changed: ", result.presentStatus);
+
+                            fetchForums();
+                            fetchUsers(0, false, true);
+
+                        } else {
+                            alert(result.message);
+                        }
+                    } catch (error) {
+                        console.error("Error toggling user follow: ", error);
+                    }
+
+                } else {
+                    alert("Not logged in");
+                }
+            };
+
+            actionsCell.appendChild(deleteButton);
+            actionsCell.appendChild(editButton);
+            actionsCell.appendChild(followButton);
+
+            if (currentSession !== null && currentSession.id === user._id ) {
+                actionsCell.appendChild(selfText);
+            }
+
+            row.appendChild(nameCell);
+            row.appendChild(emailCell);
+            row.appendChild(passCell);
+            row.appendChild(bioCell);
+            row.appendChild(bannerCell);
+            row.appendChild(userImageCell);
+            row.appendChild(dateCell);
+            row.appendChild(joinedCell);
+            row.appendChild(followersCell);
+            row.appendChild(followingCell);
+            row.appendChild(postsCell);
+            row.appendChild(commentsCell);
+            row.appendChild(actionsCell);
+
+            return row;
         }
 
         async function updateAllUsers(event) {
@@ -696,7 +793,7 @@
                 const result = await response.json();
 
                 alert(result.message);
-                fetchUsers();
+                fetchUsers(0, false, true); 
             } catch (error) {
                 console.error("Error updating users: ", error);
             }
@@ -723,7 +820,7 @@
                 const result = await response.json();
 
                 alert(result.message);
-                fetchUsers();
+                fetchUsers(0, false, true);
             } catch (error) {
                 console.error("Error updating forum: ", error);
             }
@@ -829,7 +926,7 @@
 
         async function logout() {
 
-            if (currentSession === null){
+            if (currentSession === null) {
                 alert("Not logged in the first place");
                 return;
             }
@@ -851,9 +948,13 @@
 
         /////////////////// POSTS ///////////////////////////////////////
 
-        async function fetchPostsByForum(forumId) {
+        async function fetchPostsByForum(forumId, skip = 0, appending = false, updating = false) {
             try {
-                const postsResponse = await fetch(`/api/get-posts-by-forum/${forumId}`);
+                const sortBy = document.getElementById("postSortByDropdown").value;
+                const order = parseInt(document.getElementById("postOrderDropdown").value);
+                const limit = parseInt(document.getElementById("postLimitInput").value);
+
+                const postsResponse = await fetch(`/api/get-posts-by-forum/${forumId}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
                 const posts = await postsResponse.json();
 
                 const forumResponse = await fetch(`/api/get-forum-by-id/${forumId}`);
@@ -883,231 +984,236 @@
                     console.log("No session");
                 }
 
-                console.log("CURRENT USER:", currentUser);
-
                 {{!-- console.log("Fetched posts: ", posts);
                 console.log("Current forum: ", forum); --}}
 
                 const postSection = document.getElementById("postSection");
-                Array.from(postSection.children).forEach(child => {
-                    if (!child.matches("button")) {
-                        child.remove();
-                    }
-                });
+
+                if (!appending && !updating) {
+                    Array.from(postSection.children).forEach(child => {
+                        if (!child.matches("button")) {
+                            child.remove();
+                        }
+                    });
+
+                    userSkip = 0;
+                }
 
                 for (const post of posts) {
-                    const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
-                    const user = await userResponse.json();
+                    if (!updating) { 
+                        const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
+                        const user = await userResponse.json();
 
-                    const commentsResponse = await fetch(`/api/get-comments-by-post/${post._id}`);
-                    const comments = await commentsResponse.json();
+                        const commentsResponse = await fetch(`/api/get-comments-by-post/${post._id}`);
+                        const comments = await commentsResponse.json();
 
-                    {{!-- console.log("Fetched user: ", user); --}}
+                        {{!-- console.log("Fetched user: ", user); --}}
 
-                    const overallContainer = document.createElement("div");
-                    overallContainer.style.display = "flex";
-                    overallContainer.style.gap = "10px";
-                    overallContainer.style.width = "100%";
-                    overallContainer.style.height = "700px";
+                        const overallContainer = document.createElement("div");
+                        overallContainer.style.display = "flex";
+                        overallContainer.style.gap = "10px";
+                        overallContainer.style.width = "100%";
+                        overallContainer.style.height = "700px";
 
-                    const postContainer = document.createElement("div");
-                    postContainer.style.display = "flex";
-                    postContainer.style.flexDirection = "column";
-                    postContainer.style.width = "100%";
-                    postContainer.style.border = "2px solid black";
-                    postContainer.style.padding = "10px";
-                    postContainer.style.margin = "10px 0";
+                        const postContainer = document.createElement("div");
+                        postContainer.style.display = "flex";
+                        postContainer.style.flexDirection = "column";
+                        postContainer.style.width = "100%";
+                        postContainer.style.border = "2px solid black";
+                        postContainer.style.padding = "10px";
+                        postContainer.style.margin = "10px 0";
 
-                    const forumDiv = document.createElement("div");
-                    forumDiv.style.display = "flex";
-                    forumDiv.style.alignItems = "center";
+                        const forumDiv = document.createElement("div");
+                        forumDiv.style.display = "flex";
+                        forumDiv.style.alignItems = "center";
 
-                    const forumImg = document.createElement("img");
-                    forumImg.src = forum.forumImage;
-                    forumImg.style.height = "20px";
-                    forumImg.style.width = "20px";
-                    forumImg.style.marginRight = "5px";
+                        const forumImg = document.createElement("img");
+                        forumImg.src = forum.forumImage;
+                        forumImg.style.height = "20px";
+                        forumImg.style.width = "20px";
+                        forumImg.style.marginRight = "5px";
 
-                    const forumTitle = document.createElement("h3");
-                    forumTitle.textContent = forum.name;
+                        const forumTitle = document.createElement("h3");
+                        forumTitle.textContent = forum.name;
 
-                    forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
+                        forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
 
-                    const editButton = document.createElement("button");
-                    editButton.textContent = "Update Post";
-                    editButton.type = "button";
-                    editButton.onclick = () => { updatePost(
-                        post._id,
-                        postTitle.value,
-                        postContent.value,
-                        forumId
-                    )};
+                        const editButton = document.createElement("button");
+                        editButton.textContent = "Update Post";
+                        editButton.type = "button";
+                        editButton.onclick = () => { updatePost(
+                            post._id,
+                            postTitle.value,
+                            postContent.value,
+                            forumId
+                        )};
 
-                    const deleteButton = document.createElement("button");
-                    deleteButton.textContent = "Delete";
-                    deleteButton.type = "button";
-                    deleteButton.onclick = () => {deletePost(post._id, forumId)};
-                    
-                    forumDiv.appendChild(forumImg);
-                    forumDiv.appendChild(forumTitle);
-                    forumDiv.appendChild(editButton);
-                    forumDiv.appendChild(deleteButton);
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.type = "button";
+                        deleteButton.onclick = () => {deletePost(post._id, forumId)};
+                        
+                        forumDiv.appendChild(forumImg);
+                        forumDiv.appendChild(forumTitle);
+                        forumDiv.appendChild(editButton);
+                        forumDiv.appendChild(deleteButton);
 
-                    const userDiv = document.createElement("div");
-                    userDiv.style.display = "flex";
-                    userDiv.style.alignItems = "center";
+                        const userDiv = document.createElement("div");
+                        userDiv.style.display = "flex";
+                        userDiv.style.alignItems = "center";
 
-                    const userImg = document.createElement("img");
-                    userImg.src = user.profileImage;
-                    userImg.style.height = "20px";
-                    userImg.style.width = "20px";
-                    userImg.style.marginRight = "5px";
-
-                    if (user && user.username) {
                         const userImg = document.createElement("img");
                         userImg.src = user.profileImage;
                         userImg.style.height = "20px";
                         userImg.style.width = "20px";
                         userImg.style.marginRight = "5px";
 
+                        if (user && user.username) {
+                            const userImg = document.createElement("img");
+                            userImg.src = user.profileImage;
+                            userImg.style.height = "20px";
+                            userImg.style.width = "20px";
+                            userImg.style.marginRight = "5px";
+
+                            const userName = document.createElement("h3");
+                            userName.textContent = user.username;
+
+                            userDiv.appendChild(userImg);
+                            userDiv.appendChild(userName);
+                        } else {
+                            const deletedUser = document.createElement("h3");
+                            deletedUser.textContent = "[DELETED]";
+                            userDiv.appendChild(deletedUser);
+                        }
+
                         const userName = document.createElement("h3");
                         userName.textContent = user.username;
 
-                        userDiv.appendChild(userImg);
-                        userDiv.appendChild(userName);
-                    } else {
-                        const deletedUser = document.createElement("h3");
-                        deletedUser.textContent = "[DELETED]";
-                        userDiv.appendChild(deletedUser);
+                        const contentDiv = document.createElement("div");
+
+                        const postTitle = document.createElement("input");
+                        postTitle.type = "text";
+                        postTitle.name = `title_${post._id}`;
+                        postTitle.value = post.title;
+                        postTitle.required = true;
+
+                        const lineBreak = document.createElement("br")
+
+                        const postContent = document.createElement("input");
+                        postContent.type = "text";
+                        postContent.name = `content_${post._id}`;
+                        postContent.value = post.content;
+                        postContent.required = true;
+
+                        const postDate = document.createElement("h4");
+                        postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
+
+                        const editedDate = document.createElement("h4");
+                        editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
+
+                        contentDiv.appendChild(postTitle);
+                        contentDiv.appendChild(lineBreak);
+                        contentDiv.appendChild(postContent);
+                        contentDiv.appendChild(postDate);
+                        contentDiv.appendChild(editedDate);
+
+                        const voteDiv = document.createElement("div");
+                        voteDiv.style.display = "flex";
+                        voteDiv.style.alignItems = "center";
+
+                        const currentVote = currentUser && currentUser.votes.find(vote => {
+                                {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
+                                return vote.postId == post._id; 
+                            });
+
+                        const voteValue = currentVote ? currentVote.vote : 0;
+
+                        {{!-- console.log(voteValue); --}}
+
+                        const upvoteButton = document.createElement("button");
+                        upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
+                        upvoteButton.type = "button";
+                        upvoteButton.onclick = () => { toggleVote(post._id, 1, sessionData) };
+
+                        const voteCount = document.createElement("h4");
+                        voteCount.textContent = post.voteValue;
+                        voteCount.style.margin = "0 10px";
+
+                        const downvoteButton = document.createElement("button");
+                        downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
+                        downvoteButton.type = "button";
+                        downvoteButton.onclick = () => { toggleVote(post._id, -1, sessionData) };
+
+                        const commentCount = document.createElement("h4");
+                        commentCount.textContent = `Comments: ${post.commentsCount}`;
+                        commentCount.style.margin = "0 10px";
+
+                        voteDiv.appendChild(upvoteButton);
+                        voteDiv.appendChild(voteCount);
+                        voteDiv.appendChild(downvoteButton);
+                        voteDiv.appendChild(commentCount);
+
+                        postContainer.appendChild(forumDiv);
+                        postContainer.appendChild(userDiv);
+                        postContainer.appendChild(contentDiv);
+                        postContainer.appendChild(voteDiv);
+
+                        overallContainer.appendChild(postContainer);
+
+                        const commentsContainer = document.createElement("div");
+                        commentsContainer.style.display = "flex";
+                        commentsContainer.style.flexDirection = "column";
+                        commentsContainer.style.width = "100%";
+                        commentsContainer.style.border = "2px solid black";
+                        commentsContainer.style.padding = "10px";
+                        commentsContainer.style.margin = "10px 0";
+                        commentsContainer.style.overflowY = "scroll";
+
+                        const newCommentContainer = document.createElement("div");
+                        newCommentContainer.style.display = "flex";
+                        newCommentContainer.style.marginBottom = "10px";
+
+                        const newCommentLabel = document.createElement("h3");
+                        newCommentLabel.textContent = "Add Comment";
+
+                        const newCommentInput = document.createElement("input");
+                        newCommentInput.type = "text";
+                        newCommentInput.placeholder = "Write comment";
+                        newCommentInput.style.marginBottom = "5px";
+                        newCommentInput.style.width = "100%";
+
+                        const newCommentButton = document.createElement("button");
+                        newCommentButton.type = "button";
+                        newCommentButton.textContent = "Post Comment";
+
+                        newCommentContainer.appendChild(newCommentLabel);
+                        newCommentContainer.appendChild(newCommentInput);
+                        newCommentContainer.appendChild(newCommentButton);
+
+                        newCommentButton.onclick = () => { 
+                            if (!currentSession) {
+                                alert("Can't make comment if not logged in");
+                                return;
+                            } else {
+                                addComment(post._id,
+                                        currentUser._id,
+                                        newCommentInput.value.trim(),
+                                        null)    
+                                }
+                            };
+
+                        commentsContainer.appendChild(newCommentContainer);
+                        overallContainer.appendChild(commentsContainer);
+
+                        const parentComments = comments.filter(comment => comment.parentId === null);
+                        const childComments = comments.filter(comment => comment.parentId !== null);
+
+                        for (const comment of parentComments) {
+                            createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
+                        }
+
+                        postSection.appendChild(overallContainer);
                     }
-
-                    const userName = document.createElement("h3");
-                    userName.textContent = user.username;
-
-                    const contentDiv = document.createElement("div");
-
-                    const postTitle = document.createElement("input");
-                    postTitle.type = "text";
-                    postTitle.name = `title_${post._id}`;
-                    postTitle.value = post.title;
-                    postTitle.required = true;
-
-                    const lineBreak = document.createElement("br")
-
-                    const postContent = document.createElement("input");
-                    postContent.type = "text";
-                    postContent.name = `content_${post._id}`;
-                    postContent.value = post.content;
-                    postContent.required = true;
-
-                    const postDate = document.createElement("h4");
-                    postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
-
-                    const editedDate = document.createElement("h4");
-                    editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
-
-                    contentDiv.appendChild(postTitle);
-                    contentDiv.appendChild(lineBreak);
-                    contentDiv.appendChild(postContent);
-                    contentDiv.appendChild(postDate);
-                    contentDiv.appendChild(editedDate);
-
-                    const voteDiv = document.createElement("div");
-                    voteDiv.style.display = "flex";
-                    voteDiv.style.alignItems = "center";
-
-                    const currentVote = currentUser && currentUser.votes.find(vote => {
-                            {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
-                            return vote.postId == post._id; 
-                        });
-
-                    const voteValue = currentVote ? currentVote.vote : 0;
-
-                    {{!-- console.log(voteValue); --}}
-
-                    const upvoteButton = document.createElement("button");
-                    upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
-                    upvoteButton.type = "button";
-                    upvoteButton.onclick = () => { toggleVote(post._id, 1, sessionData) };
-
-                    const voteCount = document.createElement("h4");
-                    voteCount.textContent = post.voteValue;
-                    voteCount.style.margin = "0 10px";
-
-                    const downvoteButton = document.createElement("button");
-                    downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
-                    downvoteButton.type = "button";
-                    downvoteButton.onclick = () => { toggleVote(post._id, -1, sessionData) };
-
-                    const commentCount = document.createElement("h4");
-                    commentCount.textContent = `Comments: ${post.commentsCount}`;
-                    commentCount.style.margin = "0 10px";
-
-                    voteDiv.appendChild(upvoteButton);
-                    voteDiv.appendChild(voteCount);
-                    voteDiv.appendChild(downvoteButton);
-                    voteDiv.appendChild(commentCount);
-
-                    postContainer.appendChild(forumDiv);
-                    postContainer.appendChild(userDiv);
-                    postContainer.appendChild(contentDiv);
-                    postContainer.appendChild(voteDiv);
-
-                    overallContainer.appendChild(postContainer);
-
-                    const commentsContainer = document.createElement("div");
-                    commentsContainer.style.display = "flex";
-                    commentsContainer.style.flexDirection = "column";
-                    commentsContainer.style.width = "100%";
-                    commentsContainer.style.border = "2px solid black";
-                    commentsContainer.style.padding = "10px";
-                    commentsContainer.style.margin = "10px 0";
-                    commentsContainer.style.overflowY = "scroll";
-
-                    const newCommentContainer = document.createElement("div");
-                    newCommentContainer.style.display = "flex";
-                    newCommentContainer.style.marginBottom = "10px";
-
-                    const newCommentLabel = document.createElement("h3");
-                    newCommentLabel.textContent = "Add Comment";
-
-                    const newCommentInput = document.createElement("input");
-                    newCommentInput.type = "text";
-                    newCommentInput.placeholder = "Write comment";
-                    newCommentInput.style.marginBottom = "5px";
-                    newCommentInput.style.width = "100%";
-
-                    const newCommentButton = document.createElement("button");
-                    newCommentButton.type = "button";
-                    newCommentButton.textContent = "Post Comment";
-
-                    newCommentContainer.appendChild(newCommentLabel);
-                    newCommentContainer.appendChild(newCommentInput);
-                    newCommentContainer.appendChild(newCommentButton);
-
-                    newCommentButton.onclick = () => { 
-                        if (!currentSession){
-                            alert("Can't make comment if not logged in");
-                            return;
-                        } else {
-                            addComment(post._id,
-                                       currentUser._id,
-                                       newCommentInput.value.trim(),
-                                       null)    
-                            }
-                        };
-
-                    commentsContainer.appendChild(newCommentContainer);
-                    overallContainer.appendChild(commentsContainer);
-
-                    const parentComments = comments.filter(comment => comment.parentId === null);
-                    const childComments = comments.filter(comment => comment.parentId !== null);
-
-                    for (const comment of parentComments) {
-                        createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
-                    }
-
-                    postSection.appendChild(overallContainer);
                 };
 
             } catch (error) {
@@ -1117,11 +1223,63 @@
 
         document.getElementById("forumDropdown").addEventListener("change", function () {
             const selectedForumId = this.value;
+            postSkip = 0;
             
             if (selectedForumId) {
-                fetchPostsByForum(selectedForumId);
+                fetchPostsByForum(selectedForumId, 0, false, false);
             }
         });
+
+        document.getElementById("forumBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("forumLimitInput").value);
+            forumSkip += limit;
+            {{!-- console.log(forumSkip); --}}
+            fetchForums(forumSkip, true);
+        });
+
+        document.getElementById("forumOrderDropdown").addEventListener("change", () => {
+            forumSkip = 0;
+            fetchForums(0, false);
+        })
+
+        document.getElementById("forumSortByDropdown").addEventListener("change", () => {
+            forumSkip = 0;
+            fetchForums(0, false);
+        })
+
+        document.getElementById("userBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("userLimitInput").value);
+            userSkip += limit;
+            {{!-- console.log(userSkip); --}}
+            fetchUsers(userSkip, true);
+        });
+
+        document.getElementById("userOrderDropdown").addEventListener("change", () => {
+            userSkip = 0;
+            fetchUsers(0, false);
+        })
+
+        document.getElementById("userSortByDropdown").addEventListener("change", () => {
+            userSkip = 0;
+            fetchUsers(0, false);
+        })
+
+        document.getElementById("postBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("postLimitInput").value);
+            postSkip += limit;
+            console.log("POST SKIP", postSkip);
+            fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, true, false);
+        });
+
+        document.getElementById("postOrderDropdown").addEventListener("change", () => {
+            postSkip = 0;
+            fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, false, false);
+        })
+
+        document.getElementById("postSortByDropdown").addEventListener("change", () => {
+            postSkip = 0;
+            fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, false, false);
+        })
 
         async function updateAllPosts(event) {
             event.preventDefault();
@@ -1153,7 +1311,7 @@
                 alert(result.message);
                 
                 const forumDropdown = document.getElementById("forumDropdown");
-                fetchPostsByForum(forumDropdown.value);
+                fetchPostsByForum(forumDropdown.value, 0, false, true);
             } catch (error) {
                 console.error("Error updating posts: ", error);
             }
@@ -1184,7 +1342,9 @@
                 const result = await response.json();
 
                 alert(result.message);
-                fetchPostsByForum(forumId);
+
+                postSkip = 0;
+                fetchPostsByForum(forumId, postSkip, false, true);
             } catch (error) {
                 console.error("Error updating post: ", error);
             }
@@ -1194,7 +1354,7 @@
             const title = document.getElementById("titleInput").value.trim();
             const content = document.getElementById("contentInput").value.trim();
 
-            if (!currentSession){
+            if (!currentSession) {
                 alert("Can't make post if not logged in");
                 return;
             }
@@ -1203,8 +1363,6 @@
                 alert("Missing fields or invalid forum");
                 return;
             }
-
-            console.log(currentSession);
 
             const newPost = {
                 forumId: document.getElementById("forumDropdown").value,
@@ -1268,7 +1426,7 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    fetchPostsByForum(document.getElementById("forumDropdown").value);
+                    fetchPostsByForum(document.getElementById("forumDropdown").value, 0, false, true);
                 } else {
                     alert(result.message);
                 }
@@ -1424,14 +1582,16 @@
 
             const sendReplyButton = document.createElement("button");
             sendReplyButton.textContent = "Send";
-            sendReplyButton.onclick = async () => {
+            sendReplyButton.type = "button";
+            sendReplyButton.onclick = async () => {                
                 const content = replyInput.value.trim();
-                if (!content) {
-                    alert("Missing fields");
+
+                if (!currentSession) {
+                    alert("Can't make reply if not logged in");
                     return;
                 }
                 
-                if (!currentSession){
+                if (!content) {
                     alert("Can't make reply if not logged in");
                     return;
                 } else {
@@ -1470,7 +1630,7 @@
         }
 
         async function addComment(postId, authorId, commentContent, parentId) {
-            if (!currentSession){
+            if (!currentSession) {
                 alert("Can't make comment if not logged in");
                 return;
             }
@@ -1508,8 +1668,6 @@
         }
 
         async function deleteComment(commentId, forumId) {
-            console.log("DELETING REPLY FORUM ID", forumId);
-
             if (confirm("Are you sure you want to delete this comment?")) {
                 try {
                     const response = await fetch(`/api/delete-comment/${commentId}`, { method: "DELETE" });

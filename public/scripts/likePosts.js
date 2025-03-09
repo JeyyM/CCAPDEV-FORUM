@@ -50,12 +50,28 @@ function dislikePost(element) {
     }
 }
 
-function postSettings(element) {
-    element.parentNode.getElementsByClassName("floatingSettings")[0].classList.toggle("hidden");
+function postSettings(event, element) {
+    const $floatingSettings = $(element).parent().find(".floatingSettings");
+    
+    if ($floatingSettings.hasClass("hidden")) {
+        $(".floatingSettings").addClass("hidden");
+        $floatingSettings.removeClass("hidden");
+    }
+    else {
+        $(".floatingSettings").addClass("hidden");
+    }
+
+    event.stopPropagation();
+
+    $(document).one("click", function(event) {
+        if (!$(element).is(event.target) && !$(element).parent().find(".floatingSettings").is(event.target) && !$(element).parent().find(".floatingSettings").has(event.target).length) {
+            $floatingSettings.addClass("hidden");
+        }
+    });
 }
 
 $(document).ready(async function() {
-    const infoResponse = await fetch(`/api/get-users`)
+    const infoResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`);
     const info = await infoResponse.json();
     let sessionData = await getSession();
     let profile;
@@ -67,7 +83,7 @@ $(document).ready(async function() {
 
     $(".post").each(function (_, element) {
         let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
-        console.log(poster.profileImage);
+        console.log(poster);
 
         $(element).find(".profilePic").attr("src", poster.profileImage);
         $(element).find(".posterName").text(poster.username);
@@ -119,8 +135,6 @@ $(document).ready(async function() {
             dislikePost(this);
         }
     })
-
-    
 });
 
 async function getSession() {
