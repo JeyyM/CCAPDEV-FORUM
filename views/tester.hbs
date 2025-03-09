@@ -130,7 +130,7 @@
         <button type="submit">Update All</button>
     </form>
 
-    <h2>Posts (Keep Getting Next Batch on Forum to Get More)</h2>
+    <h2>Posts (Keep Getting Next Batch to Get More)</h2>
 
     <form id="postForm">
         <label for="titleInput">Create Post: </label>
@@ -519,6 +519,7 @@
         }
 
         //////////////////// USERS //////////////////
+
         async function fetchUsers(skip = 0, appending = false, updating = false) {
             try {
                 const sortBy = document.getElementById("userSortByDropdown").value;
@@ -946,6 +947,7 @@
         document.getElementById("logoutButton").addEventListener("click", logout);
 
         /////////////////// POSTS ///////////////////////////////////////
+
         async function fetchPostsByForum(forumId, skip = 0, appending = false, updating = false) {
             try {
                 const sortBy = document.getElementById("postSortByDropdown").value;
@@ -962,18 +964,28 @@
                 const sessionData = await sessionResponse.json();
 
                 let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
                 let currentUser;
 
                 if (hasSession) { 
                     try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
                         const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
                         currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
                     } catch (error) {
                         console.error("Error fetching user: ", error);
                     }
                 } else {
                     console.log("No session");
                 }
+
+                {{!-- console.log("Fetched posts: ", posts);
+                console.log("Current forum: ", forum); --}}
 
                 const postSection = document.getElementById("postSection");
 
@@ -983,6 +995,7 @@
                             child.remove();
                         }
                     });
+
                     userSkip = 0;
                 }
 
@@ -993,6 +1006,8 @@
 
                         const commentsResponse = await fetch(`/api/get-comments-by-post/${post._id}`);
                         const comments = await commentsResponse.json();
+
+                        {{!-- console.log("Fetched user: ", user); --}}
 
                         const overallContainer = document.createElement("div");
                         overallContainer.style.display = "flex";
@@ -1007,7 +1022,6 @@
                         postContainer.style.border = "2px solid black";
                         postContainer.style.padding = "10px";
                         postContainer.style.margin = "10px 0";
-                        overallContainer.dataset.postId = post._id;
 
                         const forumDiv = document.createElement("div");
                         forumDiv.style.display = "flex";
@@ -1022,8 +1036,27 @@
                         const forumTitle = document.createElement("h3");
                         forumTitle.textContent = forum.name;
 
+                        forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`
+
+                        const editButton = document.createElement("button");
+                        editButton.textContent = "Update Post";
+                        editButton.type = "button";
+                        editButton.onclick = () => { updatePost(
+                            post._id,
+                            postTitle.value,
+                            postContent.value,
+                            forumId
+                        )};
+
+                        const deleteButton = document.createElement("button");
+                        deleteButton.textContent = "Delete";
+                        deleteButton.type = "button";
+                        deleteButton.onclick = () => {deletePost(post._id, forumId)};
+                        
                         forumDiv.appendChild(forumImg);
                         forumDiv.appendChild(forumTitle);
+                        forumDiv.appendChild(editButton);
+                        forumDiv.appendChild(deleteButton);
 
                         const userDiv = document.createElement("div");
                         userDiv.style.display = "flex";
@@ -1035,66 +1068,79 @@
                         userImg.style.width = "20px";
                         userImg.style.marginRight = "5px";
 
+                        if (user && user.username) {
+                            const userImg = document.createElement("img");
+                            userImg.src = user.profileImage;
+                            userImg.style.height = "20px";
+                            userImg.style.width = "20px";
+                            userImg.style.marginRight = "5px";
+
+                            const userName = document.createElement("h3");
+                            userName.textContent = user.username;
+
+                            userDiv.appendChild(userImg);
+                            userDiv.appendChild(userName);
+                        } else {
+                            const deletedUser = document.createElement("h3");
+                            deletedUser.textContent = "[DELETED]";
+                            userDiv.appendChild(deletedUser);
+                        }
+
                         const userName = document.createElement("h3");
                         userName.textContent = user.username;
-
-                        userDiv.appendChild(userImg);
-                        userDiv.appendChild(userName);
 
                         const contentDiv = document.createElement("div");
 
                         const postTitle = document.createElement("input");
                         postTitle.type = "text";
+                        postTitle.name = `title_${post._id}`;
                         postTitle.value = post.title;
                         postTitle.required = true;
 
+                        const lineBreak = document.createElement("br")
+
                         const postContent = document.createElement("input");
                         postContent.type = "text";
+                        postContent.name = `content_${post._id}`;
                         postContent.value = post.content;
                         postContent.required = true;
 
                         const postDate = document.createElement("h4");
-                        postDate.textContent = `Posted: ${new Date(post.createdAt).toLocaleString()}`;
+                        postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
 
                         const editedDate = document.createElement("h4");
-                        editedDate.textContent = `Updated: ${new Date(post.updatedAt).toLocaleString()}`;
-
-                        const editButton = document.createElement("button");
-                        editButton.textContent = "Update Post";
-                        editButton.type = "button";
-                        editButton.onclick = () => {
-                            updatePost(post._id, postTitle.value, postContent.value, forumId);
-                        };
-
-                        const deleteButton = document.createElement("button");
-                        deleteButton.textContent = "Delete";
-                        deleteButton.type = "button";
-                        deleteButton.onclick = () => {
-                            deletePost(post._id, forumId);
-                        };
+                        editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
 
                         contentDiv.appendChild(postTitle);
+                        contentDiv.appendChild(lineBreak);
                         contentDiv.appendChild(postContent);
                         contentDiv.appendChild(postDate);
                         contentDiv.appendChild(editedDate);
-                        contentDiv.appendChild(editButton);
-                        contentDiv.appendChild(deleteButton);
 
                         const voteDiv = document.createElement("div");
                         voteDiv.style.display = "flex";
                         voteDiv.style.alignItems = "center";
 
+                        const currentVote = currentUser && currentUser.votes.find(vote => {
+                                {{!-- console.log("Current vote: ", vote, vote.postId, post); --}}
+                                return vote.postId == post._id; 
+                            });
+
+                        const voteValue = currentVote ? currentVote.vote : 0;
+
+                        {{!-- console.log(voteValue); --}}
+
                         const upvoteButton = document.createElement("button");
-                        upvoteButton.textContent = "Upvote";
+                        upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
                         upvoteButton.type = "button";
                         upvoteButton.onclick = () => { toggleVote(post._id, 1, sessionData) };
 
                         const voteCount = document.createElement("h4");
-                        voteCount.textContent = `Votes: ${post.voteValue}`;
+                        voteCount.textContent = post.voteValue;
                         voteCount.style.margin = "0 10px";
 
                         const downvoteButton = document.createElement("button");
-                        downvoteButton.textContent = "Downvote";
+                        downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
                         downvoteButton.type = "button";
                         downvoteButton.onclick = () => { toggleVote(post._id, -1, sessionData) };
 
@@ -1107,56 +1153,12 @@
                         voteDiv.appendChild(downvoteButton);
                         voteDiv.appendChild(commentCount);
 
-                        const commentSortContainer = document.createElement("div");
-                        commentSortContainer.style.display = "flex";
-
-                        const sortLabel = document.createElement("h3");
-                        sortLabel.textContent = "Sort Comments By: ";
-
-                        const sortDropdown = document.createElement("select");
-                        sortDropdown.classList.add("commentSortByDropdown");
-                        sortDropdown.dataset.postId = post._id;
-
-                        const orderLabel = document.createElement("h3");
-                        orderLabel.textContent = "Order: ";
-
-                        const orderDropdown = document.createElement("select");
-                        orderDropdown.classList.add("commentOrderDropdown");
-                        orderDropdown.dataset.postId = post._id;
-
-                        const options = [
-                            { value: "updatedAt", text: "New" },
-                            { value: "voteValue", text: "Votes" },
-                            { value: "hot", text: "Hot" }
-                        ];
-                        options.forEach(o => {
-                            const option = document.createElement("option");
-                            option.value = o.value;
-                            option.textContent = o.text;
-                            sortDropdown.appendChild(option);
-                        });
-
-                        const orderOptions = [
-                            { value: "-1", text: "Descending" },
-                            { value: "1", text: "Ascending" }
-                        ];
-                        orderOptions.forEach(o => {
-                            const option = document.createElement("option");
-                            option.value = o.value;
-                            option.textContent = o.text;
-                            orderDropdown.appendChild(option);
-                        });
-
-                        commentSortContainer.appendChild(sortLabel);
-                        commentSortContainer.appendChild(sortDropdown);
-                        commentSortContainer.appendChild(orderLabel);
-                        commentSortContainer.appendChild(orderDropdown);
-
                         postContainer.appendChild(forumDiv);
                         postContainer.appendChild(userDiv);
                         postContainer.appendChild(contentDiv);
                         postContainer.appendChild(voteDiv);
-                        postContainer.appendChild(commentSortContainer);
+
+                        overallContainer.appendChild(postContainer);
 
                         const commentsContainer = document.createElement("div");
                         commentsContainer.style.display = "flex";
@@ -1167,30 +1169,53 @@
                         commentsContainer.style.margin = "10px 0";
                         commentsContainer.style.overflowY = "scroll";
 
+                        const newCommentContainer = document.createElement("div");
+                        newCommentContainer.style.display = "flex";
+                        newCommentContainer.style.marginBottom = "10px";
+
+                        const newCommentLabel = document.createElement("h3");
+                        newCommentLabel.textContent = "Add Comment";
+
+                        const newCommentInput = document.createElement("input");
+                        newCommentInput.type = "text";
+                        newCommentInput.placeholder = "Write comment";
+                        newCommentInput.style.marginBottom = "5px";
+                        newCommentInput.style.width = "100%";
+
+                        const newCommentButton = document.createElement("button");
+                        newCommentButton.type = "button";
+                        newCommentButton.textContent = "Post Comment";
+
+                        newCommentContainer.appendChild(newCommentLabel);
+                        newCommentContainer.appendChild(newCommentInput);
+                        newCommentContainer.appendChild(newCommentButton);
+
+                        newCommentButton.onclick = () => { 
+                            if (!currentSession) {
+                                alert("Can't make comment if not logged in");
+                                return;
+                            } else {
+                                addComment(post._id,
+                                        currentUser._id,
+                                        newCommentInput.value.trim(),
+                                        null)    
+                                }
+                            };
+
+                        commentsContainer.appendChild(newCommentContainer);
+                        overallContainer.appendChild(commentsContainer);
+
                         const parentComments = comments.filter(comment => comment.parentId === null);
                         const childComments = comments.filter(comment => comment.parentId !== null);
 
-                        sortDropdown.addEventListener("change", () => {
-                            for (const comment of parentComments) {
-                                createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
-                            }
-                            });
-
-                        orderDropdown.addEventListener("change", () => {
-                            for (const comment of parentComments) {
-                                createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
-                            }                        
-                        });
-
                         for (const comment of parentComments) {
                             createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
-                        }              
+                        }
 
-                        overallContainer.appendChild(postContainer);
-                        overallContainer.appendChild(commentsContainer);
                         postSection.appendChild(overallContainer);
                     }
-                }
+                };
+
             } catch (error) {
                 console.error("Error fetching posts: ", error);
             }
@@ -1418,7 +1443,6 @@
             const commentContainer = document.createElement("div");
             commentContainer.style.padding = "10px";
             commentContainer.style.marginBottom = "5px";
-            commentContainer.id = `comment_${comment._id}`;
 
             const replyArea = document.createElement("div");
             replyArea.style.width = "100%";
@@ -1534,11 +1558,9 @@
             commentContainer.appendChild(replyArea);
             commentsContainer.appendChild(commentContainer);
 
-            let replies = childComments.filter(reply => reply.parentId === comment._id);
-            replies.sort((a, b) => (order === 1 ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]));
-
+            const replies = childComments.filter(reply => reply.parentId === comment._id);
             for (const reply of replies) {
-                createCommentArea(reply, postId, currentUser, replyArea, childComments, sessionData, sortBy, order);
+                createCommentArea(reply, postId, currentUser, replyArea, childComments, sessionData);
             }
         }
 
@@ -1637,7 +1659,9 @@
                 const result = await response.json();
 
                 alert(result.message);
-                updateCommentEntry(commentId, document.getElementById("forumDropdown").value, sessionData.user, [], sessionData);
+                {{!-- fetchForums();
+                fetchUsers(); --}}
+                fetchPostsByForum(document.getElementById("forumDropdown").value);
             } catch (error) {
                 console.error("Error adding comment: ", error);
             }
@@ -1681,25 +1705,6 @@
                 }
             } catch (error) {
                 console.error("Error toggling comment vote:", error);
-            }
-        }
-
-        async function updateCommentEntry(commentId, postId, currentUser, childComments, sessionData) {
-            try {
-                console.log(`Updating comment: ${commentId}`);
-                const commentContainer = document.getElementById(`comment_${commentId}`);
-
-                while (commentContainer.firstChild) {
-                    commentContainer.removeChild(commentContainer.firstChild);
-                }
-
-                const commentResponse = await fetch(`/api/get-comment-by-id/${commentId}`);
-                const updatedComment = await commentResponse.json();
-
-                createCommentArea(updatedComment, postId, currentUser, commentContainer, childComments, sessionData);
-
-            } catch (error) {
-                console.error("Error updating comment: ", error);
             }
         }
 
