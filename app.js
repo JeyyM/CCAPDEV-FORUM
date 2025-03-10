@@ -25,7 +25,7 @@ server.use(session({
     }
 }));
 
-server.use(express.json()); 
+server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
 const handlebars = require('express-handlebars');
@@ -33,14 +33,24 @@ server.set('view engine', 'hbs');
 server.engine('hbs', handlebars.engine({
     extname: 'hbs',
     helpers: {
-      isEqual: (x, y) => x === y,
-      isNull: (x) => x === null,
-      json: function (body) {
-        return JSON.stringify(body);
-      },
-      toString: function (value) {
-        return String(value);
-      }
+        isEqual: (x, y) => x === y,
+        isNull: (x) => x === null,
+        json: function (body) {
+            return JSON.stringify(body);
+        },
+        toString: function (value) {
+            return String(value);
+        },
+        formatDate: function (date) {
+            return new Date(date).toLocaleString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            });
+        }
     }
 }));
 
@@ -77,7 +87,7 @@ mongo.insertSampleForum();
 mongo.insertSampleUser();
 mongo.insertSamplePosts();
 
-server.get("/", async function(req, resp) {
+server.get("/", async function (req, resp) {
     let posts;
 
     await fetchCommunities();
@@ -92,7 +102,7 @@ server.get("/", async function(req, resp) {
         // console.log(posts);
     }
 
-    resp.render("home",{
+    resp.render("home", {
         layout: "index",
         title: "Home Page",
         pageStyle: "home",
@@ -104,7 +114,7 @@ server.get("/", async function(req, resp) {
     });
 });
 
-server.get("/viewPost/:postId", async function(req, resp){
+server.get("/viewPost/:postId", async function (req, resp) {
     const postId = req.params.postId;
     const posts = await mongo.getPosts();
     const post = posts.find(p => p._id.toString() === postId.toString());
@@ -116,7 +126,7 @@ server.get("/viewPost/:postId", async function(req, resp){
         console.log(localUser);
     }
 
-    resp.render("viewPost",{
+    resp.render("viewPost", {
         layout: "index",
         title: "View Post Page",
         pageStyle: "viewpost",
@@ -129,7 +139,7 @@ server.get("/viewPost/:postId", async function(req, resp){
     });
 });
 
-server.get("/viewCommunity/:communityName", async function(req, resp){
+server.get("/viewCommunity/:communityName", async function (req, resp) {
     const communityName = req.params.communityName;
 
     const communityList = await mongo.getForums("createdAt", -1, 99, 0);
@@ -156,10 +166,10 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
         console.log("Joined Forums: " + localUser.joinedForums);
         joinedCommunity = localUser.joinedForums.some(c => c === communityDB._id.toString());
     }
-    
+
     console.log("Joined community: " + joinedCommunity);
 
-    resp.render("viewCommunity",{
+    resp.render("viewCommunity", {
         layout: "index",
         title: "View Community Page",
         pageStyle: "viewcommunity",
@@ -173,7 +183,7 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
     });
 });
 
-server.get("/viewProfile/:profileName", async function(req, resp){
+server.get("/viewProfile/:profileName", async function (req, resp) {
     const profileName = req.params.profileName;
 
     const users = await mongo.getUsers("createdAt", -1, 99, 0);
@@ -185,7 +195,7 @@ server.get("/viewProfile/:profileName", async function(req, resp){
     const posts = await mongo.getPosts("createdAt", -1, 99, 0);
     const postList = [];
     // console.log(posts);
-    
+
     posts.forEach(function (post) {
         if (post.authorId.toString() == profile._id.toString()) {
             postList.push(post);
@@ -198,10 +208,10 @@ server.get("/viewProfile/:profileName", async function(req, resp){
         console.log("Followed Users: " + localUser.following);
         followedUser = localUser.following.some(c => c === profileDB._id.toString());
     }
-    
+
     console.log("Followed User: " + followedUser);
 
-    resp.render("viewProfile",{
+    resp.render("viewProfile", {
         layout: "index",
         title: "View Profile Page",
         pageStyle: "viewprofile",
@@ -215,7 +225,7 @@ server.get("/viewProfile/:profileName", async function(req, resp){
     });
 });
 
-server.get("/editPost/:postId", async function(req, resp){
+server.get("/editPost/:postId", async function (req, resp) {
     const postId = req.params.postId;
     const posts = await mongo.getPosts();
     const post = posts.find(p => p._id.toString() === postId.toString());
@@ -223,7 +233,7 @@ server.get("/editPost/:postId", async function(req, resp){
     const communityList = await mongo.getForums("name", 1, 99, 0);
     const community = communityList.find(c => c._id.toString() === post.forumId.toString());
 
-    resp.render("editPost",{
+    resp.render("editPost", {
         layout: "index",
         title: "Edit Post Page",
         pageStyle: "createpost",
@@ -236,13 +246,13 @@ server.get("/editPost/:postId", async function(req, resp){
     });
 });
 
-server.get("/editProfile/:profileName", async function(req, resp){
+server.get("/editProfile/:profileName", async function (req, resp) {
     const profileName = req.params.profileName;
     const profile = await mongo.getUserByName(profileName);
 
     console.log(profile);
 
-    resp.render("editProfile",{
+    resp.render("editProfile", {
         layout: "index",
         title: "Edit Profile Page",
         pageStyle: "editprofile",
@@ -254,13 +264,13 @@ server.get("/editProfile/:profileName", async function(req, resp){
     });
 });
 
-server.get("/createPost/:communityName?", async function(req, resp){
+server.get("/createPost/:communityName?", async function (req, resp) {
     const communityName = req.params.communityName;
 
     const communityList = await mongo.getForums("name", 1, 99, 0);
     const community = communityList.find(c => c.name === communityName);
 
-    resp.render("createPost",{
+    resp.render("createPost", {
         layout: "index",
         title: "Create Post Page",
         pageStyle: "createpost",
@@ -272,7 +282,7 @@ server.get("/createPost/:communityName?", async function(req, resp){
     });
 });
 
-server.get("/about", function(req, resp) {
+server.get("/about", function (req, resp) {
     resp.render("about", {
         layout: "index",
         title: "About Page",
@@ -285,8 +295,8 @@ server.get("/about", function(req, resp) {
 })
 
 const port = process.env.PORT | 3000;
-server.listen(port, function(){
-    console.log("Listening at port "+port);
+server.listen(port, function () {
+    console.log("Listening at port " + port);
 });
 
 // For Testing Stuff
@@ -298,7 +308,7 @@ async function fetchCommunities() {
 async function fetchMyCommunities() {
     const joinedCommunities = [];
 
-    localUser.joinedForums.forEach(function(community) {
+    localUser.joinedForums.forEach(function (community) {
         joinedCommunities.push(communities.find(c => c._id.toString() === community));
     });
 
@@ -307,7 +317,7 @@ async function fetchMyCommunities() {
 
 fetchCommunities();
 
-server.post("/update/userLogin", function(req, resp){
+server.post("/update/userLogin", function (req, resp) {
     console.log(req.body.user);
 
     localUser = req.body.user;
@@ -315,7 +325,7 @@ server.post("/update/userLogin", function(req, resp){
     resp.json({ success: true, message: "User login updated" });
 })
 
-server.post("/update/userGeneral", function(req, resp){
+server.post("/update/userGeneral", function (req, resp) {
     console.log(req.body.user);
 
     localUser = req.body.user;
@@ -323,13 +333,13 @@ server.post("/update/userGeneral", function(req, resp){
     resp.json({ success: true, message: "User updated" });
 });
 
-server.post("/update/userLogout", function(req, resp){
+server.post("/update/userLogout", function (req, resp) {
     console.log("User Log Out");
     localUser = null;
     resp.json({ success: true, message: "User logout updated" });
 })
 
-server.get("/info/get-forum-info-by-name/:forumName", async function(req, resp) {
+server.get("/info/get-forum-info-by-name/:forumName", async function (req, resp) {
     const forumName = req.params.forumName;
 
     const users = await mongo.getUsers();
