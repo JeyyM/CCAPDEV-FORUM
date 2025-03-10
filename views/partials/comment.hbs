@@ -1,16 +1,20 @@
-<div class="comment">
+<div class="comment" id="{{toString comment._id}}">
     <div class="commentHeaderContainer">
-        <div class="commentHeader" onclick="window.location.href='/viewProfile/{{comment.posterName}}'">
+        <div class="commentHeader" onclick="window.location.href='/viewProfile/'">
             <img src="{{comment.profilePic}}" class="profilePic">
             <div>
-                <span class="posterName">{{comment.posterName}}</span>
+                <span class="posterName" id="{{comment.authorId}}"></span>
                 <span class="dot">•</span>
-                <span class="timePosted">{{comment.timePosted}}</span>
+                <span class="timePosted">{{formatDate comment.createdAt}}</span>
+                {{#unless (isDateEqual comment.updatedAt comment.createdAt)}}
+                    <span class="dot">•</span>
+                    <span class="timePosted">[EDITED]</span>
+                {{/unless}}
             </div>
         </div>
-        {{#if (isEqual comment.posterName user.userName)}}
+        {{#if (isEqual (toString comment.authorId) user._id)}}
             <div class="postSettings">
-                <i class='bx bx-dots-horizontal-rounded' onclick="postSettings(this)"></i>
+                <i class='bx bx-dots-horizontal-rounded' onclick="postSettings(event, this)"></i>
                 <div class="floatingSettings hidden">
                     <button class="editComment" onclick="editComment(this)"><i class='bx bx-edit-alt'></i>Edit</button>
                     <button class="deleteComment"><i class='bx bx-trash'></i>Delete</button>
@@ -18,20 +22,11 @@
             </div>
         {{/if}}
     </div>
-    <div class="commentContent">
-        {{comment.commentContent}}
-    </div>
+    <div class="commentContent">{{comment.content}}</div>
     <div class="commentEngagement">
         <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>{{comment.likes}}</span></button>
-        <button class="dislikeButton clicked" onclick="dislikePost(this)"><i class='bx bxs-dislike'></i><span>{{comment.dislikes}}</span></button>
-        <button class="commentButton" onclick="addComment(this)"><i class='bx bx-comment'></i><span>{{comment.commentCount}}</span></button>
+        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>{{comment.dislikes}}</span></button>
+        <button class="commentButton" onclick="newComment(this)"><i class='bx bx-comment'></i><span>{{comment.commentCount}}</span></button>
         <button class="share"><i class='bx bx-share-alt'></i></button>
     </div>
 </div>
-{{#each comments}}
-    {{#if (isEqual parentId ../commentId)}}
-        <div class="comment">
-            {{> comment comment=this comments=../comments user=@root.user}}
-        </div>
-    {{/if}}
-{{/each}}

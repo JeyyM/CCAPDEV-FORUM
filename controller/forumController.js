@@ -136,10 +136,11 @@ router.patch("/toggle-forum-join", async (req, res) => {
 
         if (result.success) {
             res.json(result);
-        } else {
+        }
+        else {
             res.status(400).json(result);
         }
-    } catch (error) {
+    } catch (error){
         console.error("Error toggling: ", error);
         res.status(500).json({ success: false, message: "Toggling error" });
     }

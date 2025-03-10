@@ -134,10 +134,14 @@
     align-items: center;
 }
 
-.followers, .comments {
-    min-width: 12vw;
+.followers {
+    min-width: 7vw;
 }
 
 .posts {
     min-width: 6vw;
+}
+
+.comments {
+    min-width: 10vw;
 }

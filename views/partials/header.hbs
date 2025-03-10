@@ -1,20 +1,26 @@
 <div id="unfocus" onclick="unfocus()"></div>
-<div id="loginForm">
+<form id="loginForm">
     <div class="welcome">WELCOME</div>
-    <input id="username" type="text" placeholder="Email or Username" required>
-    <input id="password" type="password" placeholder="Password" required>
+    <input id="username" type="email" placeholder="Enter Email" required>
+    <input id="password" type="password" placeholder="Enter Password" required>
     <span class="signupButton" onclick="signup()">Sign up?</span>
-    <button id="loginButton">Log In</button>
-</div>
-<div id="signupForm">
+    <button id="loginButton" type="submit">Log In</button>
+    <div>
+        <label for="rememberMe">Remember Me</label>
+        <input type="checkbox" id="rememberMe">
+    </div>
+</form>
+<form id="signupForm">
     <div class="signup">Sign Up</div>
-    <input type="text" placeholder="Username" required>
-    <input type="text" placeholder="Email" required>
-    <input type="password" placeholder="Password" required>
-    <input type="password" placeholder="Confirm Password" required>
+    <input id="usernameFormInput" type="username" placeholder="Username" required>
+    <input id="emailFormInput" type="email" placeholder="Email" required>
+    <input id="passwordFormInput" type="password" placeholder="Password" required>
+    <input id="passwordFormConfirm" type="password" placeholder="Confirm Password" required>
+    <input id="profileFormPic" type="text" placeholder="Profile Image Link" required>
+    <input id="bannerFormPic" type="text" placeholder="Banner Image Link" required>
     <span class="loginButton" onclick="login()">Log In?</span>
-    <button id="signupButton">Sign Up</button>
-</div>
+    <button id="signupButton" typle="submit">Sign Up</button>
+</form>
 <div class="header">
     <div class="title" onclick="window.location.href='/'">
         <i class='bx bx-conversation titleIcon'></i>
@@ -27,7 +33,7 @@
     {{#if user}}
         <div class="account">
             <button id="createPost" onclick="window.location.href='/createPost'"><i class='bx bx-plus'></i>Create Post</button>
-            <img src="{{user.profilePic}}" class="profilePic" onclick="profileSettings()">
+            <img src="{{user.profileImage}}" class="profilePic" onclick="profileSettings()">
         </div>
     {{else}}
         <div class="account">
@@ -37,6 +43,6 @@
     {{/if}}
 </div>
 <div id="profileSettings" class="hidden">
-    <button id="viewProfile" onclick="window.location.href='/viewProfile/{{user.userName}}'"><i class='bx bx-user'></i>View Profile</button>
-    <button id="logout" onclick="window.location.href='/'"><i class='bx bx-log-out'></i>Log Out</button>
+    <button id="viewProfile" onclick="window.location.href='/viewProfile/{{user.username}}'"><i class='bx bx-user'></i>View Profile</button>
+    <button id="logout"><i class='bx bx-log-out'></i>Log Out</button>
 </div>

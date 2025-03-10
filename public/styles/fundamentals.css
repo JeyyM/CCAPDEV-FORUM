@@ -107,6 +107,7 @@ body {
     background-color: var(--bg);
     border-radius: 10px;
     z-index: 3;
+    position: fixed;
     filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
 }
 
@@ -212,6 +213,7 @@ body {
 
 .communityIcon {
     height: 3vh;
+    width: 3vh;
     border-radius: 50%;
 }
 
@@ -221,7 +223,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 3;
-    position: absolute;
+    position: fixed;
     top: 0;
 }
 
@@ -236,6 +238,7 @@ body {
     background-color: var(--bg);
     flex-direction: column;
     border-radius: 1rem;
+    position: fixed;
 }
 
 #loginForm .welcome {
@@ -246,7 +249,7 @@ body {
 }
 
 #loginForm input {
-    width: 40rem;
+    width: 45rem;
     background-color: white;
     font-size: 1.5rem;
     padding: 0.5rem;
@@ -254,6 +257,10 @@ body {
     border: 0.1rem solid var(--gray);
     filter: drop-shadow(-1px 1px 2px rgba(0, 0, 0, 0.20));
     margin: 0.5rem 0;
+}
+
+#loginForm #rememberMe {
+    width: 1rem;
 }
 
 #loginForm .signupButton {
@@ -285,6 +292,7 @@ body {
     background-color: var(--bg);
     flex-direction: column;
     border-radius: 1rem;
+    position: fixed;
 }
 
 #signupForm .signup {
@@ -295,7 +303,7 @@ body {
 }
 
 #signupForm input {
-    width: 40rem;
+    width: 45rem;
     background-color: white;
     font-size: 1.5rem;
     padding: 0.5rem;

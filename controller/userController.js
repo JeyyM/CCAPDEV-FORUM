@@ -5,7 +5,7 @@ const mongo = require('../model/dbFunctions');
 router.post("/login", async (req, res) => {
     try {
         const { email, password, rememberMe } = req.body;
-
+    
         const user = await mongo.getUserByEmail(email);
 
         if (!user) {
@@ -191,7 +191,7 @@ router.patch("/toggle-user-follow", async (req, res) => {
         } else {
             res.status(400).json(result);
         }
-    } catch (error) {
+    } catch (error){
         console.error("Error toggling: ", error);
         res.status(500).json({ success: false, message: "Toggling error" });
     }

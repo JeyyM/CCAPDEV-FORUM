@@ -10,7 +10,7 @@
         </div>
         <div class="postContainer">
             {{#each posts}}        
-                {{> post post=this user=../user}}
+                {{> post post=this user=../user showCommunity=../showCommunity}}
             {{/each}}
         </div>
     </div>

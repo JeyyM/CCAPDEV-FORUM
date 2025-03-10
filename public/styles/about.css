@@ -19,7 +19,7 @@
 }
 
 #sort {
-    width: 120px;
+    width: 150px;
 }
 
 #viewOptions {
@@ -100,7 +100,7 @@
     gap: 5px;
 }
 
-.postHeader, .communityRedirect {
+.postHeader {
     display: flex;
     gap: 5px;
     width: max-content;
@@ -129,23 +129,6 @@
     width: 4vh;
     border: 1px solid var(--gray);
     border-radius: 50%;
-}
-
-.fromCommunity {
-    margin-bottom: 5px;
-}
-
-.communityPic {
-    height: 2vh;
-    width: 2vh;
-    border: 1px solid var(--gray);
-    border-radius: 50%;
-}
-
-.postHeader .communityHeader {
-    display: flex;
-    flex-direction: unset;
-    align-items: center;
 }
 
 .postContent {

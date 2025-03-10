@@ -1,8 +1,8 @@
 <div class="main">
     <div class="postContainer">
         {{> post post=post user=user}}
-        <div class="replyContainer">
-            <textarea id="originalReply" class="replyContent" placeholder="Reply to @{{post.posterName}}" rows="1" onfocus="showPostButtons(this)" onblur="hidePostButtons(this)"></textarea>
+        <div class="replyContainer" onclick="postButtons(event, this)">
+            <textarea id="originalReply" class="replyContent" placeholder="Reply to @{{post.posterName}}" rows="1"></textarea>
             <button class="cancelReply replyButton hidden">Cancel</button>
             <button class="postReply replyButton hidden">Post</button>
         </div>

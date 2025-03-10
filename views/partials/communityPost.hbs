@@ -1,0 +1,33 @@
+<div class="post">
+    <div class="postHeaderContainer">
+        <div class="postHeader" onclick="window.location.href='/viewProfile/{{post.posterName}}'">
+            <img src="{{profile.profileImage}}" class="profilePic">
+            <div>
+                <span class="posterName" id="{{post.authorId}}"></span>
+                <span class="timePosted">{{post.updatedAt}}</span>
+            </div>
+        </div>
+        {{#if (isEqual post.authorId user.userId)}}
+            <div class="postSettings">
+                <i class='bx bx-dots-horizontal-rounded' onclick="postSettings(this)"></i>
+                <div class="floatingSettings hidden">
+                    <button class="editPost" onclick="window.location.href='/editPost/{{post.postId}}'"><i class='bx bx-edit-alt'></i>Edit</button>
+                    <button class="deletePost"><i class='bx bx-trash'></i>Delete</button>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+    <div class="postContent" onclick="window.location.href='/viewPost/{{post.postId}}'">
+        <span class="postTitle">{{post.title}}</span>
+        <span class="postBody">{{post.content}}</span>
+        {{#if post.postImage}}
+            <img src="{{post.postImage}}" class="postImage">
+        {{/if}}
+    </div>
+    <div class="postEngagement">
+        <button class="likeButton clicked" onclick="likePost(this)"><i class='bx bxs-like'></i><span>{{post.likes}}</span></button>
+        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>{{post.dislikes}}</span></button>
+        <button class="commentButton" onclick="window.location.href='/viewPost/{{post.postId}}'"><i class='bx bxs-comment'></i><span>{{post.commentsCount}}</span></button>
+        <button class="share"><i class='bx bxs-share-alt'></i></button>
+    </div>
+</div>
