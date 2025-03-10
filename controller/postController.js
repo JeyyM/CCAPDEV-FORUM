@@ -85,7 +85,7 @@ router.post("/add-post", async (req, res) => {
         // console.log("Add forum result: ", result);
 
         if (result) {
-            res.json({ message: "Post added successfully" });
+            res.json({ message: "Post added successfully", postId: result.toString() });
         } else {
             res.status(500).json({ message: "Error adding post" });
         }
