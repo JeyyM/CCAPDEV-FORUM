@@ -5,7 +5,7 @@
             <div>
                 <span class="posterName" id="{{comment.authorId}}"></span>
                 <span class="dot">•</span>
-                <span class="timePosted">{{formatDate comment.updatedAt}}</span>
+                <span class="timePosted">{{formatDate comment.createdAt}}</span>
                 {{#unless (isEqual (formatDate comment.updatedAt) (formatDate comment.createdAt))}}
                     <span class="dot">•</span>
                     <span class="timePosted">[EDITED]</span>

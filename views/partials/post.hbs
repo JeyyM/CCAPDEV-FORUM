@@ -4,11 +4,13 @@
             <img src="{{profile.profileImage}}" class="profilePic">
             <div>
                 <span class="posterName" id="{{post.authorId}}"></span>
-                {{#if post.updatedAt}}
-                <span class="timePosted">{{post.updatedAt}}</span>
-                {{else}}
-                <span class="timePosted">{{post.createdAt}}</span>
-                {{/if}}
+                <span class="timePosted">{{formatDate post.createdAt}}
+                {{#unless (isEqual (formatDate post.updatedAt) (formatDate post.createdAt))}}
+                    <span class="dot">•</span>
+                    <span class="timePosted">[EDITED]</span>
+                {{/unless}}
+                </span>
+
             </div>
         </div>
         {{#if (isEqual (toString post.authorId) user._id)}}
