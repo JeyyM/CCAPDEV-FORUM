@@ -14,6 +14,11 @@ $(document).ready(async function() {
             const result = await response.json();
 
             alert(result.message);
+
+            if (result.success){
+                window.location.href = `/viewPost/${result.postId}`
+            }
+
         } catch (error) {
             console.error("Error updating post: ", error);
         }

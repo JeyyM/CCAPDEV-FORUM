@@ -67,12 +67,12 @@ router.patch("/update-post/:postId", async (req, res) => {
         // console.log("Update result: ", result);
 
         if (result) {
-            res.json({ message: result.message });
+            res.json({success: true, message: result.message, postId: postId });
         } else {
-            res.status(400).json({ message: result.error });
+            res.status(400).json({success: false, message: result.error });
         }
     } catch (error) {
-        res.status(500).json({ message: "Error updating post" });
+        res.status(500).json({success: true, message: "Error updating post" });
     }
 });
 
@@ -85,13 +85,13 @@ router.post("/add-post", async (req, res) => {
         // console.log("Add forum result: ", result);
 
         if (result) {
-            res.json({ message: "Post added successfully", postId: result.toString() });
+            res.json({success: true, message: "Post added successfully", postId: result.toString() });
         } else {
             res.status(500).json({ message: "Error adding post" });
         }
     } catch (error) {
         console.error("Error adding post: ", error);
-        res.status(500).json({ message: "Error adding post" });
+        res.status(500).json({success: false, message: "Error adding post" });
     }
 });
 

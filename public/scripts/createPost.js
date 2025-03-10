@@ -30,14 +30,13 @@ $(document).ready(async function() {
             });
     
             const result = await response.json();
-            console.log(result);
 
             alert(result.message);
     
             $("#postTitle").val("");
             $("#postBody").val("");
 
-            if (result.message === 'Post added successfully'){
+            if (result.success){
                 window.location.href = `/viewPost/${result.postId.toString()}`;
             }
         } catch (error) {

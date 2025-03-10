@@ -2412,7 +2412,7 @@ const mongo = {
                 { $set: updatedData }
             );
 
-            return { success: true, message: "Post updated successfully!" };
+            return { success: true, message: "Post updated successfully!", postId: postId };
         } catch (error) {
             console.error("Error updating post: ", error);
             return { success: false, message: "Error updating post" };;
