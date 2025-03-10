@@ -2059,7 +2059,7 @@ const mongo = {
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 followersCount: 0,
-                postsCount: 5,
+                postsCount: 0,
                 commentsCount: 0,
                 votes: [],
                 commentVotes: []
