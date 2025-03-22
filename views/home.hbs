@@ -8,10 +8,12 @@
             <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bx-up-arrow-alt'></i>Top</div>
             <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-time'></i>New</div>
         </div>
+        <div id="searchResult">
         <div class="postContainer">
             {{#each posts}}        
                 {{> post post=this user=../user showCommunity=../showCommunity}}
             {{/each}}
+        </div>
         </div>
     </div>
 </div>

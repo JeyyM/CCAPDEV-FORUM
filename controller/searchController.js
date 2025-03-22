@@ -34,4 +34,44 @@ router.post("/login", async (req, res) => {
         res.status(500).json({ message: "Error logging in" });
     }
 });
+
+router.get("/search", async(req, res) => {
+    try{
+        const keyword = req.query.keyword;
+        if(!keyword){
+            return res.status(404).json({ success: false, message: "Keyword not found" });
+        }
+        const posts = await mongo.getPostsBySearch(keyword);
+        if(posts.length === 0){
+            return res.send(`<p>No results found for "${keyword}".</p>`);
+        }
+        let user = null;  
+        if(req.session.user){
+            // console.log("Session user exists:", req.session.user); // Debugging
+            user =  await mongo.getUserById(req.session.user.id);
+        }   
+        // console.log("Posts data:", posts);    
+        let renderedPosts = await Promise.all(
+            posts.map((post) => {
+                return new Promise((resolve, reject) => {
+                    // console.log("Logged-in User:", req.session.user); // Debugging
+                    res.render("partials/post", {post, user, showCommunity: true, layout: false}, (error, html) => {
+                        if(error){
+                            return reject(error);
+                        }
+                        resolve(html);
+                    })
+                });
+            })
+        );        
+        // console.log("USER:", user); 
+        // console.log(renderedPosts);
+        const result = renderedPosts.join("");
+        res.send(result);
+    } catch(error){
+        console.error("Error searching: ", error);
+        res.status(500).json({ message: "Error searching" });
+    }
+});
+
 module.exports = router;

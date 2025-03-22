@@ -92,11 +92,11 @@ $(document).ready(async function() {
     let profile;
 
     if (sessionData != null) {
-        profile = await (await fetch("/api/get-user-by-id/" + sessionData.id)).json()
+        profile = await (await fetch("/api/get-user-by-id/" + sessionData.id)).json();
     }
 
     let communityFlag = false;
-    if (window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "viewProfile") {
+    if (window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "viewProfile" || window.location.href.split("/")[3].includes("search")) {
         communityFlag = true;
     }
 

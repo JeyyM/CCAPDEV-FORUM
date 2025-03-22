@@ -2376,6 +2376,51 @@ const mongo = {
         }
     },
 
+    async getPostsBySearch(keyword){
+        try{
+            const db = client.db(dbName);
+            const postsCollection = db.collection(postsVar);
+            const query = {
+                $or: [
+                    {title: {$regex: keyword, $options: 'i'}},
+                    {content: {$regex: keyword, $options: 'i'}}
+                ]
+            }
+            const posts = await postsCollection.aggregate([
+                {
+                    $match: query
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'authorId',
+                        foreignField: '_id',
+                        as: 'author'
+                    }
+                },
+                {
+                    $unwind: '$author'
+                },
+                {
+                    $lookup: {
+                        from: 'forums',
+                        localField: 'forumId',
+                        foreignField: '_id',
+                        as: 'forum'
+                    }
+                },
+                {
+                    $unwind: '$forum'
+                }
+            ]).toArray();
+            return posts;
+            // return await postsCollection.find(query).toArray();
+        } catch(error){
+            console.error("Error fetching posts by keyword: ", error);
+            return [];
+        }
+    },
+
     async updatePosts(posts) {
         try {
             const db = client.db(dbName);
