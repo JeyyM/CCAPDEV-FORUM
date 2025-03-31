@@ -140,9 +140,33 @@ $(document).ready(async function() {
             }
         }
     })
+    $(".comment").each(function(_, element){
+        let commentId = $(element).attr("id");
+        if (sessionData != null) {
+            let voteInfo = profile.commentVotes.find(likedComments => likedComments.commentId === commentId);
+            if (voteInfo) {
+                if (voteInfo.vote == 1) {
+                    $(element).find(".likeButton").addClass("clicked");
+                    let likeIcon = $(element).find(".bx-like");
+                    $(likeIcon).addClass("bxs-like");
+                    $(likeIcon).removeClass("bx-like");
+                }
+                else {
+                    $(element).find(".dislikeButton").addClass("clicked");
+                    let dislikeIcon = $(element).find(".bx-dislike");
+                    $(dislikeIcon).addClass("bxs-dislike");
+                    $(dislikeIcon).removeClass("bx-dislike");
+                }
+            }
+        }
+    });
 
     $(".likeButton").click(function() {
-        toggleVote($(this.parentNode.parentNode).attr("id"), 1, sessionData);
+        let parentElement = $(this).closest(".post, .comment");
+        let itemId = parentElement.attr("id");
+        let isPost = parentElement.hasClass("post");
+        toggleVote(itemId, 1, sessionData, isPost);
+        // toggleVote($(this.parentNode.parentNode).attr("id"), 1, sessionData);
 
         if (sessionData != null) {
             likePost(this);
@@ -150,7 +174,11 @@ $(document).ready(async function() {
     });
 
     $(".dislikeButton").click(function() {
-        toggleVote($(this.parentNode.parentNode).attr("id"), -1, sessionData);
+        let parentElement = $(this).closest(".post, .comment");
+        let itemId = parentElement.attr("id");
+        let isPost = parentElement.hasClass("post");
+        toggleVote(itemId, -1, sessionData, isPost);
+        // toggleVote($(this.parentNode.parentNode).attr("id"), -1, sessionData);
 
         if (sessionData != null) {
             dislikePost(this);
@@ -180,17 +208,18 @@ async function getSession() {
     }
 }
 
-async function toggleVote(postId, voteValue, sessionData) {
+async function toggleVote(itemId, voteValue, sessionData, isPost) {
     if (!sessionData) {
         alert("Not logged in");
         return;
     }
-
+    let path = isPost ? "/api/toggle-vote": "/api/toggle-comment-vote";
+    let data = isPost ? {userId: sessionData.id, postId: itemId, voteValue}: {userId: sessionData.id, commentId: itemId, voteValue};
     try {
-        const response = await fetch("/api/toggle-vote", {
+        const response = await fetch(path, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userId: sessionData.id, postId, voteValue })
+            body: JSON.stringify(data)
         });
 
         const success = await response.json();
