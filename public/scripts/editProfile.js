@@ -43,7 +43,7 @@ $(document).ready(async function() {
             const profileResponse = await fetch(`/api/get-user-by-name/${window.location.href.split("editProfile/")[1]}`);
             const profile = await profileResponse.json();
             
-            await updateUser(profile._id.toString(), $("#usernameInput").val(), profile.email, profile.password, $("#biographyBody").val(), profile.bannerImage, profile.profileImage);
+            await updateUser(profile._id.toString(), $("#usernameInput").val(), profile.email, profile.password, $("#biographyBody").val(), $("#bannerInput").val(), $("#profileInput").val());
 
             const updatedUser = await (await fetch(`/api/get-user-by-id/${sessionData.user.id}`)).json();
 

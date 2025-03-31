@@ -63,6 +63,17 @@
     margin-left: 5px;
 }
 
+#bannerInput, #profileInput {
+    background: none;
+    background-color: #fff;
+    font-size: 24px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 10px;
+    outline: none;
+    margin-bottom: 10px;
+}
+
 #usernameInput {
     background: none;
     background-color: #fff;

@@ -7,18 +7,24 @@
         <div class="floatingContainer">
             <div class="profilePicContainer">
                 <img src="{{profile.profileImage}}" class="profilePicture">
-                <i class='bx bx-image-add'></i>
+                {{!-- <i class='bx bx-image-add'></i> --}}
             </div>
-            <i class='bx bx-image-add'></i>
+            {{!-- <i class='bx bx-image-add'></i> --}}
         </div>
         <div class="inputContainer">
+            <span>Change Banner Image</span>
+            <input id="bannerInput" placeholder="New Banner Image" value="{{profile.bannerImage}}">
+            
+            <span>Change Profile Picture</span>
+            <input id="profileInput" placeholder="New Profile Picture" value="{{profile.profileImage}}">
+
             <span>Change Username</span>
             <input id="usernameInput" placeholder="New Username" value="{{profile.username}}">
             
             <span>Edit Biography</span>
             <textarea id="biographyBody" placeholder="Biography" rows="10">{{profile.bio}}</textarea>
             <div class="buttonHolder">
-                <button class="cancelPost" onclick="window.history.back()">Cancel</button>
+                <button class="cancelPost" onclick="window.location.href='/viewProfile/{{profile.username}}'">Cancel</button>
                 <button class="confirmPost" id="editProfile">Edit</button>
             </div>
         </div>
