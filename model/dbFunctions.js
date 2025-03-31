@@ -2376,15 +2376,27 @@ const mongo = {
         }
     },
 
-    async getPostsBySearch(keyword){
+    async getPostsBySearch(keyword, community){
         try{
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
-            const query = {
-                $or: [
-                    {title: {$regex: keyword, $options: 'i'}},
-                    {content: {$regex: keyword, $options: 'i'}}
-                ]
+            let query = {};
+            if(keyword){
+                query = {
+                    $or: [
+                        {title: {$regex: keyword, $options: 'i'}},
+                        {content: {$regex: keyword, $options: 'i'}}
+                    ]
+                }
+            }
+            if(community && community !== "*"){ //filter community
+                const forum = await this.getForumByName(community);
+                if(forum){
+                    query.forumId = new ObjectId(forum._id);
+                }
+                else{
+                    return [];
+                }
             }
             const posts = await postsCollection.aggregate([
                 {

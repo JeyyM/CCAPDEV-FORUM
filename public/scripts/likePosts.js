@@ -96,7 +96,7 @@ $(document).ready(async function() {
     }
 
     let communityFlag = false;
-    if (window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "viewProfile" || window.location.href.split("/")[3].includes("search")) {
+    if (window.location.href.split("/")[3] == "" || window.location.href.split("/")[3] == "viewProfile" || window.location.href.split("/")[3].includes("search") || window.location.href.split("/")[3].includes("community")) {
         communityFlag = true;
     }
 

@@ -37,24 +37,27 @@ router.post("/login", async (req, res) => {
 
 router.get("/search", async(req, res) => {
     try{
-        const keyword = req.query.keyword;
-        if(!keyword){
+        const keyword = req.query.search;
+        const community = req.query.community;
+        // console.log(keyword);
+        // console.log(community);
+        if(!keyword && !community){
             return res.status(404).json({ success: false, message: "Keyword not found" });
         }
-        const posts = await mongo.getPostsBySearch(keyword);
+        const posts = await mongo.getPostsBySearch(keyword, community);
         if(posts.length === 0){
-            return res.send(`<p>No results found for "${keyword}".</p>`);
+            return res.send(`<p>No results found for "${community ? `s/${community} ${keyword || ""}`: keyword || ""}".</p>`);
         }
         let user = null;  
         if(req.session.user){
-            // console.log("Session user exists:", req.session.user); // Debugging
+            // console.log("Session user exists:", req.session.user); //Debugging
             user =  await mongo.getUserById(req.session.user.id);
         }   
         // console.log("Posts data:", posts);    
         let renderedPosts = await Promise.all(
             posts.map((post) => {
                 return new Promise((resolve, reject) => {
-                    // console.log("Logged-in User:", req.session.user); // Debugging
+                    // console.log("Logged-in User:", req.session.user); //Debugging
                     res.render("partials/post", {post, user, showCommunity: true, layout: false}, (error, html) => {
                         if(error){
                             return reject(error);

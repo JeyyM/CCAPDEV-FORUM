@@ -4,20 +4,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchResult = document.getElementById('searchResult');
     async function search(){
         try{
-            const keyword = searchInput.value.trim();
-            if(!keyword){
+            const searchText = searchInput.value.trim();
+            if(!searchText){
                 // searchResult.innerHTML = `<p>Please enter a keyword.</p>`
                 return alert("Please enter a keyword.");
             }
+            let community = "";
+            let keyword = searchText;
+            if(searchText.startsWith("s/")){
+                const parts = searchText.split(" ");
+                community = parts[0].substring(2);
+                keyword = parts.slice(1).join(" ");
+                if(!community){ //if s/
+                    community = "*";
+                }
+            }
             const url = new URLSearchParams(window.location.search);
             const currentSearch = url.get("search");
-            if(!url.has("search") || currentSearch !== "keyword"){
-                const newUrl = `/?search=${encodeURIComponent(keyword)}`;
-                if(window.location.search !== `?search=${encodeURIComponent(keyword)}`){ //if there was a previous search
+            const currentCommunity = url.get("community");
+            const params = new URLSearchParams(); //new
+            if(keyword){
+                params.set("search", keyword);
+            }
+            if(community){
+                params.set("community", community);
+            }
+            const newUrl = `/?${params.toString()}`;
+            if((!currentSearch && keyword) || (currentSearch && currentSearch !== keyword) || (!currentCommunity && community) || (currentCommunity && currentCommunity !== community)){
+                if(window.location.search !== newUrl){ //if there was a previous search
                     window.location.href = newUrl;
                 }
             }
-            const response = await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`);
+            const response = await fetch(`/api/search?${params.toString()}`);
             const html = await response.text();
             searchResult.innerHTML = html;
         } catch(error){
@@ -34,8 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const url = new URLSearchParams(window.location.search);
     const keyword = url.get("search");
-    if(keyword){
-        searchInput.value = keyword;
+    const community = url.get("community");
+    if(keyword || community){
+        searchInput.value = community ? `s/${community} ${keyword || ""}`: keyword || "";
         search(); 
     }
 });
