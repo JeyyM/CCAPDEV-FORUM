@@ -1,4 +1,5 @@
 const { MongoClient, ObjectId } = require('mongodb');
+const argon2 = require('argon2');
 
 const uri = "mongodb://localhost:27017";
 const dbName = "forum";
@@ -216,7 +217,10 @@ const mongo = {
                         commentVotes: []
                     }
                 ];
-
+                for(let user of sampleUsers){
+                    user.password = await argon2.hash(user.password);
+                    // console.log("Encrypt pass: "+ user.password);
+                }
                 await usersCollection.insertMany(sampleUsers);
                 console.log("5 sample users inserted.");
             } else {
@@ -2064,7 +2068,8 @@ const mongo = {
                 votes: [],
                 commentVotes: []
             };
-
+            newUser.password = await argon2.hash(newUser.password); //hash password
+            // console.log("Encrypt pass: "+ newUser.password);
             const result = await userCollection.insertOne(newUser);
             return result.insertedId;
         } catch (error) {

@@ -19,6 +19,7 @@
     "start": "node app"
   },
   "dependencies": {
+    "argon2": "^0.41.1",
     "express": "^4.21.2",
     "express-handlebars": "^8.0.1",
     "express-session": "^1.18.1",

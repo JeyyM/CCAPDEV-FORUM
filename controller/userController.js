@@ -1,4 +1,5 @@
 const express = require('express');
+const argon2 = require('argon2');
 const router = express.Router();
 const mongo = require('../model/dbFunctions');
 
@@ -11,8 +12,9 @@ router.post("/login", async (req, res) => {
         if (!user) {
             return res.status(404).json({ success: false, message: "Email not found" });
         }
-
-        if (user.password !== password) {
+        let isMatch = await argon2.verify(user.password, password);
+        // console.log(isMatch ? "Login Success!": "Incorrect Password!");
+        if (!isMatch) {
             return res.status(401).json({ success: false, message: "Wrong password" });
         }
 
