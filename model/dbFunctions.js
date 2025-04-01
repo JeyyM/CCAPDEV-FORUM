@@ -1,7 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const argon2 = require('argon2');
 
-const uri = "mongodb://localhost:27017";
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017";
 const dbName = "forum";
 const forumsVar = "forums";
 const usersVar = "users"
@@ -14,7 +14,7 @@ const mongo = {
     async initializeDB() {
         try {
             await client.connect();
-            console.log("Connected to MongoDB");
+            console.log("Connected to Mongo Atlas");
 
             const db = client.db(dbName);
 

@@ -279,13 +279,14 @@ server.get("/about", function(req, resp) {
     })
 })
 
-const port = process.env.PORT || 3000;
-server.listen(port, function(){
-    console.log("Listening at port "+port);
-});
+// const port = process.env.PORT || 3000;
+// server.listen(port, function(){
+//     console.log("Listening at port "+port);
+// });
+//for vercel:
+module.exports = server;
 
 // For Updating Global Variables
-
 async function fetchCommunities() {
     communities = await mongo.getForums("name", 1, 99, 0);
 }
