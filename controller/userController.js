@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
         };
 
         if (rememberMe) {
-            req.session.cookie.maxAge = 60 * 60 * 1000;
+            req.session.cookie.maxAge = 3 * 7 * 24 * 60 * 60 * 1000;
         }
 
         res.json({ success: true, message: "Login successful", user });
