@@ -131,7 +131,7 @@ function postBuilder(param, poster, community, user) {
             let postSettings = $(`<div class="postSettings">
                                     <i class="bx bx-dots-horizontal-rounded" onclick="postSettings(event, this)"></i>
                                     <div class="floatingSettings hidden">
-                                        <button class="editPost" onclick="window.location.href='/editPost/${param._id.toString()}'"><i class="bx bx-edit-alt"></i>Edit</button> <!-- Fixed quote here -->
+                                        <button class="editPost" onclick="window.location.href='/editPost/${param._id.toString()}'"><i class="bx bx-edit-alt"></i>Edit</button>
                                         <button class="deletePost"><i class="bx bx-trash"></i>Delete</button>
                                     </div>
                                 </div>`);
@@ -151,7 +151,7 @@ function postBuilder(param, poster, community, user) {
                             <button class="likeButton"><i class="bx bx-like"></i></button>
                             <span class="voteValue">${param.voteValue}</span>
                             <button class="dislikeButton"><i class="bx bx-dislike"></i></button>
-                            <button class="commentButton" onclick="window.location.href='/viewPost/${param._id.toString()}'"><i class="bx bxs-comment"></i><span>${param.commentsCount}</span></button> <!-- Fixed quote here -->
+                            <button class="commentButton" onclick="window.location.href='/viewPost/${param._id.toString()}'"><i class="bx bxs-comment"></i><span>${param.commentsCount}</span></button>
                             <button class="share"><i class="bx bxs-share-alt"></i></button>
                             </div>`);
 

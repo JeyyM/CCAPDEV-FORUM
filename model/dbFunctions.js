@@ -1,6 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
+const argon2 = require('argon2');
 
-const uri = "mongodb://localhost:27017";
+const uri = process.env.MONGODB_URI || "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/";
 const dbName = "forum";
 const forumsVar = "forums";
 const usersVar = "users"
@@ -13,7 +14,7 @@ const mongo = {
     async initializeDB() {
         try {
             await client.connect();
-            console.log("Connected to MongoDB");
+            console.log("Connected to Mongo Atlas");
 
             const db = client.db(dbName);
 
@@ -216,7 +217,10 @@ const mongo = {
                         commentVotes: []
                     }
                 ];
-
+                for(let user of sampleUsers){
+                    user.password = await argon2.hash(user.password);
+                    // console.log("Encrypt pass: "+ user.password);
+                }
                 await usersCollection.insertMany(sampleUsers);
                 console.log("5 sample users inserted.");
             } else {
@@ -2064,7 +2068,8 @@ const mongo = {
                 votes: [],
                 commentVotes: []
             };
-
+            newUser.password = await argon2.hash(newUser.password); //hash password
+            // console.log("Encrypt pass: "+ newUser.password);
             const result = await userCollection.insertOne(newUser);
             return result.insertedId;
         } catch (error) {

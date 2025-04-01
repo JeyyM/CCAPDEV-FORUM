@@ -146,14 +146,14 @@ $(document).ready(async function() {
             let voteInfo = profile.commentVotes.find(likedComments => likedComments.commentId === commentId);
             if (voteInfo) {
                 if (voteInfo.vote == 1) {
-                    $(element).find(".likeButton").addClass("clicked");
-                    let likeIcon = $(element).find(".bx-like");
+                    $(element).find(".likeButton").first().addClass("clicked");
+                    let likeIcon = $(element).find(".bx-like").first();
                     $(likeIcon).addClass("bxs-like");
                     $(likeIcon).removeClass("bx-like");
                 }
                 else {
-                    $(element).find(".dislikeButton").addClass("clicked");
-                    let dislikeIcon = $(element).find(".bx-dislike");
+                    $(element).not(".comment").find(".dislikeButton").first().addClass("clicked");
+                    let dislikeIcon = $(element).find(".bx-dislike").first();
                     $(dislikeIcon).addClass("bxs-dislike");
                     $(dislikeIcon).removeClass("bx-dislike");
                 }

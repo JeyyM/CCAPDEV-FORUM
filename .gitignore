@@ -208,3 +208,4 @@ Gemfile.lock
 *.7z
 *.tgz
 
+.vercel

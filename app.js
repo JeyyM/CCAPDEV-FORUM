@@ -154,6 +154,7 @@ server.get("/viewPost/:postId", async function(req, resp){
     }
 
     const comments = await mongo.getCommentsByPostId(post._id);
+    console.log(comments);
 
     resp.render("viewPost",{
         layout: "index",
@@ -375,10 +376,12 @@ server.get("/about", async function(req, resp) {
     })
 })
 
-const port = process.env.PORT | 3000;
-server.listen(port, function(){
-    console.log("Listening at port "+port);
-});
+// const port = process.env.PORT || 3000;
+// server.listen(port, function(){
+//     console.log("Listening at port "+port);
+// });
+//for vercel:
+module.exports = server;
 
 // For Updating Global Variables
 server.post("/update/userLogin", function(req, resp){
