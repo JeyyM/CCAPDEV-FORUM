@@ -8,7 +8,7 @@
                     <span class="profileName">{{profile.username}}</span>
                 </div>
                 {{#if (isEqual profile.username user.username)}}
-                    <div class="profileOptions editProfile" onclick="window.location.href='/editProfile/{{profile.username}}'"><i class='bx bx-edit-alt'></i>Edit</div>
+                    <div class="profileOptions editProfile" onclick="window.location.href='/editProfile'"><i class='bx bx-edit-alt'></i>Edit</div>
                 {{else}}
                     {{#if followedUser}}
                     <div class="profileOptions following followed" id="followUser"><i class='bx bxs-bookmark'></i>Followed</div>

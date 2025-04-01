@@ -22,7 +22,6 @@ router.post("/login", async (req, res) => {
             email: user.email,
             // joinedForums: user.joinedForums,
             // following: user.joinedForums
-            
         };
 
         if (rememberMe) {

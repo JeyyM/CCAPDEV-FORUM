@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{{title}}</title>
+        <link rel="stylesheet" href="/styles/home.css">
+
+        <!-- Dependencies -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+        <script>
+            let currentSession = null;
+            let forumSkip = 0;
+            let userSkip = 0;
+            let postSkip = 0;
+            let groupSkip = 0;
+            let activitiesSkip = 0;
+
+            async function checkSession() {
+                try {
+                    const response = await fetch("/api/session");
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert(`Logged in as: ${result.user.username}`);
+                        console.log("Current session:", result);
+
+                        currentSession = result.user;
+                        return true
+                    } else {
+                        console.log("No current session");
+                        alert("No current session");
+                        return false
+                    }
+                } catch (error) {
+                    console.error("Error checking session:", error);
+                }
+            }
+            
+        </script>
+    </head>
+  <body>
+{{{body}}}
+  </body>
+</html>

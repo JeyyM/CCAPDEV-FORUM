@@ -2,7 +2,6 @@ $(document).ready(async function() {
     const sessionResponse = await fetch("/api/session");
     const sessionData = await sessionResponse.json();
     let hasSession = sessionData.success;
-
     
     async function updateUser(userId, newName, newEmail, newPass, newBio, newBannerImage, newProfileImage) {
         try {
@@ -40,7 +39,7 @@ $(document).ready(async function() {
                 console.error("Error fetching user: ", error);
             }
 
-            const profileResponse = await fetch(`/api/get-user-by-name/${window.location.href.split("editProfile/")[1]}`);
+            const profileResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
             const profile = await profileResponse.json();
             
             await updateUser(profile._id.toString(), $("#usernameInput").val(), profile.email, profile.password, $("#biographyBody").val(), $("#bannerInput").val(), $("#profileInput").val());
@@ -53,7 +52,7 @@ $(document).ready(async function() {
                 body: JSON.stringify({ user: updatedUser })
             });
 
-            window.location.href = window.location.href.split("editProfile/")[0] + "editProfile/" + $("#usernameInput").val();
+            window.location.href = "/editProfile";
         }
         else {
             alert("Not logged in");

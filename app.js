@@ -79,9 +79,9 @@ server.use("/api", commentController);
 server.use("/api", searchController);
 
 //////////////////////////////// Global Variables ///////////////////////////////////////////////
-let localUser = null;
-let communities;
-let myCommunities;
+// let localUser = null;
+// let communities;
+// let myCommunities;
 
 ///////////////////////// ROUTES //////////////////////////////
 
@@ -90,17 +90,32 @@ mongo.insertSampleForum();
 mongo.insertSampleUser();
 mongo.insertSamplePosts();
 
+server.get("/tester", async function(req, resp){
+    resp.render("tester",{
+        layout: "tester",
+        title: "Tester",
+    });
+});
+
 server.get("/", async function (req, resp) {
     let posts;
+    let currentUser;
+    let allCommunities = await mongo.getForums("name", 1, 99, 0);
 
-    await fetchCommunities();
-
-    if (localUser == null) {
-        posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
+    let followedCommunities = [];
+    
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = allCommunities.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
     }
 
-    else {
-        posts = await mongo.getPostsByForumIds(localUser.joinedForums, "new", 1, 10, 0);
+
+    if (currentUser == null) {
+        posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
+    } else {
+        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "new", 1, 10, 0);
     }
 
     resp.render("home",{
@@ -108,18 +123,35 @@ server.get("/", async function (req, resp) {
         title: "Home Page",
         pageStyle: "home",
         pageScripts: ["account", "sortPosts", "likePosts", "home", "search"],
-        user: localUser,
-        myCommunities: myCommunities,
-        communities: communities,
+        user: currentUser,
+        myCommunities: followedCommunities,
+        communities: allCommunities,
         posts: posts,
         showCommunity: true
     });
 });
 
 server.get("/viewPost/:postId", async function(req, resp){
+    let currentUser;
+    let allCommunities = await mongo.getForums("name", 1, 99, 0);
+    let followedCommunities = [];
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = allCommunities.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
+
     const postId = req.params.postId;
-    const posts = await mongo.getPosts();
+    let posts = await mongo.getPosts();
     const post = posts.find(p => p._id.toString() === postId.toString());
+
+    if (currentUser == null) {
+        posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
+    } else {
+        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "new", 1, 10, 0);
+    }
 
     const comments = await mongo.getCommentsByPostId(post._id);
 
@@ -128,15 +160,26 @@ server.get("/viewPost/:postId", async function(req, resp){
         title: "View Post Page",
         pageStyle: "viewpost",
         pageScripts: ["account", "likePosts", "viewPost", "textarea", "search"],
-        user: localUser,
-        myCommunities: myCommunities,
-        communities: communities,
+        user: currentUser,
+        myCommunities: followedCommunities,
+        communities: allCommunities,
         post: post,
         comments: comments
     });
 });
 
 server.get("/viewCommunity/:communityName", async function(req, resp){
+    let currentUser;
+    let allCommunities = await mongo.getForums("name", 1, 99, 0);
+    let followedCommunities = [];
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = allCommunities.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
+
     const communityName = req.params.communityName;
 
     const communityList = await mongo.getForums("createdAt", -1, 99, 0);
@@ -155,8 +198,8 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
 
     let joinedCommunity = null;
 
-    if (localUser) {
-        joinedCommunity = localUser.joinedForums.some(c => c === communityDB._id.toString());
+    if (currentUser) {
+        joinedCommunity = currentUser.joinedForums.some(c => c === communityDB._id.toString());
     }
 
     resp.render("viewCommunity",{
@@ -164,9 +207,9 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
         title: "View Community Page",
         pageStyle: "viewcommunity",
         pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewCommunity", "search"],
-        user: localUser,
-        myCommunities: myCommunities,
-        communities: communities,
+        user: currentUser,
+        myCommunities: followedCommunities,
+        communities: allCommunities,
         community: community,
         joinedCommunity: joinedCommunity,
         posts: postList
@@ -174,6 +217,17 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
 });
 
 server.get("/viewProfile/:profileName", async function(req, resp){
+    let currentUser;
+    let allCommunities = await mongo.getForums("name", 1, 99, 0);
+    let followedCommunities = [];
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = allCommunities.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
+
     const profileName = req.params.profileName;
 
     const users = await mongo.getUsers("createdAt", -1, 99, 0);
@@ -192,8 +246,8 @@ server.get("/viewProfile/:profileName", async function(req, resp){
 
     let followedUser = null;
 
-    if (localUser) {
-        followedUser = localUser.following.some(c => c === profileDB._id.toString());
+    if (currentUser) {
+        followedUser = currentUser.following.some(c => c === profileDB._id.toString());
     }
 
     resp.render("viewProfile",{
@@ -201,9 +255,9 @@ server.get("/viewProfile/:profileName", async function(req, resp){
         title: "View Profile Page",
         pageStyle: "viewprofile",
         pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewProfile", "search"],
-        user: localUser,
-        myCommunities: myCommunities,
-        communities: communities,
+        user: currentUser,
+        myCommunities: followedCommunities,
+        communities: allCommunities,
         profile: profile,
         followedUser: followedUser,
         posts: postList,
@@ -212,6 +266,9 @@ server.get("/viewProfile/:profileName", async function(req, resp){
 });
 
 server.get("/editPost/:postId", async function(req, resp){
+    let currentUser;
+    let followedCommunities = [];
+
     const postId = req.params.postId;
     const posts = await mongo.getPosts();
     const post = posts.find(p => p._id.toString() === postId.toString());
@@ -219,62 +276,102 @@ server.get("/editPost/:postId", async function(req, resp){
     const communityList = await mongo.getForums("name", 1, 99, 0);
     const community = communityList.find(c => c._id.toString() === post.forumId.toString());
 
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = communityList.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }    
+
     resp.render("editPost",{
         layout: "index",
         title: "Edit Post Page",
         pageStyle: "createpost",
         pageScripts: ["account", "likePosts", "sortPosts", "editPost", "textarea", "search"],
-        myCommunities: myCommunities,
-        communities: communities,
-        user: localUser,
+        myCommunities: followedCommunities,
+        communities: communityList,
+        user: currentUser,
         post: post,
         community: community
     });
 });
 
-server.get("/editProfile/:profileName", async function(req, resp){
-    const profileName = req.params.profileName;
-    const profile = await mongo.getUserByName(profileName);
+server.get("/editProfile", async function(req, resp){
+    let currentUser;
+    let allCommunities = await mongo.getForums("name", 1, 99, 0);
+    let followedCommunities = [];
+    let alertMessage;
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = allCommunities.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    } else {
+        alertMessage = "You are currently not logged in, returning home.";
+    }
 
     resp.render("editProfile",{
         layout: "index",
         title: "Edit Profile Page",
         pageStyle: "editprofile",
         pageScripts: ["account", "likePosts", "sortPosts", "editProfile", "textarea", "search"],
-        myCommunities: myCommunities,
-        communities: communities,
-        user: localUser,
-        profile: profile
+        myCommunities: followedCommunities,
+        communities: allCommunities,
+        user: currentUser,
+        profile: currentUser,
+        alert: alertMessage
     });
 });
 
 server.get("/createPost/:communityName?", async function(req, resp){
+    let currentUser;
+    let followedCommunities = [];
+
     const communityName = req.params.communityName;
 
     const communityList = await mongo.getForums("name", 1, 99, 0);
     const community = communityList.find(c => c.name === communityName);
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = communityList.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
 
     resp.render("createPost",{
         layout: "index",
         title: "Create Post Page",
         pageStyle: "createpost",
         pageScripts: ["account", "sortPosts", "likePosts", "createPost", "textarea", "search"],
-        myCommunities: myCommunities,
+        myCommunities: followedCommunities,
         communities: communityList,
-        user: localUser,
+        user: currentUser,
         community: community
     });
 });
 
-server.get("/about", function(req, resp) {
+server.get("/about", async function(req, resp) {
+    let currentUser;
+    let allCommunities = await mongo.getForums("name", 1, 99, 0);
+    let followedCommunities = [];
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = allCommunities.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
+
     resp.render("about", {
         layout: "index",
         title: "About Page",
         pageStyle: "about",
         pageScripts: ["account"],
-        myCommunities: myCommunities,
-        communities: communities,
-        user: localUser
+        myCommunities: followedCommunities,
+        communities: allCommunities,
+        user: currentUser
     })
 })
 
@@ -284,35 +381,21 @@ server.listen(port, function(){
 });
 
 // For Updating Global Variables
-
-async function fetchCommunities() {
-    communities = await mongo.getForums("name", 1, 99, 0);
-}
-
-async function fetchMyCommunities() {
-    const joinedCommunities = [];
-
-    localUser.joinedForums.forEach(function(community) {
-        joinedCommunities.push(communities.find(c => c._id.toString() === community));
-    });
-
-    myCommunities = joinedCommunities.reverse();
-}
-
 server.post("/update/userLogin", function(req, resp){
-    localUser = req.body.user;
-    fetchMyCommunities();
+    // localUser = req.body.user;
+
+    // fetchMyCommunities();
     resp.json({ success: true, message: "User login updated" });
 })
 
 server.post("/update/userGeneral", function(req, resp){
-    localUser = req.body.user;
-    fetchMyCommunities();
+    // localUser = req.body.user;
+    // fetchMyCommunities();
     resp.json({ success: true, message: "User updated" });
 });
 
 server.post("/update/userLogout", function(req, resp){
-    localUser = null;
+    // localUser = null;
     resp.json({ success: true, message: "User logout updated" });
 })
 

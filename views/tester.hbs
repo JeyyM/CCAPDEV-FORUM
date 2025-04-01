@@ -1,0 +1,1905 @@
+<body>
+    <h1>Tester NOTE ALL FETCHES HAVE BEEN UPDATED</h1>
+    <h1>When upvotes, following, and joining still works but the UI just doesn't update</h1>
+    <h1>So just update it on your implementation, like modify the css, don't reload</h1>
+
+    <div style="display: flex;">
+        <h2>Accounts</h2>
+        <button id="logoutButton">Log Out</button>
+        
+    </div>
+    <form id="accountForm">
+        <input type="email" id="email" placeholder="Enter email" required>
+        <input type="password" id="password" placeholder="Enter password" required>
+        <button type="submit">Login</button>
+        <label for="rememberMe">Remember Me</label>
+        <input type="checkbox" id="rememberMe">
+
+        <div style="display: flex;">
+            <h3 id="userDisplay">Not logged</h3>
+        </div>
+    </form>
+
+    <div style="display: flex;">
+        <h3>Sort Forums By: </h3>
+        <select id="forumSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="hot">Hot</option>
+            <option value="membersCount">Members</option>
+            <option value="postsCount">Posts</option>
+            <option value="name">Alphabetical</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="forumOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="forumLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <h2>Forums</h2>
+    <div style="display: flex;">
+        <button onclick="fetchForums()">Refresh</button>
+        <input type="text" id="forumName" placeholder="Forum Name" required>
+        <input type="text" id="forumDescription" placeholder="Description" required>
+        <input type="text" id="bannerImage" placeholder="Banner Image" required>
+        <input type="text" id="forumImage" placeholder="Forum Image" required>
+        <button onclick="addForum()">Add forum</button>
+ 
+    </div>
+    <form id="forumsForm">
+        <table id="forumsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Banner Image</th>
+                    <th>Forum Image</th>
+                    <th>Members</th>
+                    <th>Posts</th>
+                    <th>Dates</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="forumsList">
+
+            </tbody>
+            <button id="forumBatchButton" type="button">Get Next Batch</button>
+        </table>
+        <button type="submit">Update All</button>
+    </form>
+
+    <div style="display: flex;">
+        <h3>Sort Users By: </h3>
+        <select id="userSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="followersCount">Followers</option>
+            <option value="commentsCount">Comments</option>
+            <option value="username">Alphabetical</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="userOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="userLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <h2>Users</h2>
+    <div style="display: flex;">
+        <button onclick="fetchUsers()">Refresh</button>
+        <input type="text" id="userName" placeholder="User Name" required>
+        <input type="text" id="userBio" placeholder="Bio" required>
+        <input type="email" id="userEmail" placeholder="Email" required>
+        <input type="text" id="userPassword" placeholder="Password" required>
+        <input type="text" id="userBanner" placeholder="User Banner" required>
+        <input type="text" id="userImage" placeholder="User Image" required>
+        <button onclick="addUser()">Add User</button>
+ 
+    </div>
+    <form id="usersForm">
+        <table id="usersTable" border="1">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Bio</th>
+                    <th>User Banner</th>
+                    <th>User Image</th>
+                    <th>Dates</th>
+                    <th>Joined Forums</th>
+                    <th>Followers</th>
+                    <th>Following</th>
+                    <th>Posts</th>
+                    <th>Comments</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="usersList">
+
+            </tbody>
+        </table>
+        <button id="userBatchButton" type="button">Get Next Batch</button>
+        <button type="submit">Update All</button>
+    </form>
+
+    <h2>Posts (Keep Getting Next Batch to Get More)</h2>
+
+    <form id="postForm">
+        <label for="titleInput">Create Post: </label>
+        <input type="text" id="titleInput" placeholder="Post Title">
+        <input type="text" id="contentInput" placeholder="Post Content">
+        <button type="button" onclick="addPost()">Add Post</button>
+    </form>
+
+    <div style="display: flex;">
+        <h3>Sort Posts By: </h3>
+        <select id="postSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="title">Alphabetical</option>
+            <option value="hot">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="postOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="postLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <button id="postBatchButton" type="button">Get Next Batch</button>
+
+    <label for="forumDropdown">Select a Forum:</label>
+    <select id="forumDropdown" name="forumDropdown">
+        <option value="">Select a Forum</option> 
+    </select>
+
+    <form id="postSection" style="display: flex; flex-direction: column; width: 60%;">
+    </form>
+
+    <br><br><br>
+
+     <h2>Posts By ID Group</h2>
+
+    <div style="display: flex;">
+        <h3>Sort Posts By: </h3>
+        <select id="groupSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="title">Alphabetical</option>
+            <option value="hot">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="groupOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+        <h3>Limit: </h3>
+        <input id="groupLimitInput" value="3" placeholder="Limit" readonly>
+    </div>
+
+    <button id="getPostByJoined" type="button">Get Posts</button>
+    <button id="groupBatchButton" type="button">Get Next Batch</button>
+
+    <form id="groupSection" style="display: flex; flex-direction: column; width: 60%;">
+    </form>
+
+    <br><br><br>
+
+    <div style="display: flex;">
+        <h3>See user activities Limit:</h3>
+        <input id="userActivityId" placeholder="user id" value="67c792cfb3ba6d9c76f699d5">
+        <input id="activitiesLimitInput" value="3" placeholder="Limit" readonly>
+
+            <div style="display: flex;">
+        <h3>Sort Posts By: </h3>
+        <select id="activitiesSortByDropdown">
+            <option value="updatedAt">New</option>
+            <option value="voteValue">Votes</option>
+            <option value="alphabetical">Alphabetical</option>
+            <option value="hot">Hot</option>
+        </select>
+
+        <h3>Order: </h3>
+        <select id="activitiesOrderDropdown">
+            <option value="-1">Descending</option>
+            <option value="1">Ascending</option>
+        </select>
+
+    </div>
+    </div>
+    <button type="button" id="getActivity">Get User Activity</button>
+    <button id="activityBatchButton" type="button">Get Next Batch</button>
+
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <script>
+        ///// LOGIN CHECKER /////
+        // LOOK AT tester.hbs in layouts for currentSession data
+        const sessionDisplay = document.getElementById("userDisplay");
+        // To check if logged in
+        let isLoggedIn;
+        window.addEventListener("load", async () => {
+            isLoggedIn = await checkSession();
+            console.log("Session active: ", isLoggedIn);
+
+            if (isLoggedIn) {
+                sessionDisplay.textContent = `Logged-in as: ${currentSession.username}`;
+            }
+        });
+
+        ///////////////////// FORUMS ///////////////////////
+        async function fetchForums(skip = 0, appending = false, updating = false) {
+            try {
+                const sortBy = document.getElementById("forumSortByDropdown").value;
+                const order = parseInt(document.getElementById("forumOrderDropdown").value);
+                const limit = parseInt(document.getElementById("forumLimitInput").value);
+
+                const response = await fetch(`/api/get-forums?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+                const forums = await response.json();
+                const tbody = document.getElementById("forumsList");
+                const dropdown = document.getElementById("forumDropdown");
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
+                let currentUser;
+
+                if (hasSession) { 
+                    try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
+                        currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
+
+                const baseOption = document.createElement("option");
+                baseOption.value = ""
+                baseOption.textContent = "Select a Forum"
+
+                dropdown.appendChild(baseOption);
+
+
+                if (!appending && !updating) {
+                    while (tbody.firstChild) {
+                        tbody.removeChild(tbody.firstChild);
+                    }
+
+                    while (dropdown.hasChildNodes()) {
+                        dropdown.removeChild(dropdown.firstChild);
+                    }
+
+                    forumSkip = 0;
+                }
+
+                forums.forEach(forum => {
+                    if (!updating) {
+                        const row = createForumRow(forum, hasSession, currentUser, dropdown);
+                        tbody.appendChild(row);
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error fetching forums:", error);
+            }
+        }
+
+        function createForumRow(forum, hasSession, currentUser, dropdown) {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = `name_${forum._id}`;
+            nameInput.value = forum.name;
+            nameInput.required = true;
+            nameCell.appendChild(nameInput);
+
+            const descCell = document.createElement("td");
+            const descInput = document.createElement("input");
+            descInput.type = "text";
+            descInput.name = `description_${forum._id}`;
+            descInput.value = forum.description;
+            descInput.required = true;
+            descCell.appendChild(descInput);
+
+            const bannerCell = document.createElement("td");
+            const bannerInput = document.createElement("input");
+            bannerInput.type = "text";
+            bannerInput.name = `bannerImage_${forum._id}`;
+            bannerInput.value = forum.bannerImage;
+            bannerInput.required = true;
+            bannerCell.appendChild(bannerInput);
+
+            const forumImageCell = document.createElement("td");
+            const forumImageInput = document.createElement("input");
+            forumImageInput.type = "text";
+            forumImageInput.name = `forumImage_${forum._id}`;
+            forumImageInput.value = forum.forumImage;
+            forumImageInput.required = true;
+            forumImageCell.appendChild(forumImageInput);
+
+            const membersCell = document.createElement("td");
+            membersCell.textContent = forum.membersCount;
+
+            const postsCell = document.createElement("td");
+            postsCell.textContent = forum.postsCount;
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = `Created: ${new Date(forum.createdAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })} | Updated: ${new Date(forum.updatedAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })}`;
+
+            const actionsCell = document.createElement("td");
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => deleteForum(forum._id);
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.textContent = "Update One";
+            editButton.onclick = () => updateForum(forum._id, nameInput.value, descInput.value, bannerInput.value, forumImageInput.value);
+            
+            const joinButton = document.createElement("button");
+            joinButton.type = "button";
+            joinButton.textContent = "Join Forum";
+
+            const adminText = document.createElement("p");
+            adminText.textContent = "ADMIN"
+
+            if (hasSession){
+                if (currentUser.joinedForums.includes(forum._id)){
+                    joinButton.textContent = "Leave Forum";
+                }
+            }
+
+            joinButton.onclick = async () => {
+                if (hasSession){
+                    try {
+                        const response = await fetch("/api/toggle-forum-join", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId: currentUser._id, forumId: forum._id })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            console.log("Join status changed: ", result.presentStatus);
+
+                            fetchForums();
+                            fetchUsers();
+
+                        } else {
+                            alert(result.message);
+                        }
+                    } catch (error) {
+                        console.error("Error toggling forum join: ", error);
+                    }
+
+                } else {
+                    alert("Not logged in");
+                }
+            };
+
+            actionsCell.appendChild(deleteButton);
+            actionsCell.appendChild(editButton);
+            actionsCell.appendChild(joinButton);
+
+            if (currentUser && forum.admins.includes(currentUser._id)){
+                actionsCell.appendChild(adminText);
+            }
+
+            if (hasSession) {
+                if (forum.admins.includes(currentUser._id)) {
+                    actionsCell.appendChild(adminText);       
+                }
+            }
+            
+            row.appendChild(nameCell);
+            row.appendChild(descCell);
+            row.appendChild(bannerCell);
+            row.appendChild(forumImageCell);
+            row.appendChild(membersCell);
+            row.appendChild(postsCell);
+            row.appendChild(dateCell);
+            row.appendChild(actionsCell);
+
+
+            /////// Dropdown Options /////
+            const option = document.createElement("option");
+            option.value = forum._id;
+            option.textContent = forum.name;
+            dropdown.appendChild(option);
+            
+            return row;
+        }
+
+        async function updateAllForums(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const updatedForums = [];
+
+            for (let entry of formData.entries()) {
+                const [key, value] = entry;
+                const [field, id] = key.split("_");
+
+                let forum = updatedForums.find(f => f._id === id);
+                if (!forum) {
+                    forum = { _id: id, updatedAt: new Date() };
+                    updatedForums.push(forum);
+                }
+                forum[field] = value;
+            }
+
+            try {
+                const response = await fetch("/api/update-forums", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ forums: updatedForums })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchForums(0, false, true);
+            } catch (error) {
+                console.error("Error updating forums: ", error);
+            }
+        }
+
+        document.getElementById("forumsForm").addEventListener("submit", updateAllForums);
+
+        async function updateForum(forumId, newName, newDescription, newBannerImage, newForumImage) {
+            try {
+                const response = await fetch(`/api/update-forum/${forumId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: newName,
+                        description: newDescription,
+                        bannerImage: newBannerImage,
+                        forumImage: newForumImage,
+                        updatedAt: new Date()
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchForums(0, false, true); 
+            } catch (error) {
+                console.error("Error updating forum: ", error);
+            }
+        }
+
+        async function addForum() {
+            const name = document.getElementById("forumName").value.trim();
+            const description = document.getElementById("forumDescription").value.trim();
+            const bannerImage = document.getElementById("bannerImage").value.trim();
+            const forumImage = document.getElementById("forumImage").value.trim();
+
+            if (!currentSession) {
+                alert("Can't make forum if not logged in");
+                return;
+            }
+
+            if (!name || !description || !bannerImage || !forumImage) {
+                alert("Missing fields");
+                return;
+            }
+
+            const newForum = {
+                name,
+                description,
+                bannerImage,
+                forumImage,
+                membersCount: 0,
+                postsCount: 0,
+                admins: [currentSession.id],
+                bannedUsers: []
+            };
+
+            try {
+                const response = await fetch("/api/add-forum", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newForum)
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchForums();
+
+                document.getElementById("forumName").value = "";
+                document.getElementById("forumDescription").value = "";
+                document.getElementById("bannerImage").value = "";
+                document.getElementById("forumImage").value = "";
+            } catch (error) {
+                console.error("Error adding forum: ", error);
+            }
+        }
+
+
+        async function deleteForum(forumId) {
+            if (confirm("Are you sure you want to delete this forum?")) {
+                try {
+                    const response = await fetch(`/api/delete-forum/${forumId}`, { method: "DELETE" });
+                    const result = await response.json();
+
+                    alert(result.message);
+                    fetchForums();
+                } catch (error) {
+                    console.error("Error deleting forum: ", error);
+                }
+            }
+        }
+
+        //////////////////// USERS //////////////////
+
+        async function fetchUsers(skip = 0, appending = false, updating = false) {
+            try {
+                const sortBy = document.getElementById("userSortByDropdown").value;
+                const order = parseInt(document.getElementById("userOrderDropdown").value);
+                const limit = parseInt(document.getElementById("userLimitInput").value);
+
+                const response = await fetch(`/api/get-users?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+                const users = await response.json();
+
+                const tbody = document.getElementById("usersList");
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
+                let currentUser;
+
+                if (hasSession) { 
+                    try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
+                        currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
+
+                if (!appending && !updating) {
+                    while (tbody.firstChild) {
+                        tbody.removeChild(tbody.firstChild);
+                    }
+
+                    userSkip = 0;
+                }
+
+                users.forEach(user => {
+                    if (!updating) {
+                        const row = createUserRow(user, hasSession, currentUser);
+                        tbody.appendChild(row);
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error fetching users: ", error);
+            }
+        }
+
+        function createUserRow(user, hasSession, currentUser) {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.name = `username_${user._id}`;
+            nameInput.value = user.username;
+            nameInput.required = true;
+            nameCell.appendChild(nameInput);
+
+            const emailCell = document.createElement("td");
+            const emailInput = document.createElement("input");
+            emailInput.type = "email";
+            emailInput.name = `email_${user._id}`;
+            emailInput.value = user.email;
+            emailInput.required = true;
+            emailCell.appendChild(emailInput);
+
+            const passCell = document.createElement("td");
+            const passInput = document.createElement("input");
+            passInput.type = "text";
+            passInput.name = `password_${user._id}`;
+            passInput.value = user.password;
+            passInput.required = true;
+            passCell.appendChild(passInput);
+
+            const bioCell = document.createElement("td");
+            const bioInput = document.createElement("input");
+            bioInput.type = "text";
+            bioInput.name = `bio_${user._id}`;
+            bioInput.value = user.bio;
+            bioInput.required = true;
+            bioCell.appendChild(bioInput);
+
+            const bannerCell = document.createElement("td");
+            const bannerInput = document.createElement("input");
+            bannerInput.type = "text";
+            bannerInput.name = `bannerImage_${user._id}`;
+            bannerInput.value = user.bannerImage;
+            bannerInput.required = true;
+            bannerCell.appendChild(bannerInput);
+
+            const userImageCell = document.createElement("td");
+            const userImageInput = document.createElement("input");
+            userImageInput.type = "text";
+            userImageInput.name = `profileImage_${user._id}`;
+            userImageInput.value = user.profileImage;
+            userImageInput.required = true;
+            userImageCell.appendChild(userImageInput);
+
+            const joinedCell = document.createElement("td");
+            if (user.joinedForums.length > 0) {
+                const list = document.createElement("ul");
+                user.joinedForums.forEach(forum => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = forum;
+                    list.appendChild(listItem);
+                });
+                joinedCell.appendChild(list);
+            } else {
+                joinedCell.textContent = "None";
+            }
+
+            const followersCell = document.createElement("td");
+            followersCell.textContent = user.followersCount;
+
+            const followingCell = document.createElement("td");
+            if (user.following.length > 0) {
+                const list = document.createElement("ul");
+                user.following.forEach(followed => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = followed;
+                    list.appendChild(listItem);
+                });
+                followingCell.appendChild(list);
+            } else {
+                followingCell.textContent = "None";
+            }
+
+            const postsCell = document.createElement("td");
+            postsCell.textContent = user.postsCount;
+
+            const commentsCell = document.createElement("td");
+            commentsCell.textContent = user.commentsCount;
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = `Created: ${new Date(user.createdAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })} | Updated: ${new Date(user.updatedAt).toLocaleString('en-US', {
+                month: 'short',
+                day: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            })}`;
+
+            const actionsCell = document.createElement("td");
+
+            const deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = () => {deleteUser(user._id)};
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.textContent = "Update User";
+            editButton.onclick = () => { updateUser(
+                user._id,
+                nameInput.value,
+                emailInput.value,
+                passInput.value,
+                bioInput.value,
+                bannerInput.value,
+                userImageInput.value
+            )};
+
+            const followButton = document.createElement("button");
+            followButton.type = "button";
+            followButton.textContent = "Follow";
+
+            const selfText = document.createElement("p");
+            selfText.textContent = "SELF"
+
+            if (hasSession) {
+                if (currentUser.following.includes(user._id)) {
+                    followButton.textContent = "Unfollow";
+                }
+            }
+
+            followButton.onclick = async () => {
+                if (hasSession) {
+                    try {
+                        const response = await fetch("/api/toggle-user-follow", {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ userId: currentUser._id, targetId: user._id })
+                        });
+
+                        const result = await response.json();
+
+                        if (result.success) {
+                            console.log("Join status changed: ", result.presentStatus);
+
+                            fetchForums();
+                            fetchUsers(0, false, true);
+
+                        } else {
+                            alert(result.message);
+                        }
+                    } catch (error) {
+                        console.error("Error toggling user follow: ", error);
+                    }
+
+                } else {
+                    alert("Not logged in");
+                }
+            };
+
+            actionsCell.appendChild(deleteButton);
+            actionsCell.appendChild(editButton);
+            actionsCell.appendChild(followButton);
+
+            if (currentSession !== null && currentSession.id === user._id ) {
+                actionsCell.appendChild(selfText);
+            }
+
+            row.appendChild(nameCell);
+            row.appendChild(emailCell);
+            row.appendChild(passCell);
+            row.appendChild(bioCell);
+            row.appendChild(bannerCell);
+            row.appendChild(userImageCell);
+            row.appendChild(dateCell);
+            row.appendChild(joinedCell);
+            row.appendChild(followersCell);
+            row.appendChild(followingCell);
+            row.appendChild(postsCell);
+            row.appendChild(commentsCell);
+            row.appendChild(actionsCell);
+
+            return row;
+        }
+
+        async function updateAllUsers(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const updatedUsers = [];
+
+            for (let entry of formData.entries()) {
+                const [key, value] = entry;
+                const [field, id] = key.split("_");
+
+                let user = updatedUsers.find(u => u._id === id);
+                if (!user) {
+                    user = { _id: id, updatedAt: new Date() };
+                    updatedUsers.push(user);
+                }
+                user[field] = value;
+            }
+
+            try {
+                const response = await fetch("/api/update-users", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ users: updatedUsers })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchUsers(0, false, true); 
+            } catch (error) {
+                console.error("Error updating users: ", error);
+            }
+        }
+
+        document.getElementById("usersForm").addEventListener("submit", updateAllUsers);
+
+        async function updateUser(userId, newName, newEmail, newPass, newBio, newBannerImage, newProfileImage) {
+            try {
+                const response = await fetch(`/api/update-user/${userId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: newName,
+                        email: newEmail,
+                        password: newPass,
+                        bio: newBio,
+                        bannerImage: newBannerImage,
+                        profileImage: newProfileImage,
+                        updatedAt: new Date()
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchUsers(0, false, true);
+            } catch (error) {
+                console.error("Error updating forum: ", error);
+            }
+        }
+
+        async function addUser() {
+            const username = document.getElementById("userName").value.trim();
+            const bio = document.getElementById("userBio").value.trim();
+            const email = document.getElementById("userEmail").value.trim();
+            const password = document.getElementById("userPassword").value.trim();
+            const userBanner = document.getElementById("userBanner").value.trim();
+            const userImage = document.getElementById("userImage").value.trim();
+
+            if (!username || !bio || !email || !password || !userBanner || !userImage ) {
+                alert("Missing fields");
+                return;
+            }
+
+            const newProfile = {
+                username,
+                email,
+                bio,
+                password,
+                bannerImage: userBanner,
+                profileImage: userImage,
+                joinedForums: [],
+                followers: 0,
+                following: []
+            };
+
+            try {
+                const response = await fetch("/api/add-user", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newProfile)
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchUsers();
+
+                document.getElementById("userName").value = "";
+                document.getElementById("userEmail").value = "";
+                document.getElementById("userBio").value = "";
+                document.getElementById("userPassword").value = "";
+                document.getElementById("userBanner").value = "";
+                document.getElementById("userImage").value = "";
+            } catch (error) {
+                console.error("Error adding user: ", error);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (confirm("Are you sure you want to delete this user?")) {
+                try {
+                    const response = await fetch(`/api/delete-user/${userId}`, { method: "DELETE" });
+                    const result = await response.json();
+
+                    alert(result.message);
+                    fetchUsers();
+                } catch (error) {
+                    console.error("Error deleting user: ", error);
+                }
+            }
+        }
+
+        /////////////////// ACCOUNTS ///////////////////////////////////////
+
+        document.getElementById("accountForm").addEventListener("submit", async function login(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const rememberMe = document.getElementById("rememberMe").checked;
+
+            if (!email || !password) {
+                alert("Missing fields");
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password, rememberMe })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    alert(result.message);
+                } else {
+                    alert("Login successful");
+                    location.reload();
+                    console.log("User: ", result.user);
+                }
+            } catch (error) {
+                console.error("Error logging in: ", error);
+            }
+        });
+
+
+        async function logout() {
+
+            if (currentSession === null) {
+                alert("Not logged in the first place");
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/logout", { method: "POST" });
+                const result = await response.json();
+
+                if (result.success) {
+                    alert(result.message);
+                    location.reload(); 
+                }
+            } catch (error) {
+                console.error("Error logging out: ", error);
+            }
+        }
+
+        document.getElementById("logoutButton").addEventListener("click", logout);
+
+        /////////////////// POSTS ///////////////////////////////////////
+        async function fetchPostsByForum(forumId, skip = 0, appending = false, updating = false) {
+            try {
+                const sortBy = document.getElementById("postSortByDropdown").value;
+                const order = parseInt(document.getElementById("postOrderDropdown").value);
+                const limit = parseInt(document.getElementById("postLimitInput").value);
+
+                const postsResponse = await fetch(`/api/get-posts-by-forum/${forumId}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+                const posts = await postsResponse.json();
+
+                const forumResponse = await fetch(`/api/get-forum-by-id/${forumId}`);
+                const forum = await forumResponse.json();
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+
+                {{!-- console.log("Current Session: ", sessionData); --}}
+
+                let currentUser;
+
+                if (hasSession) { 
+                    try {
+                        {{!-- console.log("Fetching user with ID: ", sessionData.user.id); --}}
+
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+
+                        currentUser = await userResponse.json();
+                        {{!-- console.log("Fetched User: ", currentUser); --}}
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
+
+                {{!-- console.log("Fetched posts: ", posts);
+                console.log("Current forum: ", forum); --}}
+
+                const postSection = document.getElementById("postSection");
+
+                if (!appending && !updating) {
+                    Array.from(postSection.children).forEach(child => {
+                        if (!child.matches("button")) {
+                            child.remove();
+                        }
+                    });
+
+                    postSkip = 0;
+                }
+
+                for (const post of posts) {
+                    if (!updating) { 
+                        const postElement = await createPostElement(post, forum, currentUser, sessionData);
+                        postSection.appendChild(postElement);
+                    }
+                };
+
+            } catch (error) {
+                console.error("Error fetching posts: ", error);
+            }
+        }
+        
+        async function fetchPostsByForumIds(forumIds, skip = 0, appending = false, updating = false) { 
+            try {
+                console.log("fetchPostsByForumIds");
+
+
+                const sortBy = document.getElementById("groupSortByDropdown").value;
+                const order = parseInt(document.getElementById("groupOrderDropdown").value);
+                const limit = parseInt(document.getElementById("groupLimitInput").value);
+                skip = parseInt(skip) || 0;  
+
+                console.log("updating: ", sortBy, order, limit, skip, "WTF");
+
+                const forumParam = forumIds.length > 0 ? forumIds.join(",") : "all";
+                const postsResponse = await fetch(`/api/get-posts-by-forums/${forumParam}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+
+                const posts = await postsResponse.json();
+
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let hasSession = sessionData.success;
+                let currentUser = null;
+
+                if (hasSession) { 
+                    try {
+                        const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+                        currentUser = await userResponse.json();
+                    } catch (error) {
+                        console.error("Error fetching user: ", error);
+                    }
+                } else {
+                    console.log("No session");
+                }
+
+                const groupSection = document.getElementById("groupSection");
+
+                if (!appending && !updating) {
+                    Array.from(groupSection.children).forEach(child => {
+                        if (!child.matches("button")) {
+                            child.remove();
+                        }
+                    });
+
+                    groupSkip = 0;
+                }
+
+                console.log("HERE");
+
+                console.log(updating);
+
+                for (const post of posts) {
+                    if (!updating) { 
+                        
+                        const forumResponse = await fetch(`/api/get-forum-by-id/${post.forumId}`);
+                        const forum = await forumResponse.json();
+
+                        const postElement = await createPostElement(post, forum, currentUser, sessionData);
+                        groupSection.appendChild(postElement);
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error fetching posts: ", error);
+            }
+        }
+
+        async function byForumsTrigger() {
+            try {
+                const sessionResponse = await fetch("/api/session");
+                const sessionData = await sessionResponse.json();
+
+                let forumIds = [];
+
+                if (!sessionData.success) {
+                    alert("Not logged in, will use all forums");
+                } else {
+                    const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+                    const currentUser = await userResponse.json();
+                    forumIds = currentUser.joinedForums || [];
+                }
+
+                console.log("FORUM IDS: ", forumIds);
+
+                // Get Sorting Parameters
+                const sortBy = document.getElementById("groupSortByDropdown").value;
+                const order = parseInt(document.getElementById("groupOrderDropdown").value);
+                const limit = parseInt(document.getElementById("groupLimitInput").value);
+
+                console.log("byForumsTrigger", sortBy, order, limit, groupSkip);
+
+                fetchPostsByForumIds(forumIds, groupSkip, false, false);
+            } catch (error) {
+                console.error("Error in getting from multiple forums:", error);
+            }
+        }
+
+    document.getElementById("groupSortByDropdown").addEventListener("change", () => {
+        groupSkip = 0;
+        console.log("Sort By Changed: ", document.getElementById("groupSortByDropdown").value);
+        byForumsTrigger();
+    });
+
+    document.getElementById("groupOrderDropdown").addEventListener("change", () => {
+        groupSkip = 0;
+        console.log("Order Changed: ", document.getElementById("groupOrderDropdown").value);
+        byForumsTrigger();
+    });
+
+    document.getElementById("getPostByJoined").addEventListener("click", byForumsTrigger);
+
+    async function createPostElement(post, forum, currentUser, sessionData) {
+        const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
+        const user = await userResponse.json();
+
+        const commentsResponse = await fetch(`/api/get-comments-by-post/${post._id}`);
+        const comments = await commentsResponse.json();
+
+        const overallContainer = document.createElement("div");
+        overallContainer.style.display = "flex";
+        overallContainer.style.gap = "10px";
+        overallContainer.style.width = "100%";
+        overallContainer.style.height = "700px";
+
+        const postContainer = document.createElement("div");
+        postContainer.style.display = "flex";
+        postContainer.style.flexDirection = "column";
+        postContainer.style.width = "100%";
+        postContainer.style.border = "2px solid black";
+        postContainer.style.padding = "10px";
+        postContainer.style.margin = "10px 0";
+
+        const forumDiv = document.createElement("div");
+        forumDiv.style.display = "flex";
+        forumDiv.style.alignItems = "center";
+
+        const forumImg = document.createElement("img");
+        forumImg.src = forum.forumImage;
+        forumImg.style.height = "20px";
+        forumImg.style.width = "20px";
+        forumImg.style.marginRight = "5px";
+
+        const forumTitle = document.createElement("h3");
+        forumTitle.textContent = currentUser && post.authorId === currentUser._id ? `${forum.name} POSTER` : `${forum.name}`;
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Update Post";
+        editButton.type = "button";
+        editButton.onclick = () => updatePost(post._id, postTitle.value, postContent.value, forum._id);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.type = "button";
+        deleteButton.onclick = () => deletePost(post._id, forum._id);
+
+        forumDiv.appendChild(forumImg);
+        forumDiv.appendChild(forumTitle);
+        forumDiv.appendChild(editButton);
+        forumDiv.appendChild(deleteButton);
+
+        const userDiv = document.createElement("div");
+        userDiv.style.display = "flex";
+        userDiv.style.alignItems = "center";
+
+        const userImg = document.createElement("img");
+        userImg.src = user.profileImage;
+        userImg.style.height = "20px";
+        userImg.style.width = "20px";
+        userImg.style.marginRight = "5px";
+
+        if (user && user.username) {
+            const userName = document.createElement("h3");
+            userName.textContent = user.username;
+
+            userDiv.appendChild(userImg);
+            userDiv.appendChild(userName);
+        } else {
+            const deletedUser = document.createElement("h3");
+            deletedUser.textContent = "[DELETED]";
+            userDiv.appendChild(deletedUser);
+        }
+
+        const contentDiv = document.createElement("div");
+
+        const postTitle = document.createElement("input");
+        postTitle.type = "text";
+        postTitle.name = `title_${post._id}`;
+        postTitle.value = post.title;
+        postTitle.required = true;
+
+        const postContent = document.createElement("input");
+        postContent.type = "text";
+        postContent.name = `content_${post._id}`;
+        postContent.value = post.content;
+        postContent.required = true;
+
+        const postDate = document.createElement("h4");
+        postDate.textContent = `Post Date: ${new Date(post.createdAt).toLocaleString()}`;
+
+        const editedDate = document.createElement("h4");
+        editedDate.textContent = `Edited Date: ${new Date(post.updatedAt).toLocaleString()}`;
+
+        contentDiv.appendChild(postTitle);
+        contentDiv.appendChild(document.createElement("br"));
+        contentDiv.appendChild(postContent);
+        contentDiv.appendChild(postDate);
+        contentDiv.appendChild(editedDate);
+
+        const voteDiv = document.createElement("div");
+        voteDiv.style.display = "flex";
+        voteDiv.style.alignItems = "center";
+
+        const currentVote = currentUser && currentUser.votes.find(vote => vote.postId == post._id);
+        const voteValue = currentVote ? currentVote.vote : 0;
+
+        const upvoteButton = document.createElement("button");
+        upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
+        upvoteButton.type = "button";
+        upvoteButton.onclick = () => toggleVote(post._id, 1, sessionData);
+
+        const voteCount = document.createElement("h4");
+        voteCount.textContent = post.voteValue;
+        voteCount.style.margin = "0 10px";
+
+        const downvoteButton = document.createElement("button");
+        downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
+        downvoteButton.type = "button";
+        downvoteButton.onclick = () => toggleVote(post._id, -1, sessionData);
+
+        const commentCount = document.createElement("h4");
+        commentCount.textContent = `Comments: ${post.commentsCount}`;
+        commentCount.style.margin = "0 10px";
+
+        voteDiv.appendChild(upvoteButton);
+        voteDiv.appendChild(voteCount);
+        voteDiv.appendChild(downvoteButton);
+        voteDiv.appendChild(commentCount);
+
+        postContainer.appendChild(forumDiv);
+        postContainer.appendChild(userDiv);
+        postContainer.appendChild(contentDiv);
+        postContainer.appendChild(voteDiv);
+
+        overallContainer.appendChild(postContainer);
+
+        const commentsContainer = document.createElement("div");
+        commentsContainer.style.display = "flex";
+        commentsContainer.style.flexDirection = "column";
+        commentsContainer.style.width = "100%";
+        commentsContainer.style.border = "2px solid black";
+        commentsContainer.style.padding = "10px";
+        commentsContainer.style.margin = "10px 0";
+        commentsContainer.style.overflowY = "scroll";
+
+        const newCommentContainer = document.createElement("div");
+        newCommentContainer.style.display = "flex";
+        newCommentContainer.style.marginBottom = "10px";
+
+        const newCommentLabel = document.createElement("h3");
+        newCommentLabel.textContent = "Add Comment";
+
+        const newCommentInput = document.createElement("input");
+        newCommentInput.type = "text";
+        newCommentInput.placeholder = "Write comment";
+        newCommentInput.style.marginBottom = "5px";
+        newCommentInput.style.width = "100%";
+
+        const newCommentButton = document.createElement("button");
+        newCommentButton.type = "button";
+        newCommentButton.textContent = "Post Comment";
+
+        newCommentContainer.appendChild(newCommentLabel);
+        newCommentContainer.appendChild(newCommentInput);
+        newCommentContainer.appendChild(newCommentButton);
+
+        newCommentButton.onclick = () => { 
+            if (!sessionData) {
+                alert("Can't make comment if not logged in");
+                return;
+            } else {
+                addComment(post._id, currentUser._id, newCommentInput.value.trim(), null);
+            }
+        };
+
+        commentsContainer.appendChild(newCommentContainer);
+        overallContainer.appendChild(commentsContainer);
+
+        const parentComments = comments.filter(comment => comment.parentId === null);
+        const childComments = comments.filter(comment => comment.parentId !== null);
+
+        for (const comment of parentComments) {
+            createCommentArea(comment, post._id, currentUser, commentsContainer, childComments, sessionData);
+        }
+
+        return overallContainer;
+    }
+
+        document.getElementById("forumDropdown").addEventListener("change", function () {
+            const selectedForumId = this.value;
+            postSkip = 0;
+            
+            if (selectedForumId) {
+                fetchPostsByForumIds(selectedForumId, 0, false, false);
+            }
+        });
+
+        document.getElementById("forumBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("forumLimitInput").value);
+            forumSkip += limit;
+            {{!-- console.log(forumSkip); --}}
+            fetchForums(forumSkip, true);
+        });
+
+        document.getElementById("forumOrderDropdown").addEventListener("change", () => {
+            forumSkip = 0;
+            fetchForums(0, false);
+        })
+
+        document.getElementById("forumSortByDropdown").addEventListener("change", () => {
+            forumSkip = 0;
+            fetchForums(0, false);
+        })
+
+        document.getElementById("userBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("userLimitInput").value);
+            userSkip += limit;
+            {{!-- console.log(userSkip); --}}
+            fetchUsers(userSkip, true);
+        });
+
+        document.getElementById("userOrderDropdown").addEventListener("change", () => {
+            userSkip = 0;
+            fetchUsers(0, false);
+        })
+
+        document.getElementById("userSortByDropdown").addEventListener("change", () => {
+            userSkip = 0;
+            fetchUsers(0, false);
+        })
+
+        document.getElementById("postBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("postLimitInput").value);
+            postSkip += limit;
+            console.log("POST SKIP", postSkip);
+            fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, true, false);
+        });
+
+        document.getElementById("postOrderDropdown").addEventListener("change", () => {
+            postSkip = 0;
+            fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, false, false);
+        })
+
+        document.getElementById("postSortByDropdown").addEventListener("change", () => {
+            postSkip = 0;
+            fetchPostsByForum(document.getElementById("forumDropdown").value, postSkip, false, false);
+        })
+
+        document.getElementById("groupBatchButton").addEventListener("click", async () => {
+            const sessionResponse = await fetch("/api/session");
+            const sessionData = await sessionResponse.json();
+
+            let forumIds = [];
+
+            if (!sessionData.success) {
+                alert("Not logged in, will use all forums");
+            } else {
+                const userResponse = await fetch(`/api/get-user-by-id/${sessionData.user.id}`);
+                const currentUser = await userResponse.json();
+                forumIds = currentUser.joinedForums || [];
+            }
+
+            console.log("FORUM IDS: ", forumIds);
+
+            const limit =  parseInt(document.getElementById("groupLimitInput").value);
+            groupSkip += limit;
+            console.log("GROUP SKIP", groupSkip);
+            fetchPostsByForumIds(forumIds, groupSkip, true, false);
+        });
+
+        document.getElementById("getActivity").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("activitiesLimitInput").value);
+            const userId =  document.getElementById("userActivityId").value;
+
+            activitiesSkip += limit;
+            {{!-- console.log(activitiesSkip); --}}
+            fetchActivity(activitiesSkip, true);
+        });
+
+        async function updateAllPosts(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const updatedPosts = [];
+
+            for (let entry of formData.entries()) {
+                const [key, value] = entry;
+                const [field, id] = key.split("_");
+
+                let post = updatedPosts.find(u => u._id === id);
+                if (!post) {
+                    post = { _id: id, updatedAt: new Date() };
+                    updatedPosts.push(post);
+                }
+                post[field] = value;
+            }
+
+            try {
+                const response = await fetch("/api/update-posts", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ posts: updatedPosts })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                
+                const forumDropdown = document.getElementById("forumDropdown");
+                fetchPostsByForum(forumDropdown.value, 0, false, true);
+            } catch (error) {
+                console.error("Error updating posts: ", error);
+            }
+        }
+
+        const postSection = document.getElementById("postSection");
+        postSection.addEventListener("submit", updateAllPosts);
+
+        const submitAll = document.createElement("button");
+        submitAll.id = "editAllPosts";
+        submitAll.type = "submit";
+        submitAll.textContent = "Update All";
+        postSection.appendChild(submitAll);
+
+
+        async function updatePost(postId, postTitle, postContent, forumId) {
+            try {
+                const response = await fetch(`/api/update-post/${postId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        title: postTitle,
+                        content: postContent,
+                        updatedAt: new Date()
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+
+                postSkip = 0;
+                fetchPostsByForum(forumId, postSkip, false, true);
+            } catch (error) {
+                console.error("Error updating post: ", error);
+            }
+        }
+
+        async function addPost() {
+            const title = document.getElementById("titleInput").value.trim();
+            const content = document.getElementById("contentInput").value.trim();
+
+            if (!currentSession) {
+                alert("Can't make post if not logged in");
+                return;
+            }
+
+            if (!title || !content || document.getElementById("forumDropdown").value == "") {
+                alert("Missing fields or invalid forum");
+                return;
+            }
+
+            const newPost = {
+                forumId: document.getElementById("forumDropdown").value,
+                authorId: currentSession.id,
+                title: title,
+                content: content,
+                voteValue: 0,
+                comments: []
+            };
+
+            try {
+                const response = await fetch("/api/add-post", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newPost)
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchForums();
+                fetchUsers();
+                fetchPostsByForum(document.getElementById("forumDropdown").value);
+
+                document.getElementById("titleInput").value = "";
+                document.getElementById("contentInput").value = "";
+            } catch (error) {
+                console.error("Error adding post: ", error);
+            }
+        }
+
+        async function deletePost(postId, forumId) {
+            if (confirm("Are you sure you want to delete this post?")) {
+                try {
+                    const response = await fetch(`/api/delete-post/${postId}`, { method: "DELETE" });
+                    const result = await response.json();
+
+                    alert(result.message);
+                    fetchForums();
+                    fetchUsers();
+                    fetchPostsByForum(forumId);
+                } catch (error) {
+                    console.error("Error deleting post: ", error);
+                }
+            }
+        }
+
+        async function toggleVote(postId, voteValue, sessionData) {
+            if (!sessionData.success) {
+                alert("Not logged in");
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/toggle-vote", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: sessionData.user.id, postId, voteValue })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    fetchPostsByForum(document.getElementById("forumDropdown").value, 0, false, true);
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error("Error toggling vote:", error);
+            }
+        }
+
+        ////////////////////// COMMENTS ///////////////
+        async function createCommentArea(comment, postId, currentUser, commentsContainer, childComments, sessionData) {
+            const authorResponse = await fetch(`/api/get-user-by-id/${comment.authorId}`);
+            const author = await authorResponse.json();
+
+            const commentContainer = document.createElement("div");
+            commentContainer.style.padding = "10px";
+            commentContainer.style.marginBottom = "5px";
+
+            const replyArea = document.createElement("div");
+            replyArea.style.width = "100%";
+            replyArea.style.marginLeft = "15px";
+            replyArea.style.paddingLeft = "5px";
+            replyArea.style.borderLeft = "2px solid black";
+
+            const authorDiv = document.createElement("div");
+            authorDiv.style.display = "flex";
+            authorDiv.style.alignItems = "center";
+
+            if (author && author.username) {
+                const authorImg = document.createElement("img");
+                authorImg.src = author.profileImage;
+                authorImg.style.height = "20px";
+                authorImg.style.width = "20px";
+                authorImg.style.marginRight = "5px";
+
+                const authorName = document.createElement("h3");
+                authorName.textContent = currentUser && comment.authorId === currentUser._id ? `${author.username} POSTER` : `${author.username}`;
+
+                authorDiv.appendChild(authorImg);
+                authorDiv.appendChild(authorName);
+            } else {
+                const deletedUser = document.createElement("h3");
+                deletedUser.textContent = "[DELETED]";
+                authorDiv.appendChild(deletedUser);
+            }
+
+            const editButton = document.createElement("button");
+            editButton.textContent = "Update Comment";
+            editButton.type = "button";
+            editButton.onclick = () => {
+                updateComment(
+                    comment._id,
+                    commentContent.value,
+                    document.getElementById("forumDropdown").value
+                );
+            };
+
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.type = "button";
+            deleteButton.onclick = () => {
+                deleteComment(comment._id, document.getElementById("forumDropdown").value);
+            };
+
+            authorDiv.appendChild(editButton);
+            authorDiv.appendChild(deleteButton);
+
+            const contentDiv = document.createElement("div");
+            const commentContent = document.createElement("input");
+            commentContent.type = "text";
+            commentContent.name = `content_${comment._id}`;
+            commentContent.value = comment.content;
+            commentContent.required = true;
+
+            const lineBreak = document.createElement("br");
+
+            const commentDate = document.createElement("h4");
+            commentDate.textContent = `Comment Date: ${new Date(comment.createdAt).toLocaleString()}`;
+
+            const editedDate = document.createElement("h4");
+            editedDate.textContent = `Edited Date: ${new Date(comment.updatedAt).toLocaleString()}`;
+
+            contentDiv.appendChild(lineBreak);
+            contentDiv.appendChild(commentContent);
+            contentDiv.appendChild(commentDate);
+            contentDiv.appendChild(editedDate);
+
+            const voteDiv = document.createElement("div");
+            voteDiv.style.display = "flex";
+            voteDiv.style.alignItems = "center";
+
+            const currentVote = currentUser && currentUser.commentVotes.find(vote => {
+                return vote.commentId == comment._id;
+            });
+
+            const voteValue = currentVote ? currentVote.vote : 0;
+
+            const upvoteButton = document.createElement("button");
+            upvoteButton.textContent = voteValue === 1 ? "UPVOTED" : "Upvote";
+            upvoteButton.type = "button";
+            upvoteButton.onclick = () => { toggleCommentVote(comment._id, 1, sessionData); };
+
+            const voteCount = document.createElement("h4");
+            voteCount.textContent = comment.voteValue;
+            voteCount.style.margin = "0 10px";
+
+            const downvoteButton = document.createElement("button");
+            downvoteButton.textContent = voteValue === -1 ? "DOWNVOTED" : "Downvote";
+            downvoteButton.type = "button";
+            downvoteButton.onclick = () => { toggleCommentVote(comment._id, -1, sessionData); };
+
+            voteDiv.appendChild(upvoteButton);
+            voteDiv.appendChild(voteCount);
+            voteDiv.appendChild(downvoteButton);
+
+            const replyButton = document.createElement("button");
+            replyButton.textContent = "Reply";
+            replyButton.type = "button";
+            replyButton.onclick = () => {
+                if (!replyArea.querySelector(".reply-input")) {
+                    showReplyInput(replyArea, postId, comment._id);
+                }
+            };
+
+            voteDiv.appendChild(replyButton);
+
+            commentContainer.appendChild(authorDiv);
+            commentContainer.appendChild(contentDiv);
+            commentContainer.appendChild(voteDiv);
+            commentContainer.appendChild(replyArea);
+            commentsContainer.appendChild(commentContainer);
+
+            const replies = childComments.filter(reply => reply.parentId === comment._id);
+            for (const reply of replies) {
+                createCommentArea(reply, postId, currentUser, replyArea, childComments, sessionData);
+            }
+        }
+
+
+        function showReplyInput(replyArea, postId, parentId) {
+            if (replyArea.querySelector(".reply-input")) return;
+
+            const replyDiv = document.createElement("div");
+            replyDiv.classList.add("reply-input");
+            replyDiv.style.marginLeft = "15px";
+            replyDiv.style.paddingLeft = "5px";
+            replyDiv.style.borderLeft = "2px solid gray";
+
+            const replyInput = document.createElement("input");
+            replyInput.type = "text";
+            replyInput.placeholder = "Write reply.";
+            replyInput.style.marginRight = "5px";
+            replyInput.style.width = "80%";
+
+            const sendReplyButton = document.createElement("button");
+            sendReplyButton.textContent = "Send";
+            sendReplyButton.type = "button";
+            sendReplyButton.onclick = async () => {                
+                const content = replyInput.value.trim();
+
+                if (!currentSession) {
+                    alert("Can't make reply if not logged in");
+                    return;
+                }
+                
+                if (!content) {
+                    alert("Can't make reply if not logged in");
+                    return;
+                } else {
+                    await addComment(postId, currentSession.id, content, parentId);
+                    replyDiv.remove();
+
+                    {{!-- fetchForums();
+                    fetchPostsByForum; --}}
+                    fetchPostsByForum(document.getElementById("forumDropdown").value);
+                }
+            };
+
+            replyDiv.appendChild(replyInput);
+            replyDiv.appendChild(sendReplyButton);
+            replyArea.appendChild(replyDiv);
+        }
+
+        async function updateComment(commentId, postContent, forumId) {
+            try {
+                const response = await fetch(`/api/update-comment/${commentId}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        content: postContent,
+                        updatedAt: new Date()
+                    })
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                fetchPostsByForum(forumId);
+            } catch (error) {
+                console.error("Error updating post: ", error);
+            }
+        }
+
+        async function addComment(postId, authorId, commentContent, parentId) {
+            if (!currentSession) {
+                alert("Can't make comment if not logged in");
+                return;
+            }
+
+            if (!commentContent) {
+                alert("Missing fields");
+                return;
+            }
+
+            const newComment = {
+                postId: postId,
+                authorId: authorId,
+                parentId: parentId,
+                content: commentContent,
+                voteValue: 0,
+            };
+
+
+            try {
+                const response = await fetch("/api/add-comment", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newComment)
+                });
+
+                const result = await response.json();
+
+                alert(result.message);
+                {{!-- fetchForums();
+                fetchUsers(); --}}
+                fetchPostsByForum(document.getElementById("forumDropdown").value);
+            } catch (error) {
+                console.error("Error adding comment: ", error);
+            }
+        }
+
+        async function deleteComment(commentId, forumId) {
+            if (confirm("Are you sure you want to delete this comment?")) {
+                try {
+                    const response = await fetch(`/api/delete-comment/${commentId}`, { method: "DELETE" });
+                    const result = await response.json();
+
+                    alert(result.message);
+                    {{!-- fetchForums();
+                    fetchUsers(); --}}
+                    fetchPostsByForum(forumId);
+                } catch (error) {
+                    console.error("Error deleting comment: ", error);
+                }
+            }
+        }
+
+        async function toggleCommentVote(commentId, voteValue, sessionData) {
+            if (!sessionData.success) {
+                alert("Not logged in");
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/toggle-comment-vote", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: sessionData.user.id, commentId, voteValue })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    fetchPostsByForum(document.getElementById("forumDropdown").value);
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error("Error toggling comment vote:", error);
+            }
+        }
+
+        ///////////// User Activities
+        async function fetchActivity(skip = 0, appending = false, updating = false) {
+            try {
+                const userId = document.getElementById("userActivityId").value;
+                const sortBy = document.getElementById("activitiesSortByDropdown").value;
+                const order = parseInt(document.getElementById("activitiesOrderDropdown").value);
+                const limit = parseInt(document.getElementById("activitiesLimitInput").value);
+
+                console.log("Acttivities for: ", userId, sortBy, order, limit)
+
+                const response = await fetch(`/api/get-activity-by-user/${userId}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+                const activities = await response.json();
+
+                console.log(activities);
+
+            } catch (error) {
+                console.error("Error fetching activities:", error);
+            }
+        }
+
+        fetchForums();
+        fetchUsers();
+    </script>
+</body>
