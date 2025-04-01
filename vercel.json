@@ -1,27 +1,4 @@
-/*{
-    "version": 2,
-    "builds": [
-        {
-            "src": "app.js",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "app.js"
-        }
-    ],
-    "functions": {
-        "api/app.js": {
-            "maxDuration": 30
-        }
-    },
-    "env": {
-        "MONGODB_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
-    }
-}
-*/
+
 
 {
     "version": 2,
