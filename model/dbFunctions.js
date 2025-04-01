@@ -1,7 +1,8 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const argon2 = require('argon2');
+require('dotenv').config();
 
-const uri = "mongodb://localhost:27017/";
+const uri = process.env.MONGODB_URI;
 const dbName = "forum";
 const forumsVar = "forums";
 const usersVar = "users"
@@ -2335,7 +2336,7 @@ const mongo = {
             }
 
             else {
-                idArray = forumIds.map(id => new ObjectId(id.trim()));
+                idArray = forumIds.map(id => new ObjectId(id));
             }
         
             let posts;
