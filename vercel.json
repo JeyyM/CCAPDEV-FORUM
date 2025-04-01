@@ -12,6 +12,11 @@
             "dest": "/api/server.js"
         }
     ],
+    "functions": {
+        "api/server.js": {
+            "maxDuration": 30
+        }
+    },
     "env": {
         "MONGODB_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
     }
