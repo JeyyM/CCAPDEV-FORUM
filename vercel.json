@@ -1,4 +1,4 @@
-{
+/*{
     "version": 2,
     "builds": [
         {
@@ -17,6 +17,25 @@
             "maxDuration": 30
         }
     },
+    "env": {
+        "MONGODB_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
+    }
+}
+*/
+
+{
+    "version": 2,
+    "functions": {
+        "api/server.js": {
+            "maxDuration": 30
+        }
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "app.js"
+        }
+    ],
     "env": {
         "MONGODB_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
     }
