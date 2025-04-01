@@ -27,12 +27,11 @@
         <button class="likeButton"><i class='bx bx-like'></i></button>
         <span class="voteValue">{{comment.voteValue}}</span>
         <button class="dislikeButton"><i class='bx bx-dislike'></i></button>
-        <button class="commentButton" onclick="newComment(this)"><i class='bx bx-comment'></i><span>{{comment.commentCount}}</span></button>
+        {{#unless (isNull user._id)}}
+        <button class="commentButton" onclick="newComment(this, '{{user._id}}')"><i class='bx bx-comment'></i><span>{{comment.commentCount}}</span></button>
+        {{else}}
+        <button class="commentButton" onclick="newComment(this, null)"><i class='bx bx-comment'></i><span>{{comment.commentCount}}</span></button>
+        {{/unless}}
         <button class="share"><i class='bx bxs-share-alt'></i></button>
-
-        {{!-- <button class="likeButton" onclick="likePost(this)"><i class='bx bx-like'></i><span>{{comment.likes}}</span></button>
-        <button class="dislikeButton" onclick="dislikePost(this)"><i class='bx bx-dislike'></i><span>{{comment.dislikes}}</span></button>
-        <button class="commentButton" onclick="newComment(this)"><i class='bx bx-comment'></i><span>{{comment.commentCount}}</span></button>
-        <button class="share"><i class='bx bx-share-alt'></i></button> --}}
     </div>
 </div>

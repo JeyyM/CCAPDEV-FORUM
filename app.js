@@ -122,6 +122,7 @@ server.get("/viewPost/:postId", async function(req, resp){
     const post = posts.find(p => p._id.toString() === postId.toString());
 
     const comments = await mongo.getCommentsByPostId(post._id);
+    console.log(comments);
 
     resp.render("viewPost",{
         layout: "index",
