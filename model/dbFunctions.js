@@ -1,7 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 const argon2 = require('argon2');
 
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017";
+const uri = "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/";
 const dbName = "forum";
 const forumsVar = "forums";
 const usersVar = "users"
