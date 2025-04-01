@@ -14,6 +14,6 @@
         }
     ],
     "env": {
-        "MONGODB_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
+        "MONGODB_CONNECT_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
     }
 }
