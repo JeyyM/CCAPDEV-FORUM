@@ -209,7 +209,7 @@
         <select id="activitiesSortByDropdown">
             <option value="updatedAt">New</option>
             <option value="voteValue">Votes</option>
-            <option value="alphabetical">Alphabetical</option>
+            <option value="title">Alphabetical</option>
             <option value="hot">Hot</option>
         </select>
 
@@ -217,6 +217,13 @@
         <select id="activitiesOrderDropdown">
             <option value="-1">Descending</option>
             <option value="1">Ascending</option>
+        </select>
+
+        <h3>Type: </h3>
+        <select id="activitiesTypeDropdown">
+            <option value="all">All</option>
+            <option value="post">Posts</option>
+            <option value="comment">Comments</option>
         </select>
 
     </div>
@@ -1175,6 +1182,24 @@
 
     document.getElementById("getPostByJoined").addEventListener("click", byForumsTrigger);
 
+    document.getElementById("activitiesSortByDropdown").addEventListener("change", () => {
+        activitiesSkip = 0;
+        console.log("Sort By Changed: ", document.getElementById("activitiesSortByDropdown").value);
+        fetchActivity();
+    });
+
+    document.getElementById("activitiesOrderDropdown").addEventListener("change", () => {
+        activitiesSkip = 0;
+        console.log("Order Changed: ", document.getElementById("activitiesOrderDropdown").value);
+        fetchActivity();
+    });
+
+    document.getElementById("activitiesTypeDropdown").addEventListener("change", () => {
+        activitiesSkip = 0;
+        console.log("Type Changed: ", document.getElementById("activitiesTypeDropdown").value);
+        fetchActivity();
+    });
+
     async function createPostElement(post, forum, currentUser, sessionData) {
         const userResponse = await fetch(`/api/get-user-by-id/${post.authorId}`);
         const user = await userResponse.json();
@@ -1450,6 +1475,13 @@
             activitiesSkip += limit;
             {{!-- console.log(activitiesSkip); --}}
             fetchActivity(activitiesSkip, true);
+        });
+
+        document.getElementById("activityBatchButton").addEventListener("click", () => {
+            const limit =  parseInt(document.getElementById("activitiesLimitInput").value);
+            activitiesSkip += limit;
+            console.log("ACTIVITIES SKIP", activitiesSkip);
+            fetchActivity(activitiesSkip, true, false);
         });
 
         async function updateAllPosts(event) {
@@ -1886,10 +1918,11 @@
                 const sortBy = document.getElementById("activitiesSortByDropdown").value;
                 const order = parseInt(document.getElementById("activitiesOrderDropdown").value);
                 const limit = parseInt(document.getElementById("activitiesLimitInput").value);
+                const type = document.getElementById("activitiesTypeDropdown").value;
 
                 console.log("Acttivities for: ", userId, sortBy, order, limit)
 
-                const response = await fetch(`/api/get-activity-by-user/${userId}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}`);
+                const response = await fetch(`/api/get-activity-by-user/${userId}?sortBy=${sortBy}&order=${order}&limit=${limit}&skip=${skip}&type=${type}`);
                 const activities = await response.json();
 
                 console.log(activities);

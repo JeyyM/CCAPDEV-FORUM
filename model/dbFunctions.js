@@ -2765,6 +2765,207 @@ const mongo = {
         }
     },
 
+    ////////////// USER ACTIVITY //////////////
+    async getUserActivity(userId, sortBy = "createdAt", order = -1, limit = 10, skip = 0, type = "all") {
+        console.log("User Activity: ", userId, sortBy, order, limit, skip, type);
+    
+        const db = client.db(dbName);
+        const postsCollection = db.collection(postsVar);
+        const usersCollection = db.collection(usersVar);
+        const commentsCollection = db.collection(commentsVar);
+        const forumsCollection = db.collection(forumsVar);
+    
+        const now = new Date();
+        const userObjectId = new ObjectId(userId);
+    
+        const deletedUser = {
+            username: "[ DELETED USER ]",
+            email: "deleted@email.com",
+            profileImage: "https://thumbs.dreamstime.com/b/vector-illustration-missing-person-graphic-wanted-poster-lost-anonymous-missing-person-graphic-wanted-poster-lost-anonymous-106106416.jpg",
+            bannerImage: "https://thumbs.dreamstime.com/b/vector-illustration-missing-person-graphic-wanted-poster-lost-anonymous-missing-person-graphic-wanted-poster-lost-anonymous-106106416.jpg",
+            password: "DELETED",
+            createdAt: now,
+            updatedAt: now,
+            bio: "Deleted User",
+            joinedForums: [],
+            following: [],
+            followersCount: 0,
+            postsCount: 0,
+            commentsCount: 0,
+            votes: [],
+            commentVotes: []
+        };
+    
+        const deletedPost = {
+            title: "[ DELETED POST ]",
+            content: "[ deleted ]",
+            comments: [],
+            voteValue: 0,
+            commentsCount: 0,
+            createdAt: now,
+            updatedAt: now,
+            forumId: null,
+            authorId: null
+        };
+    
+        const deletedForum = {
+            name: "[ DELETED FORUM ]",
+            description: "[ DELETED FORUM ]",
+            forumImage: "https://www.rafflespaint.com/cdn/shop/products/PURE_BLACK_RP0-1_bb8afd96-bd13-4bfd-83e3-ef063ae9fef7.jpg?v=1566778832",
+            bannerImage: "https://www.rafflespaint.com/cdn/shop/products/PURE_BLACK_RP0-1_bb8afd96-bd13-4bfd-83e3-ef063ae9fef7.jpg?v=1566778832",
+            createdAt: now,
+            updatedAt: now,
+            membersCount: 0,
+            postsCount: 0,
+            admins: [],
+            bannedUsers: []
+        };
+    
+        const userDictionary = {};
+        const commentDictionary = {};
+    
+        const userPosts = await postsCollection.find({ authorId: userObjectId }).toArray();
+        const userComments = await commentsCollection.find({ authorId: userObjectId }).toArray();
+        const allForums = await forumsCollection.find().toArray();
+    
+        const forumDictionary = Object.fromEntries(allForums.map(f => [f._id.toString(), f]));
+    
+        // Prepare user dictionary
+        for (const post of userPosts) {
+            const authorIdStr = post.authorId?.toString?.() || "deleted";
+            if (!userDictionary[authorIdStr]) {
+                const user = post.authorId ? await usersCollection.findOne({ _id: post.authorId }) : null;
+                userDictionary[authorIdStr] = user || { ...deletedUser, _id: post.authorId || new ObjectId() };
+            }
+        }
+    
+        // Post-based activities
+        const postActivities = userPosts.map(post => {
+            const user = userDictionary[post.authorId?.toString()] || deletedUser;
+            const forum = forumDictionary[post.forumId?.toString()] || deletedForum;
+    
+            return {
+                type: "post",
+                ...post,
+                user,
+                forum,
+                thread: []
+            };
+        });
+    
+        // Source posts for user comments
+        const postIds = userComments.map(c => new ObjectId(c.postId));
+        const sourcePosts = await Promise.all(
+            postIds.map(async (id) => {
+                const post = await postsCollection.findOne({ _id: id });
+                return post ? post : { ...deletedPost, _id: id };
+            })
+        );
+    
+        // Attach authors of those source posts
+        for (const post of sourcePosts) {
+            const authorIdStr = post.authorId?.toString?.() || "deleted";
+            if (!userDictionary[authorIdStr]) {
+                const user = post.authorId ? await usersCollection.findOne({ _id: post.authorId }) : null;
+                userDictionary[authorIdStr] = user || { ...deletedUser, _id: post.authorId || new ObjectId() };
+            }
+        }
+    
+        async function getCommentThread(comment) {
+            const thread = [comment];
+            let current = comment;
+    
+            const authorIdStr = comment.authorId?.toString?.() || "deleted";
+            if (!userDictionary[authorIdStr]) {
+                const user = comment.authorId ? await usersCollection.findOne({ _id: comment.authorId }) : null;
+                userDictionary[authorIdStr] = user || { ...deletedUser, _id: comment.authorId || new ObjectId() };
+            }
+    
+            comment.user = userDictionary[authorIdStr];
+    
+            while (current.parentId) {
+                const parentId = current.parentId.toString();
+                current = await commentsCollection.findOne({ _id: new ObjectId(parentId) });
+                if (!current) break;
+    
+                const parentAuthorIdStr = current.authorId?.toString?.() || "deleted";
+                if (!userDictionary[parentAuthorIdStr]) {
+                    const user = current.authorId ? await usersCollection.findOne({ _id: current.authorId }) : null;
+                    userDictionary[parentAuthorIdStr] = user || { ...deletedUser, _id: current.authorId || new ObjectId() };
+                }
+    
+                current.user = userDictionary[parentAuthorIdStr];
+                commentDictionary[parentId] = current;
+    
+                thread.push(current);
+            }
+    
+            return thread.reverse();
+        }
+    
+        const commentActivities = [];
+        for (let i = 0; i < userComments.length; i++) {
+            const comment = userComments[i];
+            const thread = await getCommentThread(comment);
+            const post = sourcePosts[i];
+            const user = userDictionary[post.authorId?.toString()] || deletedUser;
+            const forum = forumDictionary[post.forumId?.toString()] || deletedForum;
+    
+            commentActivities.push({
+                type: "comment",
+                ...post,
+                user,
+                forum,
+                thread
+            });
+        }
+    
+        let allActivity = [...postActivities, ...commentActivities];
+    
+        // Filtering
+        if (type === "post") {
+            allActivity = allActivity.filter(a => a.type === "post");
+        } else if (type === "comment") {
+            allActivity = allActivity.filter(a => a.type === "comment");
+        }
+    
+        // Sorting
+        if (sortBy === "title") {
+            allActivity.sort((a, b) => {
+                const aTitle = (a.title || "").toLowerCase();
+                const bTitle = (b.title || "").toLowerCase();
+                return order === 1 ? aTitle.localeCompare(bTitle) : bTitle.localeCompare(aTitle);
+            });
+        } else if (sortBy === "voteValue") {
+            allActivity.sort((a, b) => {
+                const aVotes = a.voteValue || 0;
+                const bVotes = b.voteValue || 0;
+                return order === 1 ? aVotes - bVotes : bVotes - aVotes;
+            });
+        } else if (sortBy === "createdAt") {
+            allActivity.sort((a, b) => {
+                const aDate = new Date(a.createdAt);
+                const bDate = new Date(b.createdAt);
+                return order === 1 ? aDate - bDate : bDate - aDate;
+            });
+        } else if (sortBy === "hot") {
+            const exponent = 1.5;
+            const nowTime = now.getTime();
+    
+            allActivity.forEach(activity => {
+                const ageInHours = (nowTime - new Date(activity.createdAt).getTime()) / (1000 * 60 * 60);
+                const score = activity.voteValue || 0;
+                activity.hotRating = score / Math.pow(1 + ageInHours, exponent);
+            });
+    
+            allActivity.sort((a, b) => {
+                return order === 1 ? a.hotRating - b.hotRating : b.hotRating - a.hotRating;
+            });
+        }
+    
+        return allActivity.slice(skip, skip + limit);
+    }
+    
 };
 
 module.exports = mongo;

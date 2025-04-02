@@ -29,10 +29,10 @@
             </div>
         </div>
         {{> sort}}
-        <div id="postContainer">
-            {{#each posts}}
-                {{> post post=this user=../user profile=../profile showCommunity=../showCommunity}}
-            {{/each}}
-        </div>
+
+        {{#each posts}}
+            {{> activity this }}
+        {{/each}}
+
     </div>
 </div>

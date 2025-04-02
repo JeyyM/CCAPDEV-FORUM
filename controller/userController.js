@@ -199,4 +199,21 @@ router.patch("/toggle-user-follow", async (req, res) => {
     }
 });
 
+router.get("/get-activity-by-user/:userId", async (req, res) => {
+    try {
+        const sortBy = req.query.sortBy;
+        const order = parseInt(req.query.order);
+        const limit = parseInt(req.query.limit);
+        const skip = parseInt(req.query.skip);
+        const type = req.query.type;
+        const userId = req.params.userId;
+        const activity = await mongo.getUserActivity(userId, sortBy, order, limit, skip, type);
+
+        res.json(activity);
+    } catch (error) {
+        console.error("Error fetching activity: ", error);
+        res.status(500).json({ message: "Error fetching activity" });
+    }
+});
+
 module.exports = router;

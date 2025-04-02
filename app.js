@@ -189,6 +189,7 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
     const communityDB = await mongo.getForumByName(communityName);
 
     const posts = await mongo.getPosts();
+    
     const postList = [];
 
     posts.forEach(function (post) {
@@ -217,10 +218,28 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
     });
 });
 
+//     resp.render("viewProfile",{
+//         layout: "index",
+//         title: "View Profile Page",
+//         pageStyle: "viewpost",
+//         pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewProfile", "search"],
+//         user: currentUser,
+//         myCommunities: followedCommunities,
+//         communities: allCommunities,
+//         profile: profile,
+//         followedUser: followedUser,
+//         posts: activitiesList,
+//         showCommunity: true
+//     });
+// });
+
 server.get("/viewProfile/:profileName", async function(req, resp){
+    const profileName = req.params.profileName;
+
     let currentUser;
     let allCommunities = await mongo.getForums("name", 1, 99, 0);
     let followedCommunities = [];
+    const profileDB = await mongo.getUserByName(profileName);
 
     if (req.session.user){
         currentUser = await mongo.getUserById(req.session.user.id);
@@ -229,23 +248,16 @@ server.get("/viewProfile/:profileName", async function(req, resp){
         );
     }
 
-    const profileName = req.params.profileName;
-
     const users = await mongo.getUsers("createdAt", -1, 99, 0);
     const profile = users.find(u => u.username === profileName);
 
-    const profileDB = await mongo.getUserByName(profileName);
+    // modify with the proper sort system
 
-    const posts = await mongo.getPosts("createdAt", -1, 99, 0);
-    const postList = [];
-    
-    posts.forEach(function (post) {
-        if (post.authorId.toString() == profile._id.toString()) {
-            postList.push(post);
-        }
-    })
-
+    // ID, sortBy, order, limit, skip, type ("all/post/comment")
+    const activitiesList = await mongo.getUserActivity(profileDB._id.toString(), "createdAt", -1, 50, 0, "all");
     let followedUser = null;
+
+    console.log(activitiesList);
 
     if (currentUser) {
         followedUser = currentUser.following.some(c => c === profileDB._id.toString());
@@ -259,9 +271,9 @@ server.get("/viewProfile/:profileName", async function(req, resp){
         user: currentUser,
         myCommunities: followedCommunities,
         communities: allCommunities,
-        profile: profile,
         followedUser: followedUser,
-        posts: postList,
+        profile: profile,
+        posts: activitiesList,
         showCommunity: true
     });
 });
