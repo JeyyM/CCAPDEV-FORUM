@@ -33,7 +33,7 @@ server.set('view engine', 'hbs');
 server.engine('hbs', handlebars.engine({
     extname: 'hbs',
     helpers: {
-        isEqual: (x, y) => x === y,
+        isEqual: (x, y) => x == y,
         isNull: (x) => x === null,
         json: function (body) {
             return JSON.stringify(body);
@@ -147,11 +147,13 @@ server.get("/viewPost/:postId", async function(req, resp){
     let posts = await mongo.getPosts();
     const post = posts.find(p => p._id.toString() === postId.toString());
 
+    /*
     if (currentUser == null) {
         posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
     } else {
         posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "new", 1, 10, 0);
     }
+    */
 
     const comments = await mongo.getCommentsByPostId(post._id);
 
