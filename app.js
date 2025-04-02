@@ -461,12 +461,13 @@ server.get("/about", async function(req, resp) {
     })
 })
 
-const port = process.env.PORT || 3000;
-server.listen(port, function(){
-    console.log("Listening at port "+port);
-});
-// for vercel:
-// module.exports = server;
+//im deleting the ff:
+// const port = process.env.PORT || 3000;
+// server.listen(port, function(){
+//     console.log("Listening at port "+port);
+// });
+// and replacing w the ff for vercel:
+module.exports = server;
 
 // For Updating Global Variables
 server.post("/update/userLogin", function(req, resp){
