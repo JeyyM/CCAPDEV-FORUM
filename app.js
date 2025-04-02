@@ -20,25 +20,21 @@ const forumController = require('./controller/forumController');
 const postController = require('./controller/postController');
 const commentController = require('./controller/commentController');
 const searchController = require('./controller/searchController');
-/*
-server.use(session({
-    secret: "fuckingpassword",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: false,
-        httpOnly: true
-    }
-}));
-*/
+
 //why home not accesisble
-server.set('view engine', 'hbs');
+//setting engine
+server.engine("hbs", engine({
+    extname: "hbs",
+    defaultLayout: "main", // If you have a default layout, like main.hbs
+}));
+server.set("view engine", "hbs");
+
 server.use(session({
     secret: "fuckingpassword",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI, // Mongo URI from .env
+        mongoUrl: process.env.MONGODB_URI,
         collectionName: "sessions"
     }),
     cookie: {
