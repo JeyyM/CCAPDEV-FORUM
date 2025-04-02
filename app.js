@@ -28,6 +28,8 @@ server.engine("hbs", engine({
     defaultLayout: "main", // If you have a default layout, like main.hbs
 }));
 server.set("view engine", "hbs");
+server.set("controller", path.join(__dirname, "controller"));
+server.set("model", path.join(__dirname, "model"));
 server.set("views", path.join(__dirname, "views"));
 server.set("public", path.join(__dirname, "public"));
 
