@@ -53,14 +53,13 @@ server.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI, // Ensure this is correctly set
+        mongoUrl: process.env.MONGODB_URI, 
         collectionName: "sessions"
     }),
     cookie: {
-        maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+        secure: process.env.NODE_ENV === 'production', 
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure cookies in production
-        sameSite: "strict"
+        maxAge: 1000 * 60 * 60 * 24, 
     }
 }));
 
