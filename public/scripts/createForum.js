@@ -5,7 +5,7 @@ $(document).ready(async function() {
         const bannerImage = document.getElementById("forumBanner").value.trim();
         const forumImage = document.getElementById("forumImage").value.trim();
 
-        if (!currentSession) {
+        if (!checkSession()) {
             alert("Can't make forum if not logged in");
             return;
         }
@@ -13,6 +13,14 @@ $(document).ready(async function() {
         if (!name || !description || !bannerImage || !forumImage) {
             alert("Missing fields");
             return;
+        }
+
+        const forumsResponse = await fetch(`/api/get-forums?sortBy=createdAt&order=1&limit=99&skip=0`);
+        const forums = await forumsResponse.json();
+        const dForumName = forums.some(forum => forum.name.toLowerCase() === name.toLowerCase());
+        if(dForumName){
+            alert("Forum name is taken!");
+            return; 
         }
 
         const newForum = {

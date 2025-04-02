@@ -1,6 +1,14 @@
 $(document).ready(async function() {
     async function updateForum(forumId, newName, newDescription, newBannerImage, newForumImage) {
         try {
+            const forumsResponse = await fetch(`/api/get-forums?sortBy=createdAt&order=1&limit=99&skip=0`);
+            const forums = await forumsResponse.json();
+            const dForum = forums.find(forum => forum.name.toLowerCase() === newName.toLowerCase());
+            if(dForum._id !== forumId && dForum.name.toLowerCase() === newName.toLowerCase()){
+                alert("Forum name is taken!");
+                return; 
+            }
+            
             const response = await fetch(`/api/update-forum/${forumId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
