@@ -2828,6 +2828,7 @@ const mongo = {
             }
     
             for (const [userId, count] of Object.entries(userDictionary)) {
+                console.log(userId, count);
                 await usersCollection.updateOne(
                     { _id: new ObjectId(userId) },
                     { $inc: { commentsCount: -count } }
