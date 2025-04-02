@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="postHeaderContainer">
+    <div class="postHeaderContainer {{authorId}} uid{{toString user._id}}">
         <div class="postHeader" onclick="window.location.href='/viewProfile/{{user.username}}'">
             <img src="{{user.profileImage}}" class="profilePic">
             <div>

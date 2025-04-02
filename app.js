@@ -270,6 +270,9 @@ server.get("/viewProfile/:profileName/:option?", async function(req, resp){
         followedUser = currentUser.following.some(c => c === profileDB._id.toString());
     }
 
+    console.log("User below");
+    console.log(currentUser);
+
     resp.render("viewProfile",{
         layout: "index",
         title: "View Profile Page",

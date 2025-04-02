@@ -110,7 +110,7 @@ $(document).ready(async function() {
 
                 var newComment = createComment(comment, sessionData);
                 
-                var engagement = $(element).find(".commentEngagement");
+                var engagement = $(element).find(".commentEngagement").first();
 
                 console.log(element);
 
