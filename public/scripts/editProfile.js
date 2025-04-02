@@ -10,7 +10,7 @@ $(document).ready(async function() {
             const usersResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`);
             const users = await usersResponse.json();
             const dUsername = users.find(user => user.username.toLowerCase() === newName.toLowerCase());
-            if(dUsername._id !== userId && dUsername.username.toLowerCase() === newName.toLowerCase()){
+            if(dUsername && dUsername._id !== userId && dUsername.username.toLowerCase() === newName.toLowerCase()){
                 alert("Username is taken!");
                 return; 
             }
