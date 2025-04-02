@@ -1,6 +1,7 @@
 const express = require("express");
 const mongo = require("./model/dbFunctions");
 const session = require("express-session");
+const { engine } = require("express-handlebars");
 const bodyParser = require("body-parser");
 
 const MongoStore = require("connect-mongo");
