@@ -221,8 +221,9 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
     });
 });
 
-server.get("/viewProfile/:profileName", async function(req, resp){
+server.get("/viewProfile/:profileName/:option?", async function(req, resp){
     const profileName = req.params.profileName;
+    const option = req.params.option;
 
     let currentUser;
     let allCommunities = await mongo.getForums("name", 1, 99, 0);
@@ -242,10 +243,26 @@ server.get("/viewProfile/:profileName", async function(req, resp){
     // modify with the proper sort system
 
     // ID, sortBy, order, limit, skip, type ("all/post/comment")
-    const activitiesList = await mongo.getUserActivity(profileDB._id.toString(), "createdAt", -1, 50, 0, "all");
-    let followedUser = null;
+    let activitiesList = await mongo.getUserActivity(profileDB._id.toString(), "createdAt", -1, 50, 0, "all");
 
-    console.log(activitiesList[29]);
+    if (option == "Posts") {
+        for (let i = 0; i < activitiesList.length; i++) {
+            if (activitiesList[i].type == "comment") {
+                activitiesList.splice(i, 1);
+                i--;
+            }
+        }
+    }
+    else if (option == "Comments") {
+        for (let i = 0; i < activitiesList.length; i++) {
+            if (activitiesList[i].type == "post") {
+                activitiesList.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    let followedUser = null;
 
     if (currentUser) {
         followedUser = currentUser.following.some(c => c === profileDB._id.toString());
@@ -255,7 +272,7 @@ server.get("/viewProfile/:profileName", async function(req, resp){
         layout: "index",
         title: "View Profile Page",
         pageStyle: "viewprofile",
-        pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewPost", "viewProfile", "search"],
+        pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewProfile", "search"],
         user: currentUser,
         myCommunities: followedCommunities,
         communities: allCommunities,

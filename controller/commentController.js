@@ -14,6 +14,18 @@ router.get("/get-comments-by-post/:postId", async (req, res) => {
     }
 });
 
+router.get("/get-comments-by-author/:authorId", async (req, res) => {
+    try {
+        const authorId = req.params.authorId;
+        const comments = await mongo.getCommentsByAuthorId(authorId);
+
+        res.json(comments);
+    } catch (error) {
+        console.error("Error fetching comments: ", error);
+        res.status(500).json({ message: "Error fetching comments" });
+    }
+});
+
 router.patch("/update-comment/:commentId", async (req, res) => {
     try {
         const commentId = req.params.commentId;

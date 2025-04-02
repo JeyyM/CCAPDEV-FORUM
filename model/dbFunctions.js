@@ -2622,6 +2622,18 @@ const mongo = {
         }
     },
 
+    async getCommentsByAuthorId(authorId) {
+        try {
+            const db = client.db(dbName);
+            const commentsCollection = db.collection(commentsVar);
+
+            return await commentsCollection.find({ authorId: new ObjectId(authorId) }).toArray();
+        } catch (error) {
+            console.error("Error fetching posts by forum ID: ", error);
+            return [];
+        }
+    },
+
     async updateComment(commentId, updatedData) {
         try {
             const db = client.db(dbName);

@@ -319,6 +319,7 @@ $(document).ready(async function() {
     $(comments).each(function (_, comment) {
         if (comment.parentId == null) {
             var element = $(`#${comment._id}`);
+            console.log(comment._id);
             let poster = info.find(user => user._id.toString() === $(element).find(".posterName").attr("id").toString());
             $(element).find(".commentHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
             $(element).find(".profilePic").attr("src", poster.profileImage);
@@ -342,6 +343,8 @@ $(document).ready(async function() {
             var newComment = createComment(comment, sessionData);
             
             var engagement = $(element).find(".commentEngagement");
+
+            console.log(element);
 
             $(newComment).insertAfter(engagement);
 
