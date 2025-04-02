@@ -48,97 +48,96 @@ $(document).ready(async function() {
                     const poster = info.find(user => user._id.toString() === post.authorId.toString());
                     const community = communityData.find(community => community._id.toString() === post.forumId.toString());
 
-                        let postContent = postBuilder(post, poster, community, sessionData.user);
-                        $(".postContainer").append(postContent);
+                    let postContent = postBuilder(post, poster, community, sessionData.user);
+                    $(".postContainer").append(postContent);
 
-                        $(postContent).find(".likeButton").first().click(function() {
-                            let parentElement = $(this).closest(".post, .comment");
-                            let itemId = parentElement.attr("id");
-                            let isPost = parentElement.hasClass("post");
-                            toggleVote(itemId, 1, sessionData.user, isPost);
-                    
-                            if (sessionData != null) {
-                                likePost(this);
-                            }
-                        });
-                    
-                        $(postContent).find(".dislikeButton").closest().click(function() {
-                            let parentElement = $(this).closest(".post, .comment");
-                            let itemId = parentElement.attr("id");
-                            let isPost = parentElement.hasClass("post");
-                            toggleVote(itemId, -1, sessionData.user, isPost);
-                    
-                            if (sessionData != null) {
-                                dislikePost(this);
-                            }
-                        })
+                    $(postContent).find(".likeButton").first().click(function() {
+                        let parentElement = $(this).closest(".post, .comment");
+                        let itemId = parentElement.attr("id");
+                        let isPost = parentElement.hasClass("post");
+                        toggleVote(itemId, 1, sessionData.user, isPost);
+                
+                        if (sessionData != null) {
+                            likePost(this);
+                        }
                     });
-                }
-                catch (error) {
-                    console.error("Error fetching posts:", error);
-                }
-                finally {
-                    isFetching = false;
-                }
+                
+                    $(postContent).find(".dislikeButton").closest().click(function() {
+                        let parentElement = $(this).closest(".post, .comment");
+                        let itemId = parentElement.attr("id");
+                        let isPost = parentElement.hasClass("post");
+                        toggleVote(itemId, -1, sessionData.user, isPost);
+                
+                        if (sessionData != null) {
+                            dislikePost(this);
+                        }
+                    })
+                });
             }
-        }); 
-    }
-    else {
-        let isFetching = false;
+            catch (error) {
+                console.error("Error fetching posts:", error);
+            }
+            finally {
+                isFetching = false;
+            }
+        }
+        else {
+            let isFetching = false;
 
-        $(window).on('scroll', async function () {
-            if ($(window).scrollTop() >= $('.postContainer').offset().top + $('.postContainer').outerHeight() - window.innerHeight) {
-                if (isFetching) return;
+            $(window).on('scroll', async function () {
+                if ($(window).scrollTop() >= $('.postContainer').offset().top + $('.postContainer').outerHeight() - window.innerHeight) {
+                    if (isFetching) return;
 
-                isFetching = true;
+                    isFetching = true;
 
-                try {
-                    const forumParam = "all";
+                    try {
+                        const forumParam = "all";
 
-                    let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=new&order=1&limit=5&skip=${skip}`);
-                    let posts = await postsResponse.json();
+                        let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=new&order=1&limit=5&skip=${skip}`);
+                        let posts = await postsResponse.json();
 
-            skip += posts.length;
+                skip += posts.length;
 
-            posts.forEach(function (post, _) {
-                const poster = info.find(user => user._id.toString() === post.authorId.toString());
-                const community = communityData.find(community => community._id.toString() === post.forumId.toString());
+                posts.forEach(function (post, _) {
+                    const poster = info.find(user => user._id.toString() === post.authorId.toString());
+                    const community = communityData.find(community => community._id.toString() === post.forumId.toString());
 
-                        let postContent = postBuilder(post, poster, community,  null);
-                        $(".postContainer").append(postContent);
+                            let postContent = postBuilder(post, poster, community,  null);
+                            $(".postContainer").append(postContent);
 
-                        $(postContent).find(".likeButton").closest().click(function() {
-                            let parentElement = $(this).closest(".post, .comment");
-                            let itemId = parentElement.attr("id");
-                            let isPost = parentElement.hasClass("post");
-                            toggleVote(itemId, 1, sessionData.user, isPost);
-                    
-                            if (sessionData != null) {
-                                likePost(this);
-                            }
+                            $(postContent).find(".likeButton").closest().click(function() {
+                                let parentElement = $(this).closest(".post, .comment");
+                                let itemId = parentElement.attr("id");
+                                let isPost = parentElement.hasClass("post");
+                                toggleVote(itemId, 1, sessionData.user, isPost);
+                        
+                                if (sessionData != null) {
+                                    likePost(this);
+                                }
+                            });
+                        
+                            $(postContent).find(".dislikeButton").closest().click(function() {
+                                let parentElement = $(this).closest(".post, .comment");
+                                let itemId = parentElement.attr("id");
+                                let isPost = parentElement.hasClass("post");
+                                toggleVote(itemId, -1, sessionData.user, isPost);
+                        
+                                if (sessionData != null) {
+                                    dislikePost(this);
+                                }
+                            })
                         });
-                    
-                        $(postContent).find(".dislikeButton").closest().click(function() {
-                            let parentElement = $(this).closest(".post, .comment");
-                            let itemId = parentElement.attr("id");
-                            let isPost = parentElement.hasClass("post");
-                            toggleVote(itemId, -1, sessionData.user, isPost);
-                    
-                            if (sessionData != null) {
-                                dislikePost(this);
-                            }
-                        })
-                    });
+                    }
+                    catch (error) {
+                        console.error("Error fetching posts:", error);
+                    }
+                    finally {
+                        isFetching = false;
+                    }
                 }
-                catch (error) {
-                    console.error("Error fetching posts:", error);
-                }
-                finally {
-                    isFetching = false;
-                }
-            }
-        }); 
-    }
+            })
+        }
+    }) 
 })
 
 function formatDate(date) {
