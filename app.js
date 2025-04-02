@@ -3,6 +3,11 @@ const mongo = require("./model/dbFunctions");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 
+const MongoStore = require("connect-mongo");
+require("dotenv").config();
+mongo.initializeDB();
+
+
 const fs = require("fs");
 const path = require("path");
 
@@ -15,15 +20,41 @@ const postController = require('./controller/postController');
 const commentController = require('./controller/commentController');
 const searchController = require('./controller/searchController');
 
+// server.set("controller", path.join(__dirname, "controller"));
+// server.set("model", path.join(__dirname, "model"));
+// server.set("public", path.join(__dirname, "public"));
+server.set("views", path.join(__dirname, "views"));
+server.use(express.static(path.join(__dirname, "public")));
+
+// server.use(session({
+//     secret: "fuckingpassword",
+//     resave: false,
+//     saveUninitialized: false,
+//     store: MongoStore.create({
+//         mongoUrl: process.env.MONGODB_URI,
+//         collectionName: "sessions"
+//     }),
+//     cookie: {
+//         secure: process.env.NODE_ENV === "production", 
+//         httpOnly: true
+//     }
+// }));
+
 server.use(session({
-    secret: "fuckingpassword",
+    secret: process.env.SESSION_SECRET || "default_secret",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI, 
+        collectionName: "sessions"
+    }),
     cookie: {
-        secure: false,
-        httpOnly: true
+        secure: process.env.NODE_ENV === 'production', 
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24, 
     }
 }));
+
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
@@ -466,12 +497,13 @@ server.get("/about", async function(req, resp) {
     })
 })
 
-const port = process.env.PORT || 3000;
-server.listen(port, function(){
-    console.log("Listening at port "+port);
-});
+
+// const port = process.env.PORT || 3000;
+// server.listen(port, function(){
+//     console.log("Listening at port "+port);
+// });
 // for vercel:
-// module.exports = server;
+module.exports = server;
 
 // For Updating Global Variables
 server.post("/update/userLogin", function(req, resp){
