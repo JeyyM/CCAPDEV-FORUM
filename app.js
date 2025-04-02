@@ -41,7 +41,7 @@ server.use(express.static(path.join(__dirname, "public")));
 // }));
 
 server.use(session({
-    secret: process.env.SESSION_SECRET || "default_secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
