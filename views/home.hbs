@@ -2,12 +2,34 @@
     <div class="body">
         <div id="sort">
             <div id="mainsort" onclick="sortClicked()">
-                <span id="current"><i class='bx bxs-hot'></i>Hot<i class='bx bx-chevron-down'></i></span>
+                <span id="current"><i class='bx bxs-hot'></i>Hot Descending<i class='bx bx-chevron-down'></i></span>
             </div>
-            <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-hot'></i>Hot</div>
-            <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bx-up-arrow-alt'></i>Top</div>
-            <div class="choices hidden" onclick="sortSelected(this)"><i class='bx bxs-time'></i>New</div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="hot" data-order="-1">
+                <i class='bx bxs-hot'></i>Hot Descending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="hot" data-order="1">
+                <i class='bx bxs-hot'></i>Hot Ascending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="voteValue" data-order="-1">
+                <i class='bx bx-up-arrow-alt'></i>Top Descending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="voteValue" data-order="1">
+                <i class='bx bx-up-arrow-alt'></i>Top Ascending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="createdAt" data-order="-1">
+                <i class='bx bxs-time'></i>New Descending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="createdAt" data-order="1">
+                <i class='bx bxs-time'></i>New Ascending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="title" data-order="1">
+                <i class='bx bx-sort-a-z'></i>Alphabetical Ascending
+            </div>
+            <div class="choices hidden" onclick="sortSelected(this)" data-value="title" data-order="-1">
+                <i class='bx bx-sort-z-a'></i>Alphabetical Descending
+            </div>
         </div>
+
         <div id="searchResult">
         <div class="postContainer">
             {{#each posts}}        

@@ -33,7 +33,7 @@ server.set('view engine', 'hbs');
 server.engine('hbs', handlebars.engine({
     extname: 'hbs',
     helpers: {
-        isEqual: (x, y) => x == y,
+        isEqual: (x, y) => x === y,
         isNull: (x) => x === null,
         json: function (body) {
             return JSON.stringify(body);
@@ -113,9 +113,14 @@ server.get("/", async function (req, resp) {
 
 
     if (currentUser == null) {
-        posts = await mongo.getPostsByForumIds("all", "title", 1, 10, 0);
+        posts = await mongo.getPostsByForumIds("all", "hot", -1, 10, 0);
     } else {
-        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "title", 1, 10, 0);
+        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "hot", -1, 10, 0);
+    }
+
+    for (let post of posts){
+        let community = allCommunities.find(community => community._id.toString() === post.forumId.toString());
+        post.forum = community
     }
 
     resp.render("home",{
@@ -147,13 +152,11 @@ server.get("/viewPost/:postId", async function(req, resp){
     let posts = await mongo.getPosts();
     const post = posts.find(p => p._id.toString() === postId.toString());
 
-    /*
     if (currentUser == null) {
         posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
     } else {
         posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "new", 1, 10, 0);
     }
-    */
 
     const comments = await mongo.getCommentsByPostId(post._id);
 
@@ -245,6 +248,8 @@ server.get("/viewProfile/:profileName/:option?", async function(req, resp){
 
     // ID, sortBy, order, limit, skip, type ("all/post/comment")
     let activitiesList = await mongo.getUserActivity(profileDB._id.toString(), "createdAt", -1, 50, 0, "all");
+
+    console.log(activitiesList[0]);
 
     if (option == "Posts") {
         for (let i = 0; i < activitiesList.length; i++) {
