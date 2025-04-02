@@ -7,7 +7,6 @@ const MongoStore = require("connect-mongo");
 require("dotenv").config();
 mongo.initializeDB();
 
-console.log('Mongo URI:', process.env.MONGODB_URI);
 
 const fs = require("fs");
 const path = require("path");
@@ -32,20 +31,20 @@ server.use(session({
 }));
 */
 
-
 server.use(session({
     secret: "fuckingpassword",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URI, // Use your MongoDB Atlas connection string
+        mongoUrl: process.env.MONGODB_URI, // Mongo URI from .env
         collectionName: "sessions"
     }),
     cookie: {
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        secure: process.env.NODE_ENV === "production", 
         httpOnly: true
     }
 }));
+
 
 
 server.use(express.json());
