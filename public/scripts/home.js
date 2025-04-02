@@ -6,7 +6,7 @@ let currentOrder = window.selectedOrder || -1;
 
 $(document).ready(async function() {
     const sessionResponse = await fetch("/api/session",{
-        credentials: 'same-origin'
+        credentials: "include"
     });
     const sessionData = await sessionResponse.json();
     let currentUser = null;
