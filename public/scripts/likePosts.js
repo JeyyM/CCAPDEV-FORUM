@@ -216,6 +216,7 @@ async function toggleVote(itemId, voteValue, sessionData, isPost) {
     }
     let path = isPost ? "/api/toggle-vote": "/api/toggle-comment-vote";
     let data = isPost ? {userId: sessionData.id, postId: itemId, voteValue}: {userId: sessionData.id, commentId: itemId, voteValue};
+    console.log(JSON.stringify(data));
     try {
         const response = await fetch(path, {
             method: "PATCH",

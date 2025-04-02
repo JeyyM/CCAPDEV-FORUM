@@ -41,7 +41,7 @@ server.use(express.static(path.join(__dirname, "public")));
 // }));
 
 server.use(session({
-    secret: process.env.SESSION_SECRET || "default_secret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -502,12 +502,12 @@ server.get("/about", async function(req, resp) {
 })
 
 
-// const port = process.env.PORT || 3000;
-// server.listen(port, function(){
-//     console.log("Listening at port "+port);
-// });
+ const port = process.env.PORT || 3000;
+ server.listen(port, function(){
+     console.log("Listening at port "+port);
+});
 // for vercel:
-module.exports = server;
+//module.exports = server;
 
 // For Updating Global Variables
 server.post("/update/userLogin", function(req, resp){

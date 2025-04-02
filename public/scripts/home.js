@@ -46,31 +46,55 @@ $(document).ready(async function() {
                     const poster = info.find(user => user._id.toString() === post.authorId.toString());
                     const community = communityData.find(community => community._id.toString() === post.forumId.toString());
 
-                    const postContent = postBuilder(post, poster, community, sessionData.user || null);
-                    $(".postContainer").append(postContent);
-                });
-            } catch (error) {
-                console.error("Error fetching posts:", error);
-            } finally {
-                isFetching = false;
+                        let postContent = postBuilder(post, poster, community, sessionData.user);
+                        $(".postContainer").append(postContent);
+
+                        $(postContent).find(".likeButton").first().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, 1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                likePost(this);
+                            }
+                        });
+                    
+                        $(postContent).find(".dislikeButton").closest().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, -1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                dislikePost(this);
+                            }
+                        })
+                    });
+                }
+                catch (error) {
+                    console.error("Error fetching posts:", error);
+                }
+                finally {
+                    isFetching = false;
+                }
             }
-        }
-    });
+        }); 
+    }
+    else {
+        let isFetching = false;
 
-    window.addEventListener("sortChanged", async function (e) {
-        currentSortBy = e.detail.sortBy || "hot";
-        currentOrder = e.detail.orderBy || -1;
-        skip = 0;
+        $(window).on('scroll', async function () {
+            if ($(window).scrollTop() >= $('.postContainer').offset().top + $('.postContainer').outerHeight() - window.innerHeight) {
+                if (isFetching) return;
 
-        $(".postContainer").empty();
+                isFetching = true;
 
-        const forumParam = currentUser && currentUser.joinedForums.length > 0
-            ? currentUser.joinedForums.join(",")
-            : "all";
+                try {
+                    const forumParam = "all";
 
-        try {
-            const postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=${currentSortBy}&order=${currentOrder}&limit=${limit}&skip=${skip}`);
-            const posts = await postsResponse.json();
+                    let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=new&order=1&limit=5&skip=${skip}`);
+                    let posts = await postsResponse.json();
 
             skip += posts.length;
 
@@ -78,14 +102,42 @@ $(document).ready(async function() {
                 const poster = info.find(user => user._id.toString() === post.authorId.toString());
                 const community = communityData.find(community => community._id.toString() === post.forumId.toString());
 
-                const postContent = postBuilder(post, poster, community, sessionData.user || null);
-                $(".postContainer").append(postContent);
-            });
-        } catch (error) {
-            console.error("Error fetching posts after sort change:", error);
-        }
-    });
-});
+                        let postContent = postBuilder(post, poster, community,  null);
+                        $(".postContainer").append(postContent);
+
+                        $(postContent).find(".likeButton").closest().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, 1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                likePost(this);
+                            }
+                        });
+                    
+                        $(postContent).find(".dislikeButton").closest().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, -1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                dislikePost(this);
+                            }
+                        })
+                    });
+                }
+                catch (error) {
+                    console.error("Error fetching posts:", error);
+                }
+                finally {
+                    isFetching = false;
+                }
+            }
+        }); 
+    }
+})
 
 function formatDate(date) {
     return new Date(date).toLocaleString("en-US", {
