@@ -3,8 +3,9 @@ $(document).ready(async function() {
         try {
             const forumsResponse = await fetch(`/api/get-forums?sortBy=createdAt&order=1&limit=99&skip=0`);
             const forums = await forumsResponse.json();
-            const dForum = forums.find(forum => forum.name.toLowerCase() === newName.toLowerCase());
-            if(dForum._id !== forumId && dForum.name.toLowerCase() === newName.toLowerCase()){
+            let finalName = newName.replace(/\s+/g, ''); //remove space
+            const dForum = forums.find(forum => forum.name.toLowerCase() === finalName.toLowerCase());
+            if(dForum && dForum._id !== forumId && dForum.name.toLowerCase() === finalName.toLowerCase()){
                 alert("Forum name is taken!");
                 return; 
             }
@@ -13,7 +14,7 @@ $(document).ready(async function() {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: newName,
+                    name: finalName,
                     description: newDescription,
                     bannerImage: newBannerImage,
                     forumImage: newForumImage,
