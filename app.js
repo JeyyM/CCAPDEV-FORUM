@@ -218,21 +218,6 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
     });
 });
 
-//     resp.render("viewProfile",{
-//         layout: "index",
-//         title: "View Profile Page",
-//         pageStyle: "viewpost",
-//         pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewProfile", "search"],
-//         user: currentUser,
-//         myCommunities: followedCommunities,
-//         communities: allCommunities,
-//         profile: profile,
-//         followedUser: followedUser,
-//         posts: activitiesList,
-//         showCommunity: true
-//     });
-// });
-
 server.get("/viewProfile/:profileName", async function(req, resp){
     const profileName = req.params.profileName;
 
@@ -257,7 +242,7 @@ server.get("/viewProfile/:profileName", async function(req, resp){
     const activitiesList = await mongo.getUserActivity(profileDB._id.toString(), "createdAt", -1, 50, 0, "all");
     let followedUser = null;
 
-    console.log(activitiesList);
+    console.log(activitiesList[29]);
 
     if (currentUser) {
         followedUser = currentUser.following.some(c => c === profileDB._id.toString());
@@ -267,7 +252,7 @@ server.get("/viewProfile/:profileName", async function(req, resp){
         layout: "index",
         title: "View Profile Page",
         pageStyle: "viewprofile",
-        pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewProfile", "search"],
+        pageScripts: ["account", "sortPosts", "likePosts", "viewOptions", "viewPost", "viewProfile", "search"],
         user: currentUser,
         myCommunities: followedCommunities,
         communities: allCommunities,

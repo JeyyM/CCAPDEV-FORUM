@@ -1,0 +1,55 @@
+<div class="post" id="{{_id}}">
+    <div class="fromCommunity">
+        <div class="communityRedirect" onclick="window.location.href='/viewCommunity/{{forum.name}}'">
+            <img src="{{forum.forumImage}}" class="communityPic">
+            <div class="communityHeader">
+                <span class="communityName" data-community="{{toString forumId}}">{{forum.name}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="postHeaderContainer">
+        <div class="postHeader" onclick="window.location.href='/viewProfile/{{user.username}}'">
+            <img src="{{user.profileImage}}" class="profilePic">
+            <div>
+                <span class="posterName" id="{{authorId}}">{{user.username}}</span>
+                <span class="timePosted">
+                    {{formatDate createdAt}}
+                    {{#unless (isDateEqual updatedAt createdAt)}}
+                        <span class="dot">•</span>
+                        <span class="timePosted">[EDITED]</span>
+                    {{/unless}}
+                </span>
+            </div>
+        </div>
+
+        {{#if (isEqual (toString authorId) (toString user._id))}}
+        <div class="postSettings">
+            <i class='bx bx-dots-horizontal-rounded' onclick="postSettings(event, this)"></i>
+            <div class="floatingSettings hidden">
+                <button class="editPost" onclick="window.location.href='/editPost/{{_id}}'"><i class='bx bx-edit-alt'></i>Edit</button>
+                <button class="deletePost"><i class='bx bx-trash'></i>Delete</button>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+
+    <div class="postContent" onclick="window.location.href='/viewPost/{{_id}}'">
+        <span class="postTitle">{{title}}</span>
+        <span class="postBody">{{content}}</span>
+        {{#if postImage}}
+            <img src="{{postImage}}" class="postImage">
+        {{/if}}
+    </div>
+
+    <div class="postEngagement">
+        <button class="likeButton"><i class='bx bx-like'></i></button>
+        <span class="voteValue">{{voteValue}}</span>
+        <button class="dislikeButton"><i class='bx bx-dislike'></i></button>
+        <button class="commentButton" onclick="window.location.href='/viewPost/{{_id}}'">
+            <i class='bx bxs-comment'></i>
+            <span>{{commentsCount}}</span>
+        </button>
+        <button class="share"><i class='bx bxs-share-alt'></i></button>
+    </div>
+</div>

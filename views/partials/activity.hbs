@@ -1,21 +1,14 @@
 <div class="postContainer">
-
-    {{#if (isEqual type "comment")}}
-        {{> post post=post user=post.user }}
-        <h1>comment</h1>
-    {{else}}
-        {{> post post=this user=user }}
-        <h1>Post</h1>
-    {{/if}}
+    {{> activityPost this }}
 
     {{#if (isEqual type "comment")}}
     <div class="commentContainer">
         {{#each thread}}
             {{#if (isNull parentId)}}
-                {{> comment comment=this comments=../thread user=../user }}
+                {{> activityComment comment=this comments=../thread user=../user }}
             {{/if}}
         {{/each}}
     </div>
     {{/if}}
-
 </div>
+
