@@ -1140,7 +1140,9 @@
 
         async function byForumsTrigger() {
             try {
-                const sessionResponse = await fetch("/api/session");
+                const sessionResponse = await fetch("/api/session", {
+            credentials: "include", 
+        });
                 const sessionData = await sessionResponse.json();
 
                 let forumIds = [];
@@ -1447,7 +1449,9 @@
         })
 
         document.getElementById("groupBatchButton").addEventListener("click", async () => {
-            const sessionResponse = await fetch("/api/session");
+            const sessionResponse = await fetch("/api/session"{
+            credentials: "include", 
+        });
             const sessionData = await sessionResponse.json();
 
             let forumIds = [];
