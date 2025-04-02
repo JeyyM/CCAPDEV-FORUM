@@ -31,7 +31,8 @@ server.use(session({
     }
 }));
 */
-
+//why home not accesisble
+server.set('view engine', 'hbs');
 server.use(session({
     secret: "fuckingpassword",
     resave: false,
