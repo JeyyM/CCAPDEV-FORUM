@@ -10,7 +10,7 @@ $(document).ready(async function() {
     const communityResponse = await fetch(`/api/get-forums?sortBy=createdAt&order=1&limit=99&skip=0`);
     const communityData = await communityResponse.json();
 
-    let skip = 10;
+    let skip = 0;
 
     if (hasSession){
         try {
@@ -34,7 +34,7 @@ $(document).ready(async function() {
                 try {
                     const forumParam = currentUser.joinedForums.length > 0 ? currentUser.joinedForums.join(",") : "all";
 
-                    let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=new&order=1&limit=5&skip=${skip}`);
+                    let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=title&order=11&limit=5&skip=${skip}`);
                     let posts = await postsResponse.json();
 
                     skip += posts.length;
@@ -67,8 +67,7 @@ $(document).ready(async function() {
 
                 try {
                     const forumParam = "all";
-
-                    let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=new&order=1&limit=5&skip=${skip}`);
+                    let postsResponse = await fetch(`api/get-posts-by-forums/${forumParam}?sortBy=title&order=1&limit=5&skip=${skip}`);
                     let posts = await postsResponse.json();
 
                     skip += posts.length;

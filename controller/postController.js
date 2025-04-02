@@ -29,6 +29,8 @@ router.get("/get-posts-by-forums/:forumIds", async (req, res) => {
         const limit = parseInt(req.query.limit);
         const skip = parseInt(req.query.skip);
 
+        console.log("in getting posts", sortBy, order, limit, skip);
+
         const forumIds = req.params.forumIds;
         const posts = await mongo.getPostsByForumIds(forumIds, sortBy, order, limit, skip);
 

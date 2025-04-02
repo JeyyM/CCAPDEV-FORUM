@@ -113,9 +113,9 @@ server.get("/", async function (req, resp) {
 
 
     if (currentUser == null) {
-        posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
+        posts = await mongo.getPostsByForumIds("all", "title", 1, 10, 0);
     } else {
-        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "new", 1, 10, 0);
+        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "title", 1, 10, 0);
     }
 
     resp.render("home",{
@@ -154,7 +154,6 @@ server.get("/viewPost/:postId", async function(req, resp){
     }
 
     const comments = await mongo.getCommentsByPostId(post._id);
-    console.log(comments);
 
     resp.render("viewPost",{
         layout: "index",
