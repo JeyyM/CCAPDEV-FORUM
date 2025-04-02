@@ -1,5 +1,7 @@
 $(document).ready(async function() {
-    const sessionResponse = await fetch("/api/session");
+    const sessionResponse = await fetch("/api/session",{
+        credentials: 'same-origin'
+    });
     const sessionData = await sessionResponse.json();
     let currentUser = null;
     let hasSession = sessionData.success;
