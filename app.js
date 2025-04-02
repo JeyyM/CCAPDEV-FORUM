@@ -2,8 +2,12 @@ const express = require("express");
 const mongo = require("./model/dbFunctions");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+
+const MongoStore = require("connect-mongo");
 require("dotenv").config();
 mongo.initializeDB();
+
+console.log('Mongo URI:', process.env.MONGODB_URI);
 
 const fs = require("fs");
 const path = require("path");
@@ -27,8 +31,7 @@ server.use(session({
     }
 }));
 */
-const MongoStore = require("connect-mongo");
-console.log('Mongo URI:', process.env.MONGO_URI);
+
 
 server.use(session({
     secret: "fuckingpassword",
