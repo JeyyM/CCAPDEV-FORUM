@@ -2321,6 +2321,8 @@ const mongo = {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
             const now = new Date();
+
+            console.log("in getPostsByForumIds", forumIds, sortBy, order, limit, skip);
     
             let idArray = [];
     
@@ -2521,34 +2523,94 @@ const mongo = {
         }
     },
 
+    // async deletePost(postId) {
+    //     try {
+    //         const db = client.db(dbName);
+    //         const postsCollection = db.collection(postsVar);
+    //         const usersCollection = db.collection(usersVar);
+    //         const forumsCollection = db.collection(forumsVar);
+
+    //         const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+
+    //         const result = await postsCollection.deleteOne({ _id: new ObjectId(postId) });
+
+    //         await usersCollection.updateOne(
+    //             { _id: post.authorId },
+    //             { $inc: { postsCount: -1 } }
+    //         );
+
+    //         await forumsCollection.updateOne(
+    //             { _id: post.forumId },
+    //             { $inc: { postsCount: -1 } }
+    //         );
+
+    //         return { success: true, message: "Post deleted successfully!" };
+    //     } catch (error) {
+    //         console.error("Error deleting forum: ", error);
+    //         return { success: false, message: "Error deleting post" };;
+    //     }
+    // },
+
     async deletePost(postId) {
         try {
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
             const usersCollection = db.collection(usersVar);
             const forumsCollection = db.collection(forumsVar);
-
-            const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
-
-            const result = await postsCollection.deleteOne({ _id: new ObjectId(postId) });
-
+            const commentsCollection = db.collection(commentsVar);
+    
+            const postObjectId = new ObjectId(postId);
+            const post = await postsCollection.findOne({ _id: postObjectId });
+            if (!post) {
+                return { success: false, message: "Post not found" };
+            }
+    
+            const postComments = await commentsCollection.find({ postId: postObjectId }).toArray();
+    
+            const allDeletedIds = postComments.map(comment => comment._id);
+            const userDictionary = {};
+    
+            for (const comment of postComments) {
+                const userId = comment.authorId.toString();
+                if (!userDictionary[userId]) userDictionary[userId] = 0;
+                userDictionary[userId]++;
+    
+                await usersCollection.updateMany(
+                    {},
+                    { $pull: { commentVotes: { commentId: comment._id } } }
+                );
+            }
+    
+            for (const [userId, count] of Object.entries(userDictionary)) {
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    { $inc: { commentsCount: -count } }
+                );
+            }
+    
+            if (allDeletedIds.length > 0) {
+                await commentsCollection.deleteMany({ _id: { $in: allDeletedIds } });
+            }
+    
             await usersCollection.updateOne(
                 { _id: post.authorId },
                 { $inc: { postsCount: -1 } }
             );
-
+    
             await forumsCollection.updateOne(
                 { _id: post.forumId },
                 { $inc: { postsCount: -1 } }
             );
-
-            return { success: true, message: "Post deleted successfully!" };
+    
+            await postsCollection.deleteOne({ _id: postObjectId });
+    
+            return { success: true, message: "Post and all comments deleted successfully" };
         } catch (error) {
-            console.error("Error deleting forum: ", error);
-            return { success: false, message: "Error deleting post" };;
+            console.error("Error deleting post: ", error);
+            return { success: false, message: "Error deleting post" };
         }
     },
-
+    
     async toggleVote(userId, postId, voteValue) {
         // console.log("PREVIOUS: ", voteValue);
         try {
@@ -2691,30 +2753,99 @@ const mongo = {
         }
     },
 
+    // async deleteComment(commentId) {
+    //     try {
+    //         const db = client.db(dbName);
+    //         const postsCollection = db.collection(postsVar);
+    //         const usersCollection = db.collection(usersVar);
+    //         const commentsCollection = db.collection(commentsVar);
+
+    //         const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
+    //         const result = await commentsCollection.deleteOne({ _id: new ObjectId(commentId) });
+
+    //         await usersCollection.updateOne(
+    //             { _id: comment.authorId },
+    //             { $inc: { commentsCount: -1 } }
+    //         );
+
+    //         await postsCollection.updateOne(
+    //             { _id: comment.postId },
+    //             { $inc: { commentsCount: -1 } }
+    //         );
+
+    //         return { success: true, message: "Comment deleted successfully!" };
+    //     } catch (error) {
+    //         console.error("Error deleting comment: ", error);
+    //         return { success: false, message: "Error deleting comment" };;
+    //     }
+    // },
+
     async deleteComment(commentId) {
         try {
+            // GOALS
+            // set the main comment
+            // find all children
+                // recursion to find more children
+            // make a dictionary for all users involved to use as a counter
+            // remove each comment to delete from all commentVotes
+            // deduct all users commentCounts using dictionary
+            // deduct length of all deleted from a post's commentsCount
+
             const db = client.db(dbName);
             const postsCollection = db.collection(postsVar);
             const usersCollection = db.collection(usersVar);
             const commentsCollection = db.collection(commentsVar);
-
-            const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
-            const result = await commentsCollection.deleteOne({ _id: new ObjectId(commentId) });
-
-            await usersCollection.updateOne(
-                { _id: comment.authorId },
-                { $inc: { commentsCount: -1 } }
-            );
-
+    
+            const mainId = new ObjectId(commentId);
+            const mainComment = await commentsCollection.findOne({ _id: mainId });
+            if (!mainComment) {
+                return { success: false, message: "Comment not found" };
+            }
+    
+            const toDeleteList = [mainComment];
+            const currentTargets = [mainId];
+    
+            while (currentTargets.length > 0) {
+                const currentId = currentTargets.pop();
+                const children = await commentsCollection.find({ parentId: currentId }).toArray();
+                toDeleteList.push(...children);
+                children.forEach(child => currentTargets.push(child._id));
+            }
+    
+            const userDictionary = {};
+            const allDeletedIds = toDeleteList.map(c => c._id);
+    
+            for (const comment of toDeleteList) {
+                const authorId = comment.authorId.toString();
+                if (!userDictionary[authorId]) {
+                    userDictionary[authorId] = 0;
+                }
+                userDictionary[authorId]++;
+                await usersCollection.updateOne(
+                    { _id: comment.authorId },
+                    { $pull: { commentVotes: { commentId: comment._id } } }
+                );
+            }
+    
+            for (const [userId, count] of Object.entries(userDictionary)) {
+                console.log(userId, count);
+                await usersCollection.updateOne(
+                    { _id: new ObjectId(userId) },
+                    { $inc: { commentsCount: -count } }
+                );
+            }
+    
             await postsCollection.updateOne(
-                { _id: comment.postId },
-                { $inc: { commentsCount: -1 } }
+                { _id: mainComment.postId },
+                { $inc: { commentsCount: -toDeleteList.length } }
             );
-
-            return { success: true, message: "Comment deleted successfully!" };
+    
+            await commentsCollection.deleteMany({ _id: { $in: allDeletedIds } });
+    
+            return { success: true, message: "Comment and all children deleted successfully" };
         } catch (error) {
             console.error("Error deleting comment: ", error);
-            return { success: false, message: "Error deleting comment" };;
+            return { success: false, message: "Error deleting comment" };
         }
     },
 
@@ -2779,7 +2910,7 @@ const mongo = {
 
     ////////////// USER ACTIVITY //////////////
     async getUserActivity(userId, sortBy = "createdAt", order = -1, limit = 10, skip = 0, type = "all") {
-        console.log("User Activity: ", userId, sortBy, order, limit, skip, type);
+        // console.log("User Activity: ", userId, sortBy, order, limit, skip, type);
     
         const db = client.db(dbName);
         const postsCollection = db.collection(postsVar);
@@ -2842,7 +2973,6 @@ const mongo = {
     
         const forumDictionary = Object.fromEntries(allForums.map(f => [f._id.toString(), f]));
     
-        // Prepare user dictionary
         for (const post of userPosts) {
             const authorIdStr = post.authorId?.toString?.() || "deleted";
             if (!userDictionary[authorIdStr]) {
@@ -2851,7 +2981,6 @@ const mongo = {
             }
         }
     
-        // Post-based activities
         const postActivities = userPosts.map(post => {
             const user = userDictionary[post.authorId?.toString()] || deletedUser;
             const forum = forumDictionary[post.forumId?.toString()] || deletedForum;
@@ -2865,7 +2994,6 @@ const mongo = {
             };
         });
     
-        // Source posts for user comments
         const postIds = userComments.map(c => new ObjectId(c.postId));
         const sourcePosts = await Promise.all(
             postIds.map(async (id) => {
@@ -2874,7 +3002,6 @@ const mongo = {
             })
         );
     
-        // Attach authors of those source posts
         for (const post of sourcePosts) {
             const authorIdStr = post.authorId?.toString?.() || "deleted";
             if (!userDictionary[authorIdStr]) {
@@ -2934,14 +3061,12 @@ const mongo = {
     
         let allActivity = [...postActivities, ...commentActivities];
     
-        // Filtering
         if (type === "post") {
             allActivity = allActivity.filter(a => a.type === "post");
         } else if (type === "comment") {
             allActivity = allActivity.filter(a => a.type === "comment");
         }
     
-        // Sorting
         if (sortBy === "title") {
             allActivity.sort((a, b) => {
                 const aTitle = (a.title || "").toLowerCase();
