@@ -145,14 +145,9 @@ server.get("/", async function (req, resp) {
 
 
     if (currentUser == null) {
-        posts = await mongo.getPostsByForumIds("all", "hot", -1, 10, 0);
+        posts = await mongo.getPostsByForumIds("all", "new", 1, 10, 0);
     } else {
-        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "hot", -1, 10, 0);
-    }
-
-    for (let post of posts){
-        let community = allCommunities.find(community => community._id.toString() === post.forumId.toString());
-        post.forum = community
+        posts = await mongo.getPostsByForumIds(currentUser.joinedForums, "new", 1, 10, 0);
     }
 
     resp.render("home",{
