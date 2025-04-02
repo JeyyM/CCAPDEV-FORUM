@@ -34,21 +34,35 @@ const searchController = require('./controller/searchController');
 server.set("views", path.join(__dirname, "views"));
 server.use(express.static(path.join(__dirname, "public")));
 
+// server.use(session({
+//     secret: "fuckingpassword",
+//     resave: false,
+//     saveUninitialized: false,
+//     store: MongoStore.create({
+//         mongoUrl: process.env.MONGODB_URI,
+//         collectionName: "sessions"
+//     }),
+//     cookie: {
+//         secure: process.env.NODE_ENV === "production", 
+//         httpOnly: true
+//     }
+// }));
 
 server.use(session({
-    secret: "fuckingpassword",
+    secret: process.env.SESSION_SECRET || "default_secret",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
+        mongoUrl: process.env.MONGODB_URI, // Ensure this is correctly set
         collectionName: "sessions"
     }),
     cookie: {
-        secure: process.env.NODE_ENV === "production", 
-        httpOnly: true
+        maxAge: 3 * 24 * 60 * 60 * 1000, // 3 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Secure cookies in production
+        sameSite: "strict"
     }
 }));
-
 
 
 server.use(express.json());
