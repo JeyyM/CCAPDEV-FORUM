@@ -2,9 +2,19 @@ $(document).ready(async function() {
     const sessionResponse = await fetch("/api/session");
     const sessionData = await sessionResponse.json();
     let hasSession = sessionData.success;
+
     
+
     async function updateUser(userId, newName, newEmail, newPass, newBio, newBannerImage, newProfileImage) {
         try {
+            const usersResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`);
+            const users = await usersResponse.json();
+            const dUsername = users.find(user => user.username.toLowerCase() === newName.toLowerCase());
+            if(dUsername._id !== userId && dUsername.username.toLowerCase() === newName.toLowerCase()){
+                alert("Username is taken!");
+                return; 
+            }
+
             const response = await fetch(`/api/update-user/${userId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },

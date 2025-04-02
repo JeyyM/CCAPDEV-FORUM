@@ -1,4 +1,3 @@
-
 {
     "version": 2,
     "builds": [
@@ -10,10 +9,7 @@
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "app.js"
+            "dest": "/app.js"
         }
-    ],
-    "env": {
-        "MONGODB_CONNECT_URI": "mongodb+srv://sophiakylie8:nsmovcnhUaC6o96v@cluster0.6jrachz.mongodb.net/"
-    } 
+    ]
 }

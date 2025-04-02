@@ -22,8 +22,6 @@
                  </span>
             </div>
         </div>
-        {{!-- {{log post.authorId}} --}}
-        {{!-- {{log user._id}} --}}
         
         {{#if (isEqual (toString post.authorId) (toString user._id))}}
             <div class="postSettings">
@@ -47,6 +45,6 @@
         <span class="voteValue">{{post.voteValue}}</span>
         <button class="dislikeButton"><i class='bx bx-dislike'></i></button>
         <button class="commentButton" onclick="window.location.href='/viewPost/{{post._id}}'"><i class='bx bxs-comment'></i><span>{{post.commentsCount}}</span></button>
-        <button class="share"><i class='bx bxs-share-alt'></i></button>
+        <button class="share" onclick="navigator.clipboard.writeText('https://ccapdevforum.vercel.app/viewPost/{{post._id}}')"><i class='bx bxs-share-alt'></i></button>
     </div>
 </div>

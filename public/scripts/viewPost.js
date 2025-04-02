@@ -215,11 +215,6 @@ function isDateEqual (date1, date2) {
 }
 
 function createComment(param, sessionData) {
-    let user;
-    if (sessionData != null) {
-        user = sessionData.user;
-    }
-
     let postMain = $(`<div class="comment" id="${param._id}"></div>`);
     let postHeaderContainer = $(`<div class="commentHeaderContainer"></div>`);
     let postHeader = $(`<div class="commentHeader" onclick="window.location.href='/viewProfile/'"></div>`);
@@ -237,8 +232,8 @@ function createComment(param, sessionData) {
 
     postHeaderContainer.append(postHeader);
 
-    if (user != null) {
-        if (user.id.toString() == param.authorId.toString()) {
+    if (sessionData != null) {
+        if (sessionData.id == param.authorId.toString()) {
             let postSettings = $(`<div class="postSettings">
                                     <i class="bx bx-dots-horizontal-rounded" onclick="postSettings(event, this)"></i>
                                     <div class="floatingSettings hidden">
@@ -342,7 +337,7 @@ $(document).ready(async function() {
 
             var newComment = createComment(comment, sessionData);
             
-            var engagement = $(element).find(".commentEngagement");
+            var engagement = $(element).find(".commentEngagement").first();
 
             console.log(element);
 
