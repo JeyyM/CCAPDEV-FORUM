@@ -17,14 +17,15 @@ $(document).ready(async function() {
 
         const forumsResponse = await fetch(`/api/get-forums?sortBy=createdAt&order=1&limit=99&skip=0`);
         const forums = await forumsResponse.json();
-        const dForumName = forums.some(forum => forum.name.toLowerCase() === name.toLowerCase());
+        let finalName = name.replace(/\s+/g, ''); //remove space
+        const dForumName = forums.some(forum => forum.name.toLowerCase() === finalName.toLowerCase());
         if(dForumName){
             alert("Forum name is taken!");
             return; 
         }
 
         const newForum = {
-            name,
+            name: finalName,
             description,
             bannerImage,
             forumImage,
