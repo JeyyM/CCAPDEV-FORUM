@@ -29,6 +29,8 @@ server.engine("hbs", engine({
 }));
 server.set("view engine", "hbs");
 server.set("views", path.join(__dirname, "views"));
+server.set("public", path.join(__dirname, "public"));
+
 
 server.use(session({
     secret: "fuckingpassword",
