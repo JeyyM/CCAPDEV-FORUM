@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="postHeaderContainer {{authorId}} uid{{toString user._id}}">
+    <div class="postHeaderContainer">
         <div class="postHeader" onclick="window.location.href='/viewProfile/{{user.username}}'">
             <img src="{{user.profileImage}}" class="profilePic">
             <div>
@@ -50,6 +50,6 @@
             <i class='bx bxs-comment'></i>
             <span>{{commentsCount}}</span>
         </button>
-        <button class="share"><i class='bx bxs-share-alt'></i></button>
+        <button class="share" onclick="navigator.clipboard.writeText('https://ccapdevforum.vercel.app/viewPost/{{_id}}')"><i class='bx bxs-share-alt'></i></button>
     </div>
 </div>

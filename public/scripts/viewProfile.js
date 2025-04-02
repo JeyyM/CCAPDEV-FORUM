@@ -8,10 +8,15 @@ $(document).ready(async function() {
 
     let options = $("#viewOptions").find(".choices");
 
+    const selected = window.location.href.split("/");
+    if (selected.length == 6) {
+        document.getElementsByClassName(window.location.href.split("/")[5])[0].click();
+    }
+
     $(options).each(function(_, elem) {
         $(elem).click(function() {
             const profile = window.location.href.split("/")[4];
-            window.location.href = `${window.location.href.split(`${profile}/`)[0]}${profile}/${$(elem).text()}`;
+            window.location.href = `${window.location.href.split(`/${profile}`)[0]}/${profile}/${$(elem).text()}`;
         })
     })
 
@@ -77,7 +82,6 @@ $(document).ready(async function() {
     console.log(option);
     
     if (option == "" || option == "All" || option == "Comments") {
-        console.log("LMAO");
         const infoResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`)
         const info = await infoResponse.json();
 
