@@ -1,7 +1,6 @@
 const express = require("express");
 const mongo = require("./model/dbFunctions");
 const session = require("express-session");
-//const { engine } = require("express-handlebars");
 const bodyParser = require("body-parser");
 
 const MongoStore = require("connect-mongo");
@@ -21,13 +20,6 @@ const postController = require('./controller/postController');
 const commentController = require('./controller/commentController');
 const searchController = require('./controller/searchController');
 
-//why home not accesisble
-//setting engine
-// server.engine("hbs", engine({
-//     extname: "hbs",
-//     defaultLayout: "main", // If you have a default layout, like main.hbs
-// }));
-//server.set("view engine", "hbs");
 // server.set("controller", path.join(__dirname, "controller"));
 // server.set("model", path.join(__dirname, "model"));
 // server.set("public", path.join(__dirname, "public"));
