@@ -344,6 +344,7 @@ $(document).ready(async function() {
             var engagement = $(element).find(".commentEngagement");
 
             $(newComment).insertAfter(engagement);
+
             $(newComment).find(".commentHeader").attr("onclick", "window.location.href='/viewProfile/" + poster.username + "'");
             $(newComment).find(".profilePic").attr("src", poster.profileImage);
             $(newComment).find(".posterName").text(poster.username);

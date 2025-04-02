@@ -140,6 +140,7 @@ $(document).ready(async function() {
             }
         }
     })
+
     $(".comment").each(function(_, element){
         let commentId = $(element).attr("id");
         if (sessionData != null) {

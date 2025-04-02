@@ -8,6 +8,9 @@
                     <span class="communityName">{{community.name}}</span>
                 </div>
                 <div class="communityOptionsContainer">
+                    {{#if admin}}
+                    <div class="communityOptions edit" onclick="window.location.href='/editForum/{{community.name}}'"><i class='bx bx-edit-alt'></i>Edit</div>
+                    {{/if}}
                     <div class="communityOptions createPost" onclick="window.location.href='/createPost/{{community.name}}'"><i class='bx bx-plus'></i>Create Post</div>
                     {{#if joinedCommunity}}
                     <div class="communityOptions join joined" id="joinCommunity"><i class='bx bxs-bookmark'></i>Joined</div>

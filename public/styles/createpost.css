@@ -83,18 +83,21 @@
     border: 1px solid var(--border);
 }
 
-#postTitle {
+#postTitle, .textInput {
     background: none;
     background-color: #fff;
     font-size: 24px;
-    font-weight: bold;
     border-radius: 10px;
     border: 1px solid var(--border);
     padding: 10px;
     outline: none;
 }
 
-#postBody {
+#postTitle, #forumTitle {
+    font-weight: bold;
+}
+
+#postBody, .textArea {
     resize: none;
     padding: 10px;
     font-family: 'Inter', serif;

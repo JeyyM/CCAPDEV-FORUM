@@ -198,9 +198,11 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
     })
 
     let joinedCommunity = null;
+    let admin = null;
 
     if (currentUser) {
         joinedCommunity = currentUser.joinedForums.some(c => c === communityDB._id.toString());
+        admin = community.admins.some(a => a === currentUser._id.toString());
     }
 
     resp.render("viewCommunity",{
@@ -212,6 +214,7 @@ server.get("/viewCommunity/:communityName", async function(req, resp){
         myCommunities: followedCommunities,
         communities: allCommunities,
         community: community,
+        admin: admin,
         joinedCommunity: joinedCommunity,
         posts: postList
     });
@@ -351,6 +354,74 @@ server.get("/createPost/:communityName?", async function(req, resp){
         user: currentUser,
         community: community
     });
+});
+
+server.get("/createForum/", async function(req, resp){
+    let currentUser;
+    let followedCommunities = [];
+
+    const communityList = await mongo.getForums("name", 1, 99, 0);
+
+    if (req.session.user){
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = communityList.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
+
+    resp.render("createForum",{
+        layout: "index",
+        title: "Create Post Page",
+        pageStyle: "createpost",
+        pageScripts: ["account", "sortPosts", "likePosts", "createForum", "textarea", "search"],
+        myCommunities: followedCommunities,
+        communities: communityList,
+        user: currentUser,
+    });
+});
+
+server.get("/editForum/:communityName?", async function(req, resp){
+    let currentUser;
+    let followedCommunities = [];
+
+    const communityList = await mongo.getForums("name", 1, 99, 0);
+
+    const communityName = req.params.communityName;
+    const community = communityList.find(c => c.name === communityName);
+
+    if (req.session.user) {
+        currentUser = await mongo.getUserById(req.session.user.id);
+        followedCommunities = communityList.filter(c =>
+            currentUser.joinedForums.includes(c._id.toString())
+        );
+    }
+
+    let admin = null;
+
+    if (currentUser) {
+        admin = community.admins.some(a => a === currentUser._id.toString());
+    }
+
+    if (admin) {
+        resp.render("editForum",{
+            layout: "index",
+            title: "Create Post Page",
+            pageStyle: "createpost",
+            pageScripts: ["account", "sortPosts", "likePosts", "editForum", "textarea", "search"],
+            myCommunities: followedCommunities,
+            communities: communityList,
+            user: currentUser,
+            community: community
+        });
+    }
+    else {
+        resp.render("error",{
+            layout: "index",
+            title: "Error",
+            pageStyle: "home",
+            alert: "You are currently not logged in, returning home."
+        })
+    }
 });
 
 server.get("/about", async function(req, resp) {

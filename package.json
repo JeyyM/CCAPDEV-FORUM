@@ -1,7 +1,6 @@
 {
   "name": "ccapdev-forum",
   "version": "1.0.0",
-  "description": "",
   "homepage": "https://github.com/JeyyM/CCAPDEV-FORUM#readme",
   "bugs": {
     "url": "https://github.com/JeyyM/CCAPDEV-FORUM/issues"
@@ -31,5 +30,6 @@
     "mongodb": "^6.15.0",
     "node": "^18.20.8",
     "uuid": "^11.1.0"
-  }
+  },
+  "description": ""
 }

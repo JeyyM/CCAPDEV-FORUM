@@ -129,6 +129,7 @@
     width: 4vh;
     border: 1px solid var(--gray);
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .fromCommunity {
@@ -140,6 +141,7 @@
     width: 2vh;
     border: 1px solid var(--gray);
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .postHeader .communityHeader {

@@ -1,0 +1,12 @@
+<div class="main">
+    <div class="body">
+        Page not found! This could be either an access error or an incorrect redirect! Returning to Home Page.
+    </div>
+</div>
+<script>
+    const alertMessage = "{{alert}}";
+    if (alertMessage) {
+        alert(alertMessage);
+        window.location.href = "/";
+    }
+</script>
