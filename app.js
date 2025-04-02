@@ -14,7 +14,7 @@ const forumController = require('./controller/forumController');
 const postController = require('./controller/postController');
 const commentController = require('./controller/commentController');
 const searchController = require('./controller/searchController');
-
+/*
 server.use(session({
     secret: "fuckingpassword",
     resave: false,
@@ -24,6 +24,23 @@ server.use(session({
         httpOnly: true
     }
 }));
+*/
+const MongoStore = require("connect-mongo");
+
+server.use(session({
+    secret: "fuckingpassword",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI, // Use your MongoDB Atlas connection string
+        collectionName: "sessions"
+    }),
+    cookie: {
+        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        httpOnly: true
+    }
+}));
+
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
