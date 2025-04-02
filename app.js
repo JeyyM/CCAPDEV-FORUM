@@ -28,6 +28,7 @@ server.engine("hbs", engine({
     defaultLayout: "main", // If you have a default layout, like main.hbs
 }));
 server.set("view engine", "hbs");
+server.set("views", path.join(__dirname, "views"));
 
 server.use(session({
     secret: "fuckingpassword",
