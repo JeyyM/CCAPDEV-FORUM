@@ -45,6 +45,28 @@ $(document).ready(async function() {
 
                         let postContent = postBuilder(post, poster, community, sessionData.user);
                         $(".postContainer").append(postContent);
+
+                        $(postContent).find(".likeButton").first().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, 1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                likePost(this);
+                            }
+                        });
+                    
+                        $(postContent).find(".dislikeButton").closest().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, -1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                dislikePost(this);
+                            }
+                        })
                     });
                 }
                 catch (error) {
@@ -79,6 +101,28 @@ $(document).ready(async function() {
 
                         let postContent = postBuilder(post, poster, community,  null);
                         $(".postContainer").append(postContent);
+
+                        $(postContent).find(".likeButton").closest().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, 1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                likePost(this);
+                            }
+                        });
+                    
+                        $(postContent).find(".dislikeButton").closest().click(function() {
+                            let parentElement = $(this).closest(".post, .comment");
+                            let itemId = parentElement.attr("id");
+                            let isPost = parentElement.hasClass("post");
+                            toggleVote(itemId, -1, sessionData.user, isPost);
+                    
+                            if (sessionData != null) {
+                                dislikePost(this);
+                            }
+                        })
                     });
                 }
                 catch (error) {
@@ -110,7 +154,7 @@ function isDateEqual (date1, date2) {
 function postBuilder(param, poster, community, user) {
     let postMain = $(`<div class="post" id="${param._id}"></div>`);
     let postHeaderContainer = $(`<div class="postHeaderContainer"></div>`);
-    let postHeader = $(`<div class="postHeader" onclick="window.location.href='/viewProfile/${param._id}'"></div>`);
+    let postHeader = $(`<div class="postHeader" onclick="window.location.href='/viewProfile/${poster.username}'"></div>`);
     let profilePic = $(`<img src="${poster.profileImage}" class="profilePic">`);
     let nameTime;
     if (isDateEqual(param.updatedAt, param.createdAt)) {
