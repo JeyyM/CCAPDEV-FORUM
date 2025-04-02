@@ -132,6 +132,20 @@ $(document).ready(function() {
             alert("Password does not match");
             return;
         }
+        
+        const usersResponse = await fetch(`/api/get-users?sortBy=createdAt&order=1&limit=99&skip=0`);
+        const users = await usersResponse.json();
+        const dUsername = users.some(user => user.username.toLowerCase() === username.toLowerCase()); //duplicate
+        const dEmail = users.some(user => user.email.toLowerCase() === email.toLowerCase()); 
+
+        if(dUsername){
+            alert("Username is taken!");
+            return; 
+        }
+        else if(dEmail){
+            alert("Email is taken!");
+            return; 
+        }
 
         const newProfile = {
             username,
